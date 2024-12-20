@@ -120,10 +120,23 @@
                     ecommerce dashboard
                 </a>
                 <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Data Center</p>
+
                 <a href="./email.html"
                     class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
                     <i class="fad fa-user text-xs mr-2"></i>
                     Pengguna
+                </a>
+
+                <a href="./email.html"
+                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                    <i class="fad fa-table text-xs mr-2"></i>
+                    Kategori
+                </a>
+
+                <a href="./email.html"
+                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                    <i class="fad fa-burger-soda text-xs mr-2"></i>
+                    Produk
                 </a>
 
                 <a href="#"

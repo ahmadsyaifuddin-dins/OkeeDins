@@ -81,7 +81,7 @@
         }
 
         .formbold-steps li.active span {
-            background: #6A64F1;
+            background: #F44424;
             color: #FFFFFF;
         }
 
@@ -109,7 +109,7 @@
         }
 
         .formbold-form-input:focus {
-            border-color: #6a64f1;
+            border-color: #F44424;
             box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
         }
 
@@ -160,7 +160,7 @@
         }
 
         .formbold-confirm-btn.active {
-            background: #6A64F1;
+            background: #F44424;
             color: #FFFFFF;
         }
 
@@ -208,7 +208,7 @@
             padding: 10px 25px;
             border: none;
             font-weight: 500;
-            background-color: #6A64F1;
+            background-color: #F44424;
             color: white;
             cursor: pointer;
         }
@@ -285,6 +285,17 @@
         .requirement.invalid:before {
             border-color: #FF5252;
         }
+
+        .login-link {
+            float: left;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #F44424;
+        }
+
+        .login-link:hover {
+            color: #07074D;
+        }
     </style>
 </head>
 
@@ -292,7 +303,8 @@
     <div class="formbold-main-wrapper">
 
         <div class="formbold-form-wrapper">
-            <form action="/register" method="POST">
+            <form action="{{ route('register.store') }}" method="POST">
+                @csrf
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active">
@@ -310,6 +322,7 @@
                     </ul>
                 </div>
 
+
                 <div class="formbold-form-step-1 active">
                     <div class="formbold-input-flex">
                         <div>
@@ -322,8 +335,6 @@
                             <input type="number" name="telepon" placeholder="0858..." id="telepon"
                                 class="formbold-form-input" required />
                         </div>
-
-
                     </div>
 
                     <div class="formbold-input-flex">
@@ -335,13 +346,13 @@
                         <div>
                             <label for="makanan_fav" class="formbold-form-label"> Makanan Favorit </label>
                             <input type="text" name="makanan_fav" id="makanan_fav" class="formbold-form-input"
-                                required />
+                                placeholder="Mandai" required />
                         </div>
                     </div>
 
                     <div>
                         <label for="address" class="formbold-form-label"> Alamat Lengkap </label>
-                        <input type="text" name="address" id="address"
+                        <input type="text" name="alamat" id="address"
                             placeholder="Jl. Kaca Piring No. 8 Banjarmasin" class="formbold-form-input" required />
                     </div>
                 </div>
@@ -359,13 +370,16 @@
                         <div class="password-requirements">
                             <p> <code><b>Minimal 3</b></code> Validasi kriteria keamanan Terpenuhi</p>
                         </div>
+
+
                     </div>
                 </div>
 
                 <div class="formbold-form-step-3">
                     <div class="formbold-form-confirm">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                            incididunt.
                         </p>
 
                         <div>
@@ -379,7 +393,7 @@
                                             fill="#536387" />
                                     </g>
                                     <defs>
-                                        <clipPath id="clip0_1667_1314">
+                                        <clipPath id="clip0_1667_1314)">
                                             <rect width="14" height="14" fill="white"
                                                 transform="translate(4 4)" />
                                         </clipPath>
@@ -398,8 +412,8 @@
                                             fill="#536387" />
                                     </g>
                                     <defs>
-                                        <clipPath id="clip0_1667_1314">
-                                            <rect width="14" height="14" fill="white"
+                                        <clipPath id="clip0_1667_1314)">
+                                            <rect width="14" height="14)" fill="white"
                                                 transform="translate(4 4)" />
                                         </clipPath>
                                     </defs>
@@ -409,11 +423,18 @@
                         </div>
                     </div>
                 </div>
+                <!-- Hyperlink untuk login -->
+                <a href="{{ route('login') }} " class="login-link">
+                    <br>
+                    jika sudah memiliki akun Klik ini!
+                </a>
+
 
                 <div class="formbold-form-btn-wrapper">
                     <button class="formbold-back-btn">
                         Kembali
                     </button>
+
 
                     <button class="formbold-btn">
                         Langkah Selanjutnya
@@ -425,14 +446,15 @@
                                     fill="white" />
                             </g>
                             <defs>
-                                <clipPath id="clip0_1675_1807">
-                                    <rect width="16" height="16" fill="white" />
+                                <clipPath id="clip0_1675_1807)">
+                                    <rect width="16" height="16)" fill="white" />
                                 </clipPath>
                             </defs>
                         </svg>
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
 
@@ -535,7 +557,7 @@
 }
 
 .password-toggle:hover i {
-    color: #6A64F1;
+    color: #F44424;
 }
 
 `;
@@ -824,7 +846,6 @@
             });
         });
     </script>
-
 
 </body>
 

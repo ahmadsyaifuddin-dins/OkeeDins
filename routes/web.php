@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +17,20 @@ use App\Http\Controllers\Auth\LoginController;
 */
 
 Route::get('/', function () {
-    return view('register');
+    return view('market');
 });
 
-Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+// Route untuk menampilkan form registrasi
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
-// Define the login routes
-Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
+// Route untuk menangani data registrasi yang dikirimkan
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+// Route untuk menampilkan form login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+
+// Route untuk memproses login
+Route::post('/login', [LoginController::class, 'login']);
+
+// Route untuk menampilkan dashboard admin
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

@@ -8,20 +8,35 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use Illuminate\Database\Eloquent\Model;
+
+
 class User extends Authenticatable
 {
+
+    use HasFactory;
+
+    // Menyatakan bahwa primary key menggunakan `user_id`
+    protected $primaryKey = 'user_id';
+
+    // Tentukan jika menggunakan auto-increment
+    public $incrementing = true;
+
+    // Tentukan tipe data primary key jika tidak integer
+    protected $keyType = 'int';
+
+
     use HasApiTokens, HasFactory, Notifiable;
 
+
+    /** * Indicates if the model should be timestamped. * * @var bool */
+    // public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'alamat', 'tgl_lahir', 'telepon', 'makanan_fav', 'role',];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -29,7 +44,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        // 'password',
         'remember_token',
     ];
 
@@ -40,6 +55,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        // 'password' => 'hashed',
     ];
 }
