@@ -13,33 +13,61 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
+    // Add new method to check email existence
+    public function checkEmail(Request $request)
+    {
+        $email = $request->input('email');
+        $exists = User::where('email', $email)->exists();
+
+        return response()->json([
+            'exists' => $exists
+        ]);
+    }
+
     public function store(Request $request)
     {
         // Log data untuk debugging
         Log::info('Data registrasi: ', $request->all());
 
-        $request->validate([
+        $validator = validator($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
             'alamat' => 'required',
             'tgl_lahir' => 'required|date',
             'telepon' => 'required',
             'makanan_fav' => 'required',
+        ], [
+            'email.unique' => 'Email sudah dipakai! Silakan gunakan email lain atau login dengan email yg terdaftar.',
+            'password.min' => 'Password minimal 8 karakter.',
         ]);
+
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->withInput($request->except('password'));
+        // }
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->with('error', 'Terdapat kesalahan pada data yang Anda masukkan.')
+                ->withInput($request->except('password'));
+        }
+
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // Tidak menggunakan bcrypt
+            'password' => $request->password,
             'alamat' => $request->alamat,
             'tgl_lahir' => $request->tgl_lahir,
             'telepon' => $request->telepon,
             'makanan_fav' => $request->makanan_fav,
             'role' => 'Pelanggan',
+            'remember_token' => '',
         ]);
 
-        // Menyimpan pesan sukses di sesi flash 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login :)');
     }
 }
