@@ -4,10 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
 
 class RegisterController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    public function showRegisterForm()
+    {
+        // Jika sudah login, alihkan ke halaman utama atau dashboard
+        if (Auth::check()) {
+            return redirect()->route('market')->with('message', 'Anda sudah login!');
+        }
+
+        return view('auth.register');
+    }
+
     public function index()
     {
         return view('auth.register');
