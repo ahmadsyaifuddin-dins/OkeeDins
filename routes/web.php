@@ -26,6 +26,8 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 // Route untuk menangani data registrasi yang dikirimkan
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
+Route::post('/check-email', [RegisterController::class, 'checkEmail'])->name('check.email');
+
 // Route untuk menampilkan form login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
