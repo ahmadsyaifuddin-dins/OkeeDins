@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -29,16 +28,26 @@ class LoginController extends Controller
             ->first();
 
         if ($user && $user->password === $request->password) {
-            // Login berhasil, simpan sesi
-            auth()->loginUsingId($user->user_id); // login dengan user_id
+            // Login dengan Remember Me
+            auth()->loginUsingId($user->user_id, $request->boolean('remember'));
 
-            // Menambahkan pesan flash
-            return redirect()->intended('/')->with('success', 'Login berhasil! Selamat datang di Market.');
+            return redirect()->intended('/')
+                ->with('success', 'Login berhasil! Selamat datang di Market.');
         }
 
         // Jika gagal, kembali ke halaman login
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Anda telah berhasil logout.');
     }
 }
