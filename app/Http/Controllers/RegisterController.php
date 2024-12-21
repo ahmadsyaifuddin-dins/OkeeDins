@@ -35,18 +35,13 @@ class RegisterController extends Controller
             'password' => 'required|min:8',
             'alamat' => 'required',
             'tgl_lahir' => 'required|date',
+            'jenis_kelamin' => 'required',
             'telepon' => 'required',
             'makanan_fav' => 'required',
         ], [
             'email.unique' => 'Email sudah dipakai! Silakan gunakan email lain atau login dengan email yg terdaftar.',
             'password.min' => 'Password minimal 8 karakter.',
         ]);
-
-        // if ($validator->fails()) {
-        //     return redirect()->back()
-        //         ->withErrors($validator)
-        //         ->withInput($request->except('password'));
-        // }
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -62,6 +57,7 @@ class RegisterController extends Controller
             'password' => $request->password,
             'alamat' => $request->alamat,
             'tgl_lahir' => $request->tgl_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'telepon' => $request->telepon,
             'makanan_fav' => $request->makanan_fav,
             'role' => 'Pelanggan',
