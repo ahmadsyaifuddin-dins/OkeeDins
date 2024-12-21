@@ -19,9 +19,9 @@
     <div class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#f8f4f3]">
             <div>
-                <a href="/">
-                    <h2 class="font-bold text-3xl">Foods <span
-                            class="bg-[#f84525] text-white px-2 rounded-md">Fusion</span></h2>
+                <a href="#">
+                    <h2 class="font-bold text-3xl">Food<box-icon name='bowl-hot'></box-icon> <span
+                            class="bg-[#f84525] text-white px-2 rounded-md">Fusion</span> </h2>
                 </a>
             </div>
 
@@ -29,6 +29,17 @@
                 @if (session('success'))
                     <div class="bg-green-500 text-white p-4 rounded mb-4">
                         {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Menampilkan error jika ada -->
+                @if ($errors->any())
+                    <div class="bg-red-500 text-white p-4 rounded mb-4">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
@@ -69,10 +80,18 @@
                         </label>
                     </div>
                     <br>
-                    <button
-                        class="ms-4 inline-flex items-center px-4 py-2 bg-[#f84525] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-800 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        Masuk
-                    </button>
+
+                    <!-- Button and Register Link in a Flex Container -->
+                    <div class="flex justify-between items-center">
+                        <button
+                            class="ms-4 inline-flex items-center px-4 py-2 bg-[#f84525] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-800 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Masuk
+                        </button>
+
+                        <p class="text-sm">
+                            Belum Punya Akun? <a href="{{ route('register') }}" class="text-[#f84525]">Daftar!</a>
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>
@@ -97,6 +116,8 @@
             }
         });
     </script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
 </body>
 
 </html>
