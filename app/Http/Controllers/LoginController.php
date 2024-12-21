@@ -8,8 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
+
+    public function __construct()
+    {
+        // Middleware auth untuk mencegah halaman login dan register diakses setelah login
+        $this->middleware('guest')->except('logout');
+    }
+
     public function showLoginForm()
     {
+        // Jika sudah login, alihkan ke halaman utama atau dashboard
+        if (Auth::check()) {
+            return redirect()->route('market')->with('message', 'Anda sudah login!');
+        }
         return view('auth.login');
     }
 
@@ -34,6 +45,7 @@ class LoginController extends Controller
             return redirect()->intended('/')
                 ->with('success', 'Login berhasil! Selamat datang di Market.');
         }
+
 
         // Jika gagal, kembali ke halaman login
         return back()->withErrors([
