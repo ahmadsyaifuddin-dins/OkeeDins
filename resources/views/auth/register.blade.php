@@ -288,13 +288,10 @@
 
         .login-link {
             float: left;
+            margin-top: 25px;
             padding: 10px 20px;
             text-decoration: none;
             color: #F44424;
-        }
-
-        .login-link:hover {
-            color: #07074D;
         }
     </style>
 </head>
@@ -424,10 +421,13 @@
                     </div>
                 </div>
                 <!-- Hyperlink untuk login -->
-                <a href="{{ route('login') }} " class="login-link">
-                    <br>
-                    jika sudah memiliki akun Klik ini!
-                </a>
+                <p class="login-link">Sudah punya akun? <a href="{{ route('login') }}">
+                        Masuk disini</a></p>
+
+                {{-- <a href="{{ route('login') }} " class="login-link">
+                            <br>
+                            Klik ini!
+                        </a> --}}
 
 
                 <div class="formbold-form-btn-wrapper">
@@ -437,7 +437,7 @@
 
 
                     <button class="formbold-btn">
-                        Langkah Selanjutnya
+                        Selanjutnya
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_1675_1807)">
@@ -737,14 +737,14 @@
                     stepTwo.removeClass('active');
                     stepOne.addClass('active');
                     formBackBtn.removeClass('active');
-                    formSubmitBtn.text('Langkah Selanjutnya');
+                    formSubmitBtn.text('Selanjutnya');
                 } else if (stepMenuThree.hasClass('active')) {
                     stepMenuThree.removeClass('active');
                     stepMenuTwo.addClass('active');
                     stepThree.removeClass('active');
                     stepTwo.addClass('active');
                     formBackBtn.addClass('active');
-                    formSubmitBtn.text('Langkah Selanjutnya');
+                    formSubmitBtn.text('Selanjutnya');
                 }
             });
 
@@ -765,7 +765,7 @@
                         stepOne.removeClass('active');
                         stepTwo.addClass('active');
                         formBackBtn.addClass('active');
-                        formSubmitBtn.text('Langkah Selanjutnya');
+                        formSubmitBtn.text('Selanjutnya');
                     } else {
                         Swal.fire({
                             icon: 'error',
