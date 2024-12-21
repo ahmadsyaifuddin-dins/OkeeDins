@@ -27,7 +27,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 48px;
+            padding: 20px;
+            min-height: 100vh;
         }
 
         .formbold-form-wrapper {
@@ -35,12 +36,15 @@
             max-width: 550px;
             width: 100%;
             background: white;
+            padding: 15px;
         }
 
+        /* Preserve multi-step structure while making it responsive */
         .formbold-steps {
             padding-bottom: 18px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             border-bottom: 1px solid #DDE3EC;
+            overflow-x: auto;
         }
 
         .formbold-steps ul {
@@ -48,17 +52,20 @@
             margin: 0;
             list-style: none;
             display: flex;
-            gap: 40px;
+            justify-content: center;
+            gap: 15px;
+            min-width: min-content;
         }
 
         .formbold-steps li {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 8px;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 24px;
             color: #536387;
+            white-space: nowrap;
         }
 
         .formbold-steps li span {
@@ -67,17 +74,15 @@
             justify-content: center;
             background: #DDE3EC;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 14px;
             color: #536387;
         }
 
         .formbold-steps li.active {
             color: #07074D;
-            ;
         }
 
         .formbold-steps li.active span {
@@ -85,24 +90,32 @@
             color: #FFFFFF;
         }
 
+        /* Make form inputs responsive */
         .formbold-input-flex {
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            gap: 15px;
             margin-bottom: 22px;
         }
 
-        .formbold-input-flex>div {
-            width: 50%;
+        @media (min-width: 540px) {
+            .formbold-input-flex {
+                flex-direction: row;
+            }
+
+            .formbold-input-flex>div {
+                width: 50%;
+            }
         }
 
         .formbold-form-input {
             width: 100%;
-            padding: 13px 22px;
+            padding: 12px 16px;
             border-radius: 5px;
             border: 1px solid #DDE3EC;
             background: #FFFFFF;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 15px;
             color: #536387;
             outline: none;
             resize: none;
@@ -119,25 +132,32 @@
             font-size: 14px;
             line-height: 24px;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
+        /* Adjust confirmation section */
         .formbold-form-confirm {
             border-bottom: 1px solid #DDE3EC;
-            padding-bottom: 35px;
+            padding-bottom: 25px;
         }
 
         .formbold-form-confirm p {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 24px;
             color: #536387;
             margin-bottom: 22px;
-            width: 75%;
         }
 
         .formbold-form-confirm>div {
             display: flex;
+            flex-direction: column;
             gap: 15px;
+        }
+
+        @media (min-width: 540px) {
+            .formbold-form-confirm>div {
+                flex-direction: row;
+            }
         }
 
         .formbold-confirm-btn {
@@ -147,16 +167,20 @@
             background: #FFFFFF;
             border: 0.5px solid #DDE3EC;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 24px;
             color: #536387;
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 10px 15px;
             transition: all .3s ease-in-out;
+            justify-content: center;
+            width: 100%;
         }
 
-        .formbold-confirm-btn {
-            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+        @media (min-width: 540px) {
+            .formbold-confirm-btn {
+                width: auto;
+            }
         }
 
         .formbold-confirm-btn.active {
@@ -164,48 +188,46 @@
             color: #FFFFFF;
         }
 
-        .formbold-form-step-1,
-        .formbold-form-step-2,
-        .formbold-form-step-3 {
-            display: none;
-        }
-
-        .formbold-form-step-1.active,
-        .formbold-form-step-2.active,
-        .formbold-form-step-3.active {
-            display: block;
-        }
-
+        /* Navigation buttons */
+        /* Navigation wrapper to contain both elements */
         .formbold-form-btn-wrapper {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 25px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 33px;
             margin-top: 25px;
         }
 
+        /* Back button styles */
         .formbold-back-btn {
             cursor: pointer;
             background: #FFFFFF;
             border: none;
             color: #07074D;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 24px;
             display: none;
         }
 
         .formbold-back-btn.active {
-            display: block;
+            background: #DDE3EC;
+            border-radius: 5px;
+            /* Mengatur tombol menjadi inline-block untuk menghindari ruang kosong */
+            display: inline-block;
+            /* Menambahkan padding agar lebih seimbang */
+            padding: 10px 20px;
         }
 
+        /* Next button styles */
         .formbold-btn {
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 16px;
+            font-size: 14px;
             border-radius: 5px;
-            padding: 10px 25px;
+            padding: 10px 20px;
             border: none;
             font-weight: 500;
             background-color: #F44424;
@@ -215,11 +237,57 @@
 
         .formbold-btn:hover {
             box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-
         }
 
+        /* Login link styles */
+        .login-link {
+            text-decoration: none;
+            color: #F44424;
+            font-size: 16px;
+            padding: 10px 0;
+        }
 
-        /* Previous styles remain the same */
+        /* Mobile styles (under 540px) */
+        @media screen and (max-width: 539px) {
+            .formbold-form-btn-wrapper {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+
+            .login-link {
+                text-align: center;
+                order: 1;
+            }
+
+            .formbold-btn {
+                order: 2;
+                justify-content: center;
+            }
+
+            .formbold-back-btn {
+                order: 3;
+                text-align: center;
+            }
+        }
+
+        /* Desktop styles (540px and above) */
+        @media screen and (min-width: 540px) {
+            .formbold-form-btn-wrapper {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .login-link {
+                margin: 0;
+                text-align: left;
+            }
+
+            .formbold-btn {
+                margin-left: auto;
+            }
+        }
+
+        /* Preserve all the password-related styles */
         .password-strength-meter {
             height: 5px;
             background-color: #f3f3f3;
@@ -259,39 +327,17 @@
             width: 100%;
         }
 
-        .requirement {
-            position: relative;
-            padding-left: 20px;
+        /* Form step visibility control */
+        .formbold-form-step-1,
+        .formbold-form-step-2,
+        .formbold-form-step-3 {
+            display: none;
         }
 
-        .requirement:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            transition: all 0.3s ease;
-        }
-
-        .requirement.valid:before {
-            border-color: #4CAF50;
-            background-color: #4CAF50;
-        }
-
-        .requirement.invalid:before {
-            border-color: #FF5252;
-        }
-
-        .login-link {
-            float: left;
-            margin-top: 25px;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #F44424;
+        .formbold-form-step-1.active,
+        .formbold-form-step-2.active,
+        .formbold-form-step-3.active {
+            display: block;
         }
     </style>
 </head>
@@ -302,6 +348,18 @@
         <div class="formbold-form-wrapper">
             <form action="{{ route('register.store') }}" method="POST">
                 @csrf
+                @if ($errors->any())
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan',
+                            html: '{!! implode('<br>', $errors->all()) !!}',
+                            showConfirmButton: true
+                        });
+                    </script>
+                @endif
+
+
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active">
@@ -325,47 +383,51 @@
                         <div>
                             <label for="fullname" class="formbold-form-label">Nama Lengkap </label>
                             <input type="text" name="name" placeholder="John Doe" id="fullname"
-                                class="formbold-form-input" required />
+                                class="formbold-form-input" required value="{{ old('name') }}" />
                         </div>
                         <div>
                             <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp </label>
-                            <input type="number" name="telepon" placeholder="0858..." id="telepon"
-                                class="formbold-form-input" required />
+                            <input type="number" name="telepon" placeholder="085812345678" id="telepon"
+                                class="formbold-form-input" required value="{{ old('telepon') }}" />
                         </div>
                     </div>
 
                     <div class="formbold-input-flex">
                         <div>
                             <label for="tgl_lahir" class="formbold-form-label"> Tanggal Lahir </label>
-                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="formbold-form-input"
-                                required />
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="formbold-form-input" required
+                                value="{{ old('tgl_lahir') }}" />
                         </div>
                         <div>
                             <label for="makanan_fav" class="formbold-form-label"> Makanan Favorit </label>
                             <input type="text" name="makanan_fav" id="makanan_fav" class="formbold-form-input"
-                                placeholder="Mandai" required />
+                                placeholder="Mandai" required value="{{ old('makanan_fav') }}" />
                         </div>
                     </div>
 
                     <div>
                         <label for="address" class="formbold-form-label"> Alamat Lengkap </label>
                         <input type="text" name="alamat" id="address"
-                            placeholder="Jl. Kaca Piring No. 8 Banjarmasin" class="formbold-form-input" required />
+                            placeholder="Jl. Kaca Piring No. 8 Banjarmasin" class="formbold-form-input" required
+                            value="{{ old('alamat') }}" />
                     </div>
                 </div>
 
                 <div class="formbold-form-step-2">
                     <div>
-                        <label for="email" class="formbold-form-label"> Email </label>
-                        <input type="email" name="email" placeholder="example@mail.com" id="email" required
-                            class="formbold-form-input" />
+                        <label for="email" class="formbold-form-label">Email</label>
+                        <input type="email" name="email" placeholder="example@mail.com" id="email"
+                            class="formbold-form-input @error('email') is-invalid @enderror" required
+                            value="{{ old('email') }}" />
                     </div>
+
+
                     <div>
                         <br>
                         <label for="password" class="formbold-form-label">Password</label>
                         <input type="password" name="password" id="password" class="formbold-form-input" required />
                         <div class="password-requirements">
-                            <p> <code><b>Minimal 3</b></code> Validasi kriteria keamanan Terpenuhi</p>
+                            <p> <b>Minimal 3</b> Validasi kriteria keamanan Terpenuhi</p>
                         </div>
 
 
@@ -375,8 +437,7 @@
                 <div class="formbold-form-step-3">
                     <div class="formbold-form-confirm">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt.
+                            Dengan Mendaftar Akun di Platform Food Fusion Kami, Apakah Anda menyetujui
                         </p>
 
                         <div>
@@ -420,21 +481,15 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Hyperlink untuk login -->
-                <p class="login-link">Sudah punya akun? <a href="{{ route('login') }}">
-                        Masuk disini</a></p>
-
-                {{-- <a href="{{ route('login') }} " class="login-link">
-                            <br>
-                            Klik ini!
-                        </a> --}}
-
-
                 <div class="formbold-form-btn-wrapper">
+                    <p>Sudah punya akun?<a href="{{ route('login') }}" class="login-link"> Masuk disini</a></p>
+
+
                     <button class="formbold-back-btn">
                         Kembali
                     </button>
-
 
                     <button class="formbold-btn">
                         Selanjutnya
@@ -564,6 +619,7 @@
         document.head.appendChild(styleSheet);
 
         $(document).ready(function() {
+
             // Form elements
             const formSubmitBtn = $('.formbold-btn');
             const stepMenuOne = $('.formbold-step-menu1');
@@ -633,8 +689,6 @@
                 }
             });
 
-
-
             // Email validation function
             function validateEmail(email) {
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -647,6 +701,46 @@
                     return false;
                 }
             }
+
+            function checkEmailExistence(email) {
+                return $.ajax({
+                    url: '/check-email', // Add this route to your web.php
+                    method: 'POST',
+                    data: {
+                        email: email,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            }
+
+            // Modify the email input event handler
+            emailInput.on('input', function() {
+                const email = $(this).val();
+                if (validateEmail(email)) {
+                    // Check email existence only if format is valid
+                    checkEmailExistence(email).then(function(response) {
+                        if (response.exists) {
+                            emailInput.removeClass('valid').addClass('invalid');
+                            // Show warning using SweetAlert2
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Email Sudah Terdaftar',
+                                text: 'Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.',
+                                showCancelButton: true,
+                                confirmButtonText: 'Login',
+                                cancelButtonText: 'Gunakan Email Lain'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '/login';
+                                }
+                            });
+                        } else {
+                            emailInput.removeClass('invalid').addClass('valid');
+                        }
+                    });
+                }
+            });
+
 
             // Password validation function
             function calculatePasswordStrength(password) {
@@ -787,6 +881,8 @@
                         return;
                     }
 
+
+
                     const isEmailValid = validateEmail(email);
                     const isPasswordValid = strength >= 3; // Minimum medium strength required
 
@@ -813,7 +909,7 @@
                     stepTwo.removeClass('active');
                     stepThree.addClass('active');
                     formBackBtn.addClass('active');
-                    formSubmitBtn.text('Daftar');
+                    formSubmitBtn.text('Daftar !');
                 } else if (stepMenuThree.hasClass('active')) {
                     const confirmBtns = $('.formbold-confirm-btn');
                     let confirmed = false;
