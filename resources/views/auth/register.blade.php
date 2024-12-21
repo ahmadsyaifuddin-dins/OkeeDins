@@ -31,7 +31,6 @@
                     </script>
                 @endif
 
-
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active">
@@ -49,7 +48,6 @@
                     </ul>
                 </div>
 
-
                 <div class="formbold-form-step-1 active">
                     <div class="formbold-input-flex">
                         <div>
@@ -66,19 +64,37 @@
 
                     <div class="formbold-input-flex">
                         <div>
-                            <label for="tgl_lahir" class="formbold-form-label"> Tanggal Lahir </label>
+                            <label for="tgl_lahir" class="formbold-form-label">Tanggal Lahir </label>
                             <input type="date" name="tgl_lahir" id="tgl_lahir" class="formbold-form-input" required
                                 value="{{ old('tgl_lahir') }}" />
                         </div>
                         <div>
-                            <label for="makanan_fav" class="formbold-form-label"> Makanan Favorit </label>
-                            <input type="text" name="makanan_fav" id="makanan_fav" class="formbold-form-input"
-                                placeholder="Mandai" required value="{{ old('makanan_fav') }}" />
+                            <label for="jenis_kelamin" class="formbold-form-label">Jenis Kelamin</label>
+                            <div>
+                                <label class="formbold-radio-label">
+                                    <input type="radio" name="jenis_kelamin" value="Laki-laki"
+                                        class="formbold-radio-input" required
+                                        {{ old('jenis_kelamin') == 'Laki-laki' ? 'checked' : '' }} />
+                                    Laki-laki
+                                </label>
+                                <label class="formbold-radio-label">
+                                    <input type="radio" name="jenis_kelamin" value="Perempuan"
+                                        class="formbold-radio-input" required
+                                        {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} />
+                                    Perempuan
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <div>
-                        <label for="address" class="formbold-form-label"> Alamat Lengkap </label>
+                        <label for="makanan_fav" class="formbold-form-label">Makanan Favorit </label>
+                        <input type="text" name="makanan_fav" id="makanan_fav" class="formbold-form-input"
+                            placeholder="Mandai, Bilungka, Kolak" required value="{{ old('makanan_fav') }}" />
+                    </div>
+                    <br>
+                    <div>
+                        <label for="address" class="formbold-form-label">Alamat Lengkap </label>
                         <input type="text" name="alamat" id="address"
                             placeholder="Jl. Kaca Piring No. 8 Banjarmasin" class="formbold-form-input" required
                             value="{{ old('alamat') }}" />
@@ -93,16 +109,13 @@
                             value="{{ old('email') }}" />
                     </div>
 
-
                     <div>
                         <br>
                         <label for="password" class="formbold-form-label">Password</label>
                         <input type="password" name="password" id="password" class="formbold-form-input" required />
                         <div class="password-requirements">
-                            <p> <b>Minimal 3</b> Validasi kriteria keamanan Terpenuhi</p>
+                            <p><b>Minimal 3</b> Validasi kriteria keamanan Terpenuhi</p>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -159,7 +172,6 @@
                 <div class="formbold-form-btn-wrapper">
                     <p>Sudah punya akun?<a href="{{ route('login') }}" class="login-link"> Masuk disini</a></p>
 
-
                     <button class="formbold-back-btn">
                         Kembali
                     </button>
@@ -182,6 +194,7 @@
                     </button>
                 </div>
             </form>
+
 
         </div>
     </div>
