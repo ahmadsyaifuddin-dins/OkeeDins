@@ -197,18 +197,41 @@
 
             <div
                 class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-                <div class="support-box text-end d-none d-xl-block">
-                    <span class="fs-6 text-muted">For Support?</span>
-                    <h5 class="mb-0">+980-34984089</h5>
-                </div>
+
 
                 <ul class="d-flex justify-content-end list-unstyled m-0">
                     <li>
-                        <a href="{{ route('register') }}" class="rounded-circle bg-light p-2 mx-1">
-                            <svg width="24" height="24" viewBox="0 0 24 24">
-                                <use xlink:href="#user"></use>
-                            </svg>
-                        </a>
+                        @if (Auth::check())
+                            <div class="dropdown">
+                                <a href="#" class="rounded-circle bg-light p-2 mx-1 dropdown-toggle"
+                                    id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg width="24" height="24" viewBox="0 0 24 24">
+                                        <use xlink:href="#user"></use>
+                                    </svg>
+                                    <span class="ms-1">{{ Auth::user()->name }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="{{ route('pelanggan.profile.show') }}">My
+                                            Profile</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('logout') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        @else
+                            <a href="{{ route('login') }}" class="rounded-circle bg-light p-2 mx-1">
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <use xlink:href="#user"></use>
+                                </svg>
+                            </a>
+                        @endif
                     </li>
                     <li>
                         <a href="#" class="rounded-circle bg-light p-2 mx-1">
