@@ -21,6 +21,10 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                // Cek jika user sedang di halaman profile
+                if ($request->is('pelanggan/profile*')) {
+                    return redirect()->route('pelanggan.profile.show');
+                }
                 return redirect()->route('market');
             }
         }

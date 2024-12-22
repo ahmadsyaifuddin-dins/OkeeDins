@@ -17,9 +17,12 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        // Jika sudah login, alihkan ke halaman utama atau dashboard
         if (Auth::check()) {
-            return redirect()->route('market')->with('message', 'Anda sudah login!');
+            // Cek jika user sedang di halaman profile
+            if (request()->is('pelanggan/profile*')) {
+                return redirect()->route('pelanggan.profile.show');
+            }
+            return redirect()->route('market');
         }
         return view('auth.login');
     }
