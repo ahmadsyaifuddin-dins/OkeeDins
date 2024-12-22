@@ -46,7 +46,7 @@ class LoginController extends Controller
             auth()->loginUsingId($user->user_id, $request->boolean('remember'));
 
             return redirect()->intended('/')
-                ->with('success', 'Login berhasil! Selamat datang di Market.');
+                ->with('success', 'Login berhasil! Selamat datang di Market');
         }
 
 
@@ -63,6 +63,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Anda telah berhasil logout.');
+        return redirect('/')->with('success', 'Anda telah logout');
     }
 }
