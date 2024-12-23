@@ -25,12 +25,12 @@ class RegisterController extends Controller
             }
             return redirect()->route('market');
         }
-        return view('auth.register');
+        return view('pelanggan.register');
     }
 
     public function index()
     {
-        return view('auth.register');
+        return view('pelanggan.register');
     }
 
     // Add new method to check email existence
