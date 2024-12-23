@@ -10,14 +10,38 @@ class AdminController extends Controller
 {
     public function index()
     {
+        // Double check untuk memastikan yang akses adalah Administrator
+        if (Auth::user()->role !== 'Administrator') {
+            Auth::logout();
+            return redirect()->route('admin.login')
+                ->with('error', 'Anda harus login sebagai Administrator.');
+        }
+
         return view('admin.dashboard');
     }
+
+    // public function administrator()
+    // {
+    //     return view('admin.dashboard');
+    // }
+
+    // public function pelanggan()
+    // {
+    //     return view('/');
+    // }
+
+    // public function kasir()
+    // {
+    //     return view('kasir.dashboard');
+    // }
+
+
 
     public function login()
     {
         // Jika sudah login sebagai admin, redirect ke dashboard
         if (Auth::check() && Auth::user()->role === 'Administrator') {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard'); // Kembali menggunakan admin.dashboard
         }
 
         return view('admin.login');
@@ -39,7 +63,7 @@ class AdminController extends Controller
             if ($request->password === $user->password) {
                 Auth::login($user);
                 $request->session()->regenerate();
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard'); // Kembali menggunakan admin.dashboard
             }
 
             return back()->withErrors([
@@ -48,7 +72,16 @@ class AdminController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Email tidak ditemukan di database!',
-        ]);
+            'email' => 'Bukan Email untuk Administrator!',
+        ])->withInput(); // Menyimpan input ke session
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
     }
 }
