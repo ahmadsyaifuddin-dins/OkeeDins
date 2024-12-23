@@ -39,7 +39,7 @@
                                 <input
                                     class="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400 @error('email') border-red-500 @enderror"
                                     id="email" placeholder="admin@example.com" type="email" name="email"
-                                    value="{{ old('email') }}" required>
+                                    required value="{{ old('email') }}" />
                                 @error('email')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
