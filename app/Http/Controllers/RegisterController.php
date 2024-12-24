@@ -58,6 +58,7 @@ class RegisterController extends Controller
             'jenis_kelamin' => 'required',
             'telepon' => 'required',
             'makanan_fav' => 'required',
+            'type_char' => 'required|in:Hero,Villain',
         ], [
             'email.unique' => 'Email sudah dipakai! Silakan gunakan email lain atau login dengan email yg terdaftar.',
             'password.min' => 'Password minimal 8 karakter.',
@@ -81,6 +82,7 @@ class RegisterController extends Controller
             'telepon' => $request->telepon,
             'makanan_fav' => $request->makanan_fav,
             'role' => 'Pelanggan',
+            'type_char' => $request->type_char,
             'remember_token' => '',
         ]);
 
