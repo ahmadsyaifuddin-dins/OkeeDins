@@ -689,9 +689,9 @@ h1,h2,h3,h4,h5,h6 {
     line-height: 1.4;
     font-size: 0.9em;
   }
-  .dropdown-menu a {
-    /* padding-left: 0; */
-  }
+  /* .dropdown-menu a {
+    padding-left: 0;
+  } */
   .dropdown-toggle::after {
     position: absolute;
     right: 0;
