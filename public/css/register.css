@@ -326,3 +326,110 @@
         .formbold-form-step-3.active {
             display: block;
         }
+
+        /* Styling untuk inputan Telepon */
+
+        .telepon-wrapper {
+            position: relative;
+        }
+        
+        .iti {
+            width: 100%;
+        }
+            
+        
+        .iti__flag-container {
+            margin-left: 4px;
+        }
+
+        .formbold-form-input.valid {
+            border-color: #4CAF50;
+            background-color: #f8fff8;
+        }
+
+        .formbold-form-input.invalid {
+            border-color: #FF5252;
+            background-color: #fff8f8;
+        }
+
+        .hide {
+            display: none;
+        }
+        
+        #valid-msg {
+            color: #00C900;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+        
+        #error-msg {
+            color: #FF5252;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Styling Untuk Radio Button Kustom (Jenis Kelamin) */ 
+    :focus {
+    outline: 0;
+    border-color: #F44424;
+    box-shadow: 0 0 0 4px #b5c9fc;
+  }
+  
+  .mydict div {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+    justify-content: left;
+  }
+
+  @media (max-width: 540px) {
+    .mydict div {
+        margin-top: 0.5rem;
+        justify-content: left;
+
+    }
+  }
+
+  
+  .mydict input[type="radio"] {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  
+  .mydict input[type="radio"]:checked + span {
+    transition: all .5s ease-in-out;
+    box-shadow: 0 0 0 0.0625em #F44424;
+    background-color: #fff0ed;
+    z-index: 1;
+    color: #F44424;
+  }
+  
+  label span {
+    display: block;
+    cursor: pointer;
+    background-color: #fff;
+    padding: 0.375em .75em;
+    position: relative;
+    margin-left: .0625em;
+    box-shadow: 0 0 0 0.0625em #b5bfd9;
+    letter-spacing: .05em;
+    color: #3e4963;
+    text-align: center;
+    transition: background-color .5s ease;
+  }
+  
+  label:first-child span {
+    border-radius: .375em 0 0 .375em;
+  }
+  
+  label:last-child span {
+    border-radius: 0 .375em .375em 0;
+  }
+  
