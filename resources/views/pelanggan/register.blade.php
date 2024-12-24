@@ -10,8 +10,12 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- IntlTelInput CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.js"></script>
+    <!-- IntlTelInput JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 </head>
 
 <body>
@@ -57,8 +61,13 @@
                         </div>
                         <div>
                             <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp </label>
-                            <input type="number" name="telepon" placeholder="085812345678" id="telepon"
-                                class="formbold-form-input" required value="{{ old('telepon') }}" />
+                            <div class="telepon-wrapper">
+                                <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
+                                    value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*" />
+                            </div>
+                            <small class="telepon-hint">Contoh: 812345678901</small>
+                            <span id="valid-msg" class="hide">✓ Valid</span>
+                            <span id="error-msg" class="hide"></span>
                         </div>
                     </div>
 
@@ -68,23 +77,26 @@
                             <input type="date" name="tgl_lahir" id="tgl_lahir" class="formbold-form-input" required
                                 value="{{ old('tgl_lahir') }}" />
                         </div>
-                        <div>
+
+                        <div class="mydict">
                             <label for="jenis_kelamin" class="formbold-form-label">Jenis Kelamin</label>
                             <div>
                                 <label class="formbold-radio-label">
-                                    <input type="radio" name="jenis_kelamin" value="Laki-laki"
+                                    <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="Laki-Laki"
                                         class="formbold-radio-input" required
-                                        {{ old('jenis_kelamin') == 'Laki-laki' ? 'checked' : '' }} />
-                                    Laki-laki
+                                        {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }} />
+                                    <span>Laki-Laki</span>
                                 </label>
                                 <label class="formbold-radio-label">
-                                    <input type="radio" name="jenis_kelamin" value="Perempuan"
+                                    <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="Perempuan"
                                         class="formbold-radio-input" required
                                         {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} />
-                                    Perempuan
+                                    <span>Perempuan</span>
                                 </label>
                             </div>
                         </div>
+
+
                     </div>
 
                     <div>
@@ -121,31 +133,13 @@
 
                 <div class="formbold-form-step-3">
                     <div class="formbold-form-confirm">
-                        <p>
-                            Dengan Mendaftar Akun di Platform Food Fusion Kami, Apakah Anda menyetujui
-                        </p>
+                        <p>Di dunia ini tipe Karakter apa yg cocok dengan diri anda?</p>
+
+                        <input type="hidden" name="type_char" id="type_char" value="">
 
                         <div>
-                            <button class="formbold-confirm-btn active">
-                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="11" cy="11" r="10.5" fill="white" stroke="#DDE3EC" />
-                                    <g clip-path="url(#clip0_1667_1314)">
-                                        <path
-                                            d="M9.83343 12.8509L15.1954 7.48828L16.0208 8.31311L9.83343 14.5005L6.12109 10.7882L6.94593 9.96336L9.83343 12.8509Z"
-                                            fill="#536387" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_1667_1314)">
-                                            <rect width="14" height="14" fill="white"
-                                                transform="translate(4 4)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                                Yes! I want it.
-                            </button>
-
-                            <button class="formbold-confirm-btn">
+                            <button type="button" onclick="selectCharacter('Hero')" class="formbold-confirm-btn"
+                                id="hero-btn">
                                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="11" cy="11" r="10.5" fill="white"
@@ -155,18 +149,28 @@
                                             d="M9.83343 12.8509L15.1954 7.48828L16.0208 8.31311L9.83343 14.5005L6.12109 10.7882L6.94593 9.96336L9.83343 12.8509Z"
                                             fill="#536387" />
                                     </g>
-                                    <defs>
-                                        <clipPath id="clip0_1667_1314)">
-                                            <rect width="14" height="14)" fill="white"
-                                                transform="translate(4 4)" />
-                                        </clipPath>
-                                    </defs>
                                 </svg>
-                                No! I don’t want it.
+                                Hero🦸
+                            </button>
+
+                            <button type="button" onclick="selectCharacter('Villain')" class="formbold-confirm-btn"
+                                id="villain-btn">
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="11" cy="11" r="10.5" fill="white"
+                                        stroke="#DDE3EC" />
+                                    <g clip-path="url(#clip0_1667_1314)">
+                                        <path
+                                            d="M9.83343 12.8509L15.1954 7.48828L16.0208 8.31311L9.83343 14.5005L6.12109 10.7882L6.94593 9.96336L9.83343 12.8509Z"
+                                            fill="#536387" />
+                                    </g>
+                                </svg>
+                                Villain🦹
                             </button>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Hyperlink untuk login -->
                 <div class="formbold-form-btn-wrapper">

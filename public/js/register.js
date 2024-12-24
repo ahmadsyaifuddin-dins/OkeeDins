@@ -100,45 +100,117 @@ color: #F44424;
 `;
 document.head.appendChild(styleSheet);
 
-$(document).ready(function() {
+$(document).ready(function () {
+    // Inisialisasi IntlTelInput
+    const input = document.querySelector("#telepon");
+    const errorMsg = document.querySelector("#error-msg");
+    const validMsg = document.querySelector("#valid-msg");
+
+    const iti = window.intlTelInput(input, {
+        initialCountry: "id", // Default ke Indonesia
+        preferredCountries: ["id", "my", "sg", "au"], // Negara yang muncul di atas
+        separateDialCode: true,
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    const errorMap = [
+        "Nomor tidak valid",
+        "Kode negara tidak valid",
+        "Nomor terlalu pendek",
+        "Nomor terlalu panjang",
+        "Nomor tidak valid",
+    ];
+
+    // Mencegah input karakter non-angka
+    input.addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9]/)) {
+            e.preventDefault();
+        }
+    });
+
+    // Mencegah paste konten non-angka
+    input.addEventListener("paste", function (e) {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData(
+            "text"
+        );
+        if (pastedText.match(/^\d+$/)) {
+            this.value = pastedText;
+        }
+    });
+
+    // Hapus karakter non-angka jika somehow masuk
+    input.addEventListener("input", function (e) {
+        this.value = this.value.replace(/[^\d]/g, "");
+    });
+
+    // Fungsi untuk validasi
+    function reset() {
+        input.classList.remove("error");
+        errorMsg.innerHTML = "";
+        errorMsg.classList.add("hide");
+        validMsg.classList.add("hide");
+    }
+
+    function validatePhoneNumber() {
+        reset();
+        if (input.value.trim()) {
+            if (iti.isValidNumber()) {
+                validMsg.classList.remove("hide");
+                return true;
+            } else {
+                input.classList.add("error");
+                const errorCode = iti.getValidationError();
+                errorMsg.innerHTML = errorMap[errorCode] || "Nomor tidak valid";
+                errorMsg.classList.remove("hide");
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // Event listeners
+    input.addEventListener("blur", validatePhoneNumber);
+    input.addEventListener("change", validatePhoneNumber);
+    input.addEventListener("keyup", validatePhoneNumber);
 
     // Form elements
-    const formSubmitBtn = $('.formbold-btn');
-    const stepMenuOne = $('.formbold-step-menu1');
-    const stepMenuTwo = $('.formbold-step-menu2');
-    const stepMenuThree = $('.formbold-step-menu3');
-    const stepOne = $('.formbold-form-step-1');
-    const stepTwo = $('.formbold-form-step-2');
-    const stepThree = $('.formbold-form-step-3');
-    const formBackBtn = $('.formbold-back-btn');
-    const emailInput = $('#email');
-    const passwordInput = $('#password');
+    const formSubmitBtn = $(".formbold-btn");
+    const stepMenuOne = $(".formbold-step-menu1");
+    const stepMenuTwo = $(".formbold-step-menu2");
+    const stepMenuThree = $(".formbold-step-menu3");
+    const stepOne = $(".formbold-form-step-1");
+    const stepTwo = $(".formbold-form-step-2");
+    const stepThree = $(".formbold-form-step-3");
+    const formBackBtn = $(".formbold-back-btn");
+    const emailInput = $("#email");
+    const passwordInput = $("#password");
 
     // Add password requirements div
-    const passwordRequirements = $('<div>', {
-        class: 'password-requirements'
+    const passwordRequirements = $("<div>", {
+        class: "password-requirements",
     }).html(`
-<div class="requirement length">Minimal 8 karakter</div>
-<div class="requirement letter">Minimal satu huruf kecil</div>
-<div class="requirement capital">Minimal satu huruf kapital</div>
-<div class="requirement number">Minimal satu angka</div>
-<div class="requirement special">Minimal satu karakter spesial</div>
-`);
+    <div class="requirement letter">Minimal satu huruf kecil</div>
+    <div class="requirement length">Minimal 8 karakter</div>
+    <div class="requirement capital">Minimal satu huruf kapital</div>
+    <div class="requirement number">Minimal satu angka</div>
+    <div class="requirement special">Minimal satu karakter spesial</div>
+    `);
 
-    const strengthMeter = $('<div>', {
-        class: 'password-strength-meter'
+    const strengthMeter = $("<div>", {
+        class: "password-strength-meter",
     }).html('<div class="strength-meter-fill"></div>');
 
-    const strengthText = $('<div>', {
-        class: 'password-strength-text',
-        style: 'font-size: 12px; margin-top: 5px; color: #666;'
+    const strengthText = $("<div>", {
+        class: "password-strength-text",
+        style: "font-size: 12px; margin-top: 5px; color: #666;",
     });
 
     // Insert elements after password input
     passwordInput.after(strengthText);
     passwordInput.after(strengthMeter);
     passwordInput.after(passwordRequirements);
-
 
     const showPasswordIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -151,22 +223,22 @@ $(document).ready(function() {
 </svg>`;
 
     passwordInput.wrap('<div class="password-wrapper"></div>');
-    const toggleButton = $('<button>', {
-        type: 'button',
-        class: 'password-toggle',
-        html: showPasswordIcon
+    const toggleButton = $("<button>", {
+        type: "button",
+        class: "password-toggle",
+        html: showPasswordIcon,
     });
     passwordInput.after(toggleButton);
 
-    toggleButton.on('click', function(e) {
+    toggleButton.on("click", function (e) {
         e.preventDefault();
         const input = passwordInput;
 
-        if (input.attr('type') === 'password') {
-            input.attr('type', 'text');
+        if (input.attr("type") === "password") {
+            input.attr("type", "text");
             $(this).html(hidePasswordIcon);
         } else {
-            input.attr('type', 'password');
+            input.attr("type", "password");
             $(this).html(showPasswordIcon);
         }
     });
@@ -176,53 +248,52 @@ $(document).ready(function() {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (emailPattern.test(email)) {
-            emailInput.removeClass('invalid').addClass('valid');
+            emailInput.removeClass("invalid").addClass("valid");
             return true;
         } else {
-            emailInput.removeClass('valid').addClass('invalid');
+            emailInput.removeClass("valid").addClass("invalid");
             return false;
         }
     }
 
     function checkEmailExistence(email) {
         return $.ajax({
-            url: '/check-email', // Add this route to your web.php
-            method: 'POST',
+            url: "/check-email", // Add this route to your web.php
+            method: "POST",
             data: {
                 email: email,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            }
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
         });
     }
 
     // Modify the email input event handler
-    emailInput.on('input', function() {
+    emailInput.on("input", function () {
         const email = $(this).val();
         if (validateEmail(email)) {
             // Check email existence only if format is valid
-            checkEmailExistence(email).then(function(response) {
+            checkEmailExistence(email).then(function (response) {
                 if (response.exists) {
-                    emailInput.removeClass('valid').addClass('invalid');
+                    emailInput.removeClass("valid").addClass("invalid");
                     // Show warning using SweetAlert2
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Email Sudah Terdaftar',
-                        text: 'Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.',
+                        icon: "warning",
+                        title: "Email Sudah Terdaftar",
+                        text: "Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.",
                         showCancelButton: true,
-                        confirmButtonText: 'Login',
-                        cancelButtonText: 'Gunakan Email Lain'
+                        confirmButtonText: "Login",
+                        cancelButtonText: "Gunakan Email Lain",
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '/login';
+                            window.location.href = "/login";
                         }
                     });
                 } else {
-                    emailInput.removeClass('invalid').addClass('valid');
+                    emailInput.removeClass("invalid").addClass("valid");
                 }
             });
         }
     });
-
 
     // Password validation function
     function calculatePasswordStrength(password) {
@@ -232,17 +303,17 @@ $(document).ready(function() {
             letter: /[a-z]/.test(password),
             capital: /[A-Z]/.test(password),
             number: /[0-9]/.test(password),
-            special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
         };
 
         // Update requirement indicators
-        Object.keys(requirements).forEach(req => {
+        Object.keys(requirements).forEach((req) => {
             const $requirement = $(`.requirement.${req}`);
             if (requirements[req]) {
-                $requirement.addClass('valid').removeClass('invalid');
+                $requirement.addClass("valid").removeClass("invalid");
                 strength++;
             } else {
-                $requirement.addClass('invalid').removeClass('valid');
+                $requirement.addClass("invalid").removeClass("valid");
             }
         });
 
@@ -250,36 +321,36 @@ $(document).ready(function() {
     }
 
     function updatePasswordStrength(strength) {
-        const $strengthMeter = $('.strength-meter-fill');
-        const $strengthText = $('.password-strength-text');
+        const $strengthMeter = $(".strength-meter-fill");
+        const $strengthText = $(".password-strength-text");
 
-        $strengthMeter.removeClass('very-weak weak medium strong very-strong');
+        $strengthMeter.removeClass("very-weak weak medium strong very-strong");
         let strengthClass, strengthText;
 
         switch (strength) {
             case 1:
-                strengthClass = 'very-weak';
-                strengthText = 'Sangat Lemah';
+                strengthClass = "very-weak";
+                strengthText = "Sangat Lemah";
                 break;
             case 2:
-                strengthClass = 'weak';
-                strengthText = 'Lemah';
+                strengthClass = "weak";
+                strengthText = "Lemah";
                 break;
             case 3:
-                strengthClass = 'medium';
-                strengthText = 'Sedang';
+                strengthClass = "medium";
+                strengthText = "Sedang";
                 break;
             case 4:
-                strengthClass = 'strong';
-                strengthText = 'Kuat';
+                strengthClass = "strong";
+                strengthText = "Kuat";
                 break;
             case 5:
-                strengthClass = 'very-strong';
-                strengthText = 'Sangat Kuat';
+                strengthClass = "very-strong";
+                strengthText = "Sangat Kuat";
                 break;
             default:
-                strengthClass = '';
-                strengthText = '';
+                strengthClass = "";
+                strengthText = "";
         }
         $strengthMeter.addClass(strengthClass);
         $strengthText.text(`Kekuatan Password: ${strengthText}`);
@@ -287,139 +358,189 @@ $(document).ready(function() {
     }
 
     // Real-time validation for email
-    emailInput.on('input', function() {
+    emailInput.on("input", function () {
         validateEmail($(this).val());
     });
 
     // Real-time validation for password
-    passwordInput.on('input', function() {
+    passwordInput.on("input", function () {
         const password = $(this).val();
         const strength = calculatePasswordStrength(password);
         const isValid = updatePasswordStrength(strength);
 
         if (isValid) {
-            $(this).removeClass('invalid').addClass('valid');
+            $(this).removeClass("invalid").addClass("valid");
         } else {
-            $(this).removeClass('valid').addClass('invalid');
+            $(this).removeClass("valid").addClass("invalid");
         }
     });
 
     // Handle back button
-    formBackBtn.on('click', function(event) {
+    formBackBtn.on("click", function (event) {
         event.preventDefault();
-        if (stepMenuTwo.hasClass('active')) {
-            stepMenuTwo.removeClass('active');
-            stepMenuOne.addClass('active');
-            stepTwo.removeClass('active');
-            stepOne.addClass('active');
-            formBackBtn.removeClass('active');
-            formSubmitBtn.text('Selanjutnya');
-        } else if (stepMenuThree.hasClass('active')) {
-            stepMenuThree.removeClass('active');
-            stepMenuTwo.addClass('active');
-            stepThree.removeClass('active');
-            stepTwo.addClass('active');
-            formBackBtn.addClass('active');
-            formSubmitBtn.text('Selanjutnya');
+        if (stepMenuTwo.hasClass("active")) {
+            stepMenuTwo.removeClass("active");
+            stepMenuOne.addClass("active");
+            stepTwo.removeClass("active");
+            stepOne.addClass("active");
+            formBackBtn.removeClass("active");
+            formSubmitBtn.text("Selanjutnya");
+        } else if (stepMenuThree.hasClass("active")) {
+            stepMenuThree.removeClass("active");
+            stepMenuTwo.addClass("active");
+            stepThree.removeClass("active");
+            stepTwo.addClass("active");
+            formBackBtn.addClass("active");
+            formSubmitBtn.text("Selanjutnya");
         }
     });
 
     // Handle next button
-    formSubmitBtn.on('click', function(event) {
+    formSubmitBtn.on("click", function (event) {
         event.preventDefault();
 
-        if (stepMenuOne.hasClass('active')) {
-            const fullname = $('#fullname').val().trim();
-            const telepon = $('#telepon').val().trim();
-            const tglLahir = $('#tgl_lahir').val().trim();
-            const makananFav = $('#makanan_fav').val().trim();
-            const address = $('#address').val().trim();
+        if (stepMenuOne.hasClass("active")) {
+            const fullname = $("#fullname").val().trim();
+            const telepon = $("#telepon").val().trim();
+            const tglLahir = $("#tgl_lahir").val().trim();
+            const jenisKelamin = $('input[name="jenis_kelamin"]:checked').val();
+            const makananFav = $("#makanan_fav").val().trim();
+            const address = $("#address").val().trim();
 
-            if (fullname && telepon && tglLahir && makananFav && address) {
-                stepMenuOne.removeClass('active');
-                stepMenuTwo.addClass('active');
-                stepOne.removeClass('active');
-                stepTwo.addClass('active');
-                formBackBtn.addClass('active');
-                formSubmitBtn.text('Selanjutnya');
+
+            if (fullname && telepon && tglLahir && jenisKelamin && makananFav && address) {
+                stepMenuOne.removeClass("active");
+                stepMenuTwo.addClass("active");
+                stepOne.removeClass("active");
+                stepTwo.addClass("active");
+                formBackBtn.addClass("active");
+                formSubmitBtn.text("Selanjutnya");
             } else {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Mohon Perhatian!',
-                    text: 'Mohon isi semua field yang wajib diisi'
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Mohon isi semua field yang wajib diisi",
                 });
             }
-        } else if (stepMenuTwo.hasClass('active')) {
+
+            if (!fullname) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: 'Isi Nama Lengkap!'
+                });
+                return;
+            }
+
+            // Check phone number validation
+            if (!iti.isValidNumber()) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Perhatikan Inputan Nomor Telepon",
+                    text:
+                        errorMap[iti.getValidationError()] ||
+                        "Mohon masukkan nomor telepon yang valid",
+                });
+                return;
+            }
+
+            // Tambahkan pengecekan spesifik untuk Tanggal Lahir
+            // if (!tglLahir) {
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Mohon Perhatian!',
+            //     text: 'Isi Tanggal lahirmu Kocak!'
+            //     });
+            //     return;
+            // }
+
+            // Tambahkan pengecekan spesifik untuk Makanan Favorit
+            if (!makananFav) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Input Makanan Favoritmu Kocak!",
+                });
+                return;
+            }
+        } else if (stepMenuTwo.hasClass("active")) {
             const email = emailInput.val().trim();
             const password = passwordInput.val().trim();
             const strength = calculatePasswordStrength(password);
 
             if (!email || !password) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Mohon Perhatian!',
-                    text: 'Mohon isi semua field yang wajib diisi'
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Mohon isi semua field yang wajib diisi",
                 });
                 return;
             }
-
-
 
             const isEmailValid = validateEmail(email);
             const isPasswordValid = strength >= 3; // Minimum medium strength required
 
             if (!isEmailValid) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Mohon Perhatian!',
-                    text: 'Format email tidak valid'
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Format email tidak valid",
                 });
                 return;
             }
 
             if (!isPasswordValid) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Mohon Perhatian!',
-                    text: 'Password terlalu lemah. Pastikan memenuhi minimal 3 kriteria keamanan'
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Password terlalu lemah. Pastikan memenuhi minimal 3 kriteria keamanan",
                 });
                 return;
             }
 
-            stepMenuTwo.removeClass('active');
-            stepMenuThree.addClass('active');
-            stepTwo.removeClass('active');
-            stepThree.addClass('active');
-            formBackBtn.addClass('active');
-            formSubmitBtn.text('Daftar !');
-        } else if (stepMenuThree.hasClass('active')) {
-            const confirmBtns = $('.formbold-confirm-btn');
-            let confirmed = false;
+            stepMenuTwo.removeClass("active");
+            stepMenuThree.addClass("active");
+            stepTwo.removeClass("active");
+            stepThree.addClass("active");
+            formBackBtn.addClass("active");
+            formSubmitBtn.text("Daftar !");
+        } else if (stepMenuThree.hasClass("active")) {
+            const characterType = document.getElementById("type_char").value;
 
-            confirmBtns.each(function() {
-                if ($(this).hasClass('active') && $(this).text().trim()
-                    .includes('Yes')) {
-                    confirmed = true;
-                }
-            });
-
-            if (!confirmed) {
+            if (!characterType) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Mohon Perhatian!',
-                    text: 'Silakan pilih konfirmasi terlebih dahulu'
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Silakan pilih tipe karakter Anda!",
                 });
                 return;
             }
 
-            $('form').submit();
+            $("form").submit();
         }
     });
 
     // Handle confirmation buttons
-    $('.formbold-confirm-btn').on('click', function(e) {
+    $(".formbold-confirm-btn").on("click", function (e) {
         e.preventDefault();
-        $('.formbold-confirm-btn').removeClass('active');
-        $(this).addClass('active');
+        $(".formbold-confirm-btn").removeClass("active");
+        $(this).addClass("active");
     });
 });
+
+function selectCharacter(type) {
+    // Reset semua button ke state awal
+    document.querySelectorAll(".formbold-confirm-btn").forEach((btn) => {
+        btn.classList.remove("active");
+    });
+
+    // Aktifkan button yang dipilih
+    const button =
+        type === "Hero"
+            ? document.getElementById("hero-btn")
+            : document.getElementById("villain-btn");
+    button.classList.add("active");
+
+    // Set nilai ke input hidden
+    document.getElementById("type_char").value = type;
+}
