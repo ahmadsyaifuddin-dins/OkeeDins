@@ -690,7 +690,7 @@ h1,h2,h3,h4,h5,h6 {
     font-size: 0.9em;
   }
   .dropdown-menu a {
-    padding-left: 0;
+    /* padding-left: 0; */
   }
   .dropdown-toggle::after {
     position: absolute;
