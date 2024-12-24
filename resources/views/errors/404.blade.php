@@ -241,7 +241,7 @@
         </svg>
         <div class="message">
             <h1>Page Not Found!</h1>
-            <p>Silahkan kembali ke <a href="/">home</a>.</p>
+            <p>Silahkan kembali ke <a href="/">home</a></p>
         </div>
     </div>
 
