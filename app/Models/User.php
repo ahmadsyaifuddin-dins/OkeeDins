@@ -47,6 +47,7 @@ class User extends Authenticatable
         'makanan_fav',
         'photo',
         'role',
+        'type_char',
     ];
 
     /**
