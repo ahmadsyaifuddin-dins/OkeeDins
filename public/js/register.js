@@ -1,6 +1,8 @@
 // Add these CSS rules to your existing <style> section
 const styleSheet = document.createElement("style");
 styleSheet.textContent = `
+
+// ! Start Styling Form Input Validasi
 .formbold-form-input.valid {
 border-color: #4CAF50 !important;
 background-color: #f8fff8 !important;
@@ -10,7 +12,10 @@ background-color: #f8fff8 !important;
 border-color: #FF5252 !important;
 background-color: #fff8f8 !important;
 }
+// ! End Styling Form Input Validasi
 
+
+// ! Start Styling Password 
 .password-requirements {
 font-size: 12px;
 color: #666;
@@ -68,7 +73,6 @@ width: 0;
 .strong { background-color: #2ECC40; width: 80%; }
 .very-strong { background-color: #01FF70; width: 100%; }
 
-
 .password-wrapper {
 position: relative;
 width: 100%;
@@ -96,12 +100,51 @@ font-size: 18px;
 .password-toggle:hover i {
 color: #F44424;
 }
+// ! End Styling Password 
+
+
+//! Start Styling untuk Inputan Telepon
+#valid-msg, #error-msg {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    margin-top: 5px;
+}
+
+#valid-msg.show, #error-msg.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hide {
+    display: none !important;
+}
+
+.telepon-wrapper {
+    position: relative;
+}
+//! End Styling untuk Inputan Telepon
 
 `;
 document.head.appendChild(styleSheet);
 
 $(document).ready(function () {
-    // Inisialisasi IntlTelInput
+
+    // Form elements
+    const formSubmitBtn = $(".formbold-btn");
+    const stepMenuOne = $(".formbold-step-menu1");
+    const stepMenuTwo = $(".formbold-step-menu2");
+    const stepMenuThree = $(".formbold-step-menu3");
+    const stepOne = $(".formbold-form-step-1");
+    const stepTwo = $(".formbold-form-step-2");
+    const stepThree = $(".formbold-form-step-3");
+    const formBackBtn = $(".formbold-back-btn");
+    const emailInput = $("#email");
+    const passwordInput = $("#password");
+
+    //! Kode JS Start Untuk Inputan Telepon
+    // Modifikasi fungsi validasi
     const input = document.querySelector("#telepon");
     const errorMsg = document.querySelector("#error-msg");
     const validMsg = document.querySelector("#valid-msg");
@@ -145,25 +188,33 @@ $(document).ready(function () {
         this.value = this.value.replace(/[^\d]/g, "");
     });
 
-    // Fungsi untuk validasi
-    function reset() {
-        input.classList.remove("error");
+    // Phone input validation functions
+    function resetPhoneValidation() {
+        input.classList.remove("error", "valid", "invalid");
         errorMsg.innerHTML = "";
+        errorMsg.classList.remove("show");
         errorMsg.classList.add("hide");
+        validMsg.classList.remove("show");
         validMsg.classList.add("hide");
     }
 
     function validatePhoneNumber() {
-        reset();
+        resetPhoneValidation();
+
         if (input.value.trim()) {
             if (iti.isValidNumber()) {
                 validMsg.classList.remove("hide");
+                setTimeout(() => validMsg.classList.add("show"), 10);
+                input.classList.add("valid");
+                input.classList.remove("invalid");
                 return true;
             } else {
-                input.classList.add("error");
+                input.classList.remove("valid");
+                input.classList.add("invalid");
                 const errorCode = iti.getValidationError();
                 errorMsg.innerHTML = errorMap[errorCode] || "Nomor tidak valid";
                 errorMsg.classList.remove("hide");
+                setTimeout(() => errorMsg.classList.add("show"), 10);
                 return false;
             }
         }
@@ -171,22 +222,24 @@ $(document).ready(function () {
     }
 
     // Event listeners
-    input.addEventListener("blur", validatePhoneNumber);
-    input.addEventListener("change", validatePhoneNumber);
-    input.addEventListener("keyup", validatePhoneNumber);
+    const phoneInput = document.querySelector("#telepon");
+    phoneInput.addEventListener("blur", validatePhoneNumber);
+    phoneInput.addEventListener("change", validatePhoneNumber);
+    phoneInput.addEventListener("keyup", function (e) {
+        // Validasi hanya jika ada input
+        if (this.value.length > 0) {
+            validatePhoneNumber();
+        } else {
+            // Reset status jika input kosong
+            this.classList.remove("valid", "invalid");
+            document.querySelector("#valid-msg").classList.add("hide");
+            document.querySelector("#error-msg").classList.add("hide");
+        }
+    });
+    //! Kode JS End Untuk Inputan Telepon
 
-    // Form elements
-    const formSubmitBtn = $(".formbold-btn");
-    const stepMenuOne = $(".formbold-step-menu1");
-    const stepMenuTwo = $(".formbold-step-menu2");
-    const stepMenuThree = $(".formbold-step-menu3");
-    const stepOne = $(".formbold-form-step-1");
-    const stepTwo = $(".formbold-form-step-2");
-    const stepThree = $(".formbold-form-step-3");
-    const formBackBtn = $(".formbold-back-btn");
-    const emailInput = $("#email");
-    const passwordInput = $("#password");
 
+    //! Kode JS Start Untuk Inputan Password
     // Add password requirements div
     const passwordRequirements = $("<div>", {
         class: "password-requirements",
@@ -240,58 +293,6 @@ $(document).ready(function () {
         } else {
             input.attr("type", "password");
             $(this).html(showPasswordIcon);
-        }
-    });
-
-    // Email validation function
-    function validateEmail(email) {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (emailPattern.test(email)) {
-            emailInput.removeClass("invalid").addClass("valid");
-            return true;
-        } else {
-            emailInput.removeClass("valid").addClass("invalid");
-            return false;
-        }
-    }
-
-    function checkEmailExistence(email) {
-        return $.ajax({
-            url: "/check-email", // Add this route to your web.php
-            method: "POST",
-            data: {
-                email: email,
-                _token: $('meta[name="csrf-token"]').attr("content"),
-            },
-        });
-    }
-
-    // Modify the email input event handler
-    emailInput.on("input", function () {
-        const email = $(this).val();
-        if (validateEmail(email)) {
-            // Check email existence only if format is valid
-            checkEmailExistence(email).then(function (response) {
-                if (response.exists) {
-                    emailInput.removeClass("valid").addClass("invalid");
-                    // Show warning using SweetAlert2
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Email Sudah Terdaftar",
-                        text: "Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.",
-                        showCancelButton: true,
-                        confirmButtonText: "Login",
-                        cancelButtonText: "Gunakan Email Lain",
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/login";
-                        }
-                    });
-                } else {
-                    emailInput.removeClass("invalid").addClass("valid");
-                }
-            });
         }
     });
 
@@ -357,11 +358,6 @@ $(document).ready(function () {
         return strength >= 3; // Returns true if password is at least medium strength
     }
 
-    // Real-time validation for email
-    emailInput.on("input", function () {
-        validateEmail($(this).val());
-    });
-
     // Real-time validation for password
     passwordInput.on("input", function () {
         const password = $(this).val();
@@ -374,6 +370,68 @@ $(document).ready(function () {
             $(this).removeClass("valid").addClass("invalid");
         }
     });
+    //! Kode JS End Untuk Inputan Password
+
+
+    //! Kode JS Start Untuk Inputan Email
+    // Email validation function
+    function validateEmail(email) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (emailPattern.test(email)) {
+            emailInput.removeClass("invalid").addClass("valid");
+            return true;
+        } else {
+            emailInput.removeClass("valid").addClass("invalid");
+            return false;
+        }
+    }
+
+    function checkEmailExistence(email) {
+        return $.ajax({
+            url: "/check-email", // Add this route to your web.php
+            method: "POST",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+    }
+
+    // Modify the email input event handler
+    emailInput.on("input", function () {
+        const email = $(this).val();
+        if (validateEmail(email)) {
+            // Check email existence only if format is valid
+            checkEmailExistence(email).then(function (response) {
+                if (response.exists) {
+                    emailInput.removeClass("valid").addClass("invalid");
+                    // Show warning using SweetAlert2
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Email Sudah Terdaftar",
+                        text: "Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.",
+                        showCancelButton: true,
+                        confirmButtonText: "Login",
+                        cancelButtonText: "Gunakan Email Lain",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/login";
+                        }
+                    });
+                } else {
+                    emailInput.removeClass("invalid").addClass("valid");
+                }
+            });
+        }
+    });
+
+    // Real-time validation for email
+    emailInput.on("input", function () {
+        validateEmail($(this).val());
+    });
+    //! Kode JS End Untuk Inputan Email
+
 
     // Handle back button
     formBackBtn.on("click", function (event) {
@@ -395,10 +453,13 @@ $(document).ready(function () {
         }
     });
 
+
+    //! Kode JS Start Untuk Menghandle Alert Isian Inputan Dan Button Selanjutnya, dan UI Step Active Color
     // Handle next button
     formSubmitBtn.on("click", function (event) {
         event.preventDefault();
 
+        //! Start Step Menu Pertama 
         if (stepMenuOne.hasClass("active")) {
             const fullname = $("#fullname").val().trim();
             const telepon = $("#telepon").val().trim();
@@ -407,7 +468,7 @@ $(document).ready(function () {
             const makananFav = $("#makanan_fav").val().trim();
             const address = $("#address").val().trim();
 
-
+            //! Kode JS Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
             if (fullname && telepon && tglLahir && jenisKelamin && makananFav && address) {
                 stepMenuOne.removeClass("active");
                 stepMenuTwo.addClass("active");
@@ -422,7 +483,10 @@ $(document).ready(function () {
                     text: "Mohon isi semua field yang wajib diisi",
                 });
             }
+            //! Kode JS End Global
 
+
+            //! Modify SweetAlert2 Kode JS Start Isian Nama Lengkap jika tidak di isi (secara Spesifik)
             if (!fullname) {
                 Swal.fire({
                     icon: "error",
@@ -431,7 +495,10 @@ $(document).ready(function () {
                 });
                 return;
             }
+            //! Modify SweetAlert2 Kode JS End Isian Nama Lengkap jika tidak di isi (secara Spesifik)
 
+
+            //! Modify SweetAlert2 Kode JS Start Isian Number jika tidak di isi (secara Spesifik)        
             // Check phone number validation
             if (!iti.isValidNumber()) {
                 Swal.fire({
@@ -443,7 +510,10 @@ $(document).ready(function () {
                 });
                 return;
             }
+            //! Modify SweetAlert2 Kode JS End Isian Number jika tidak di isi (secara Spesifik)
 
+
+            //! Modify SweetAlert2 Kode JS Start Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
             // Tambahkan pengecekan spesifik untuk Tanggal Lahir
             // if (!tglLahir) {
             // Swal.fire({
@@ -453,7 +523,10 @@ $(document).ready(function () {
             //     });
             //     return;
             // }
+            //! Modify SweetAlert2 Kode JS End Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
 
+
+            //! Modify SweetAlert2 Kode JS Start Isian Makanan Favorit jika tidak di isi (secara Spesifik)
             // Tambahkan pengecekan spesifik untuk Makanan Favorit
             if (!makananFav) {
                 Swal.fire({
@@ -463,11 +536,16 @@ $(document).ready(function () {
                 });
                 return;
             }
+            //! Modify SweetAlert2 Kode JS End Isian Makanan Favorit jika tidak di isi (secara Spesifik)
+            //! End Step Menu Pertama
+
+            //! Start Step Menu Kedua
         } else if (stepMenuTwo.hasClass("active")) {
             const email = emailInput.val().trim();
             const password = passwordInput.val().trim();
             const strength = calculatePasswordStrength(password);
 
+            //! Jika Email dan Password masih kosong lalu pencet tombol selanjutnya maka akan menampilkan alert
             if (!email || !password) {
                 Swal.fire({
                     icon: "error",
@@ -480,6 +558,7 @@ $(document).ready(function () {
             const isEmailValid = validateEmail(email);
             const isPasswordValid = strength >= 3; // Minimum medium strength required
 
+            //! Jika Inputan Email Tidak Valid, maka akan menampilkan alert
             if (!isEmailValid) {
                 Swal.fire({
                     icon: "error",
@@ -489,6 +568,7 @@ $(document).ready(function () {
                 return;
             }
 
+            //! Jika Inputan Password Lemah, maka akan menampilkan alert
             if (!isPasswordValid) {
                 Swal.fire({
                     icon: "error",
@@ -504,6 +584,8 @@ $(document).ready(function () {
             stepThree.addClass("active");
             formBackBtn.addClass("active");
             formSubmitBtn.text("Daftar !");
+            //! End Step Menu Kedua
+
         } else if (stepMenuThree.hasClass("active")) {
             const characterType = document.getElementById("type_char").value;
 
