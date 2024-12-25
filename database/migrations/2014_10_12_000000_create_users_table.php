@@ -12,13 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->increments('user_id'); // Menyesuaikan tipe primary key sebagai int(11) auto increment
+            $table->string('name', 255); // varchar(255) 
+            $table->string('email', 150)->unique(); // varchar(150) unique
+            // $table->timestamp('email_verified_at')->nullable();
+            $table->string('password', 255); // varchar(255) tidak nullable
+            $table->string('alamat', 255); // varchar(255) tidak nullable
+            $table->date('tgl_lahir'); // date, tidak nullable
+            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']); // enum tidak nullable
+            $table->string('telepon', 20); // varchar(20) tidak nullable
+            $table->string('makanan_fav', 200); // varchar(200), tidak nullable
+            $table->enum('role', ['Pelanggan', 'Administrator', 'Kasir'])->nullable(); // enum nullable
+            $table->string('photo', 255)->nullable(); // varchar(255) nullable
+            $table->enum('type_char', ['Hero', 'Villain']); // enum, tidak nullable
+            $table->timestamps(); // created_at dan updated_at sebagai timestamp, tidak nullable
+            $table->string('remember_token', 255)->nullable(false); // varchar(255), tidak nullable
+            $table->string('remember_token', 255)->nullable(false); // varchar(255), tidak nullable
         });
     }
 
