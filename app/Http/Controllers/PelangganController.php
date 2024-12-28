@@ -17,11 +17,12 @@ class PelangganController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            // Cek jika user sedang di halaman profile
-            if (request()->is('pelanggan/profile*')) {
-                return redirect()->route('pelanggan.profile.show');
+            // Jika user sudah login, arahkan sesuai role
+            if (Auth::user()->role === 'Pelanggan') {
+                return redirect()->route('market');
+            } elseif (Auth::user()->role === 'Administrator') {
+                return redirect()->route('admin.dashboard');
             }
-            return redirect()->route('market');
         }
         return view('pelanggan.login');
     }
@@ -36,24 +37,35 @@ class PelangganController extends Controller
 
         // Cek apakah email ada di database
         $user = DB::table('users')
-            ->select('user_id', 'email', 'password')
+            ->select('user_id', 'email', 'password', 'role')
             ->where('email', $request->email)
             ->first();
 
-        if ($user && $user->password === $request->password) {
-            // Login dengan Remember Me
-            auth()->loginUsingId($user->user_id, $request->boolean('remember'));
+        if ($user) {
+            // Jika user ditemukan, cek password dan role
+            if ($request->password === $user->password) { // Sesuaikan hashing password jika menggunakan bcrypt
+                if ($user->role === 'Pelanggan') {
+                    // Login dengan Remember Me
+                    Auth::loginUsingId($user->user_id, $request->boolean('remember'));
+                    return redirect()->route('market')->with('success', 'Login berhasil! Selamat datang di Market');
+                } elseif ($user->role === 'Administrator') {
+                    return back()->withErrors([
+                        'email' => 'Bukan Email untuk Pelanggan!',
+                    ])->withInput();
+                }
+            }
 
-            return redirect()->intended('/')
-                ->with('success', 'Login berhasil! Selamat datang di Market');
+            return back()->withErrors([
+                'password' => 'Password salah!',
+            ])->withInput();
         }
 
-
-        // Jika gagal, kembali ke halaman login
+        // Jika user tidak ditemukan
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            'email' => 'Email tidak ditemukan!',
         ])->onlyInput('email');
     }
+
 
     public function logout(Request $request)
     {
