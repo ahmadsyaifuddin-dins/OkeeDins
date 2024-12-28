@@ -55,6 +55,7 @@
                         <label class="block font-medium text-sm text-gray-700" for="email">Email</label>
                         <input type="email" name="email" placeholder="Email"
                             class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#f84525]" required />
+
                     </div>
 
                     <div class="mt-4">
