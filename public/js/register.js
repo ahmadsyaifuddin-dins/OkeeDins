@@ -4,7 +4,7 @@ styleSheet.textContent = `
 
 .formbold-form-input {
     width: 100%;
-    padding: 13px 40px 13px 22px;
+    padding: 13px 5px 13px 22px;
     height: 44px; 
     border: 1px solid #DDE3EC;
     border-radius: 8px;
