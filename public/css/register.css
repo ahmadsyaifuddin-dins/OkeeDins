@@ -103,7 +103,6 @@ body {
     background: #FFFFFF;
     font-weight: 500;
     font-size: 15px;
-    /* color: #536387; */
     outline: none;
     resize: none;
 }
@@ -114,7 +113,6 @@ body {
 }
 
 .formbold-form-label {
-    color: #07074D;
     font-weight: 500;
     font-size: 14px;
     line-height: 24px;
