@@ -137,7 +137,7 @@ $(document).ready(function () {
     const emailInput = $("#email");
     const passwordInput = $("#password");
 
-    //! Kode JS Start Untuk Inputan Telepon
+    //!Start Untuk Inputan Telepon
     // Modifikasi fungsi validasi
     const input = document.querySelector("#telepon");
     const errorMsg = document.querySelector("#error-msg");
@@ -230,10 +230,10 @@ $(document).ready(function () {
             document.querySelector("#error-msg").classList.add("hide");
         }
     });
-    //! Kode JS End Untuk Inputan Telepon
+    //!End Untuk Inputan Telepon
 
 
-    //! Kode JS Start Untuk Inputan Password
+    //!Start Untuk Inputan Password
     // Add password requirements div
     const passwordRequirements = $("<div>", {
         class: "password-requirements",
@@ -364,10 +364,10 @@ $(document).ready(function () {
             $(this).removeClass("valid").addClass("invalid");
         }
     });
-    //! Kode JS End Untuk Inputan Password
+    //!End Untuk Inputan Password
 
 
-    //! Kode JS Start Untuk Inputan Email
+    //!Start Untuk Inputan Email
     // Email validation function
     function validateEmail(email) {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -424,7 +424,7 @@ $(document).ready(function () {
     emailInput.on("input", function () {
         validateEmail($(this).val());
     });
-    //! Kode JS End Untuk Inputan Email
+    //!End Untuk Inputan Email
 
 
     // Handle back button
@@ -448,7 +448,7 @@ $(document).ready(function () {
     });
 
 
-    //! Kode JS Start Untuk Menghandle Alert Isian Inputan Dan Button Selanjutnya, dan UI Step Active Color
+    //!Start Untuk Menghandle Alert Isian Inputan Dan Button Selanjutnya, dan UI Step Active Color
     // Handle next button
     formSubmitBtn.on("click", function (event) {
         event.preventDefault();
@@ -462,7 +462,7 @@ $(document).ready(function () {
             const makananFav = $("#makanan_fav").val().trim();
             const address = $("#address").val().trim();
 
-            //! Kode JS Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
+            //!Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
             if (fullname && telepon && tglLahir && jenisKelamin && makananFav && address) {
                 stepMenuOne.removeClass("active");
                 stepMenuTwo.addClass("active");
@@ -477,10 +477,10 @@ $(document).ready(function () {
                     text: "Mohon isi semua field yang wajib diisi",
                 });
             }
-            //! Kode JS End Global
+            //!End Global
 
 
-            //! Modify SweetAlert2 Kode JS Start Isian Nama Lengkap jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2Start Isian Nama Lengkap jika tidak di isi (secara Spesifik)
             if (!fullname) {
                 Swal.fire({
                     icon: "error",
@@ -489,10 +489,10 @@ $(document).ready(function () {
                 });
                 return;
             }
-            //! Modify SweetAlert2 Kode JS End Isian Nama Lengkap jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2End Isian Nama Lengkap jika tidak di isi (secara Spesifik)
 
 
-            //! Modify SweetAlert2 Kode JS Start Isian Number jika tidak di isi (secara Spesifik)        
+            //! Modify SweetAlert2Start Isian Number jika tidak di isi (secara Spesifik)        
             // Check phone number validation
             if (!iti.isValidNumber()) {
                 Swal.fire({
@@ -504,10 +504,10 @@ $(document).ready(function () {
                 });
                 return;
             }
-            //! Modify SweetAlert2 Kode JS End Isian Number jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2End Isian Number jika tidak di isi (secara Spesifik)
 
 
-            //! Modify SweetAlert2 Kode JS Start Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2Start Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
             // Tambahkan pengecekan spesifik untuk Tanggal Lahir
             // if (!tglLahir) {
             // Swal.fire({
@@ -517,10 +517,10 @@ $(document).ready(function () {
             //     });
             //     return;
             // }
-            //! Modify SweetAlert2 Kode JS End Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2End Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
 
 
-            //! Modify SweetAlert2 Kode JS Start Isian Makanan Favorit jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2Start Isian Makanan Favorit jika tidak di isi (secara Spesifik)
             // Tambahkan pengecekan spesifik untuk Makanan Favorit
             if (!makananFav) {
                 Swal.fire({
@@ -530,7 +530,7 @@ $(document).ready(function () {
                 });
                 return;
             }
-            //! Modify SweetAlert2 Kode JS End Isian Makanan Favorit jika tidak di isi (secara Spesifik)
+            //! Modify SweetAlert2End Isian Makanan Favorit jika tidak di isi (secara Spesifik)
             //! End Step Menu Pertama
 
             //! Start Step Menu Kedua
