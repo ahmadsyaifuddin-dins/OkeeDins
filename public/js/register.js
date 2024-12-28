@@ -11,7 +11,6 @@ styleSheet.textContent = `
     background: #FFFFFF;
     font-weight: 500;
     font-size: 16px;
-    color: #536387;
     outline: none;
     resize: none;
     box-sizing: border-box;
