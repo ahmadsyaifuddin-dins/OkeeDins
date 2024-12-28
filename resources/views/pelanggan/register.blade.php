@@ -124,10 +124,44 @@
                     <div>
                         <br>
                         <label for="password" class="formbold-form-label">Password</label>
-                        <input type="password" name="password" id="password" class="formbold-form-input" required />
-                        <div class="password-requirements">
-                            <p><b>Minimal 3</b> Validasi kriteria keamanan Terpenuhi</p>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" id="password" class="formbold-form-input"
+                                required />
+                            <button type="button" class="password-toggle">
+                                <!-- Icon akan ditambahkan via JavaScript -->
+                            </button>
                         </div>
+
+                        <!-- Password requirements section is now more organized -->
+                        <div class="password-validation-container">
+
+                            <div class="password-requirements">
+                                <div class="requirement letter">Minimal satu huruf kecil</div>
+                                <div class="requirement length">Minimal 8 karakter</div>
+                                <div class="requirement capital">Minimal satu huruf kapital</div>
+                                <div class="requirement number">Minimal satu angka</div>
+                                <div class="requirement special">Minimal satu karakter spesial</div>
+                                <div class="password-strength-meter">
+                                    <div class="strength-meter-fill"></div>
+                                </div>
+                                <small><b>Minimal 3</b> Kriteria </small>
+                                <div class="password-strength-text"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <br>
+                            <label for="password_confirmation" class="formbold-form-label">Konfirmasi Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                    class="formbold-form-input" required />
+                                <button type="button" class="password-toggle">
+                                    <!-- Removed fa icon, will be replaced by SVG via JavaScript -->
+                                </button>
+                            </div>
+                            <div class="password-match-indicator"></div>
+                        </div>
+
                     </div>
                 </div>
 
