@@ -2,7 +2,6 @@
 const styleSheet = document.createElement("style");
 styleSheet.textContent = `
 
-// ! Start Styling Form Input Validasi
 .formbold-form-input.valid {
 border-color: #4CAF50 !important;
 background-color: #f8fff8 !important;
@@ -12,10 +11,8 @@ background-color: #f8fff8 !important;
 border-color: #FF5252 !important;
 background-color: #fff8f8 !important;
 }
-// ! End Styling Form Input Validasi
 
 
-// ! Start Styling Password 
 .password-requirements {
 font-size: 12px;
 color: #666;
@@ -100,10 +97,8 @@ font-size: 18px;
 .password-toggle:hover i {
 color: #F44424;
 }
-// ! End Styling Password 
 
 
-//! Start Styling untuk Inputan Telepon
 #valid-msg, #error-msg {
     opacity: 0;
     transform: translateY(-10px);
@@ -124,7 +119,6 @@ color: #F44424;
 .telepon-wrapper {
     position: relative;
 }
-//! End Styling untuk Inputan Telepon
 
 `;
 document.head.appendChild(styleSheet);
@@ -583,7 +577,7 @@ $(document).ready(function () {
             stepTwo.removeClass("active");
             stepThree.addClass("active");
             formBackBtn.addClass("active");
-            formSubmitBtn.text("Daftar !");
+            formSubmitBtn.text("GO! Daftar");
             //! End Step Menu Kedua
 
         } else if (stepMenuThree.hasClass("active")) {
