@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Model;
 
-
-class User extends Authenticatable
+class User extends Authenticatable  implements MustVerifyEmail
 {
 
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     // Menyatakan bahwa primary key menggunakan `user_id`
     protected $primaryKey = 'user_id';
