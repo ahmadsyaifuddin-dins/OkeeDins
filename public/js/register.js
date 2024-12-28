@@ -137,100 +137,7 @@ $(document).ready(function () {
     const emailInput = $("#email");
     const passwordInput = $("#password");
 
-    //!Start Untuk Inputan Telepon
-    // Modifikasi fungsi validasi
-    const input = document.querySelector("#telepon");
-    const errorMsg = document.querySelector("#error-msg");
-    const validMsg = document.querySelector("#valid-msg");
 
-    const iti = window.intlTelInput(input, {
-        initialCountry: "id", // Default ke Indonesia
-        preferredCountries: ["id", "my", "sg", "au"], // Negara yang muncul di atas
-        separateDialCode: true,
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    });
-
-    const errorMap = [
-        "Nomor tidak valid",
-        "Kode negara tidak valid",
-        "Nomor terlalu pendek",
-        "Nomor terlalu panjang",
-        "Nomor tidak valid",
-    ];
-
-    // Mencegah input karakter non-angka
-    input.addEventListener("keypress", function (e) {
-        if (e.key.match(/[^0-9]/)) {
-            e.preventDefault();
-        }
-    });
-
-    // Mencegah paste konten non-angka
-    input.addEventListener("paste", function (e) {
-        e.preventDefault();
-        const pastedText = (e.clipboardData || window.clipboardData).getData(
-            "text"
-        );
-        if (pastedText.match(/^\d+$/)) {
-            this.value = pastedText;
-        }
-    });
-
-    // Hapus karakter non-angka jika somehow masuk
-    input.addEventListener("input", function (e) {
-        this.value = this.value.replace(/[^\d]/g, "");
-    });
-
-    // Phone input validation functions
-    function resetPhoneValidation() {
-        input.classList.remove("error", "valid", "invalid");
-        errorMsg.innerHTML = "";
-        errorMsg.classList.remove("show");
-        errorMsg.classList.add("hide");
-        validMsg.classList.remove("show");
-        validMsg.classList.add("hide");
-    }
-
-    function validatePhoneNumber() {
-        resetPhoneValidation();
-
-        if (input.value.trim()) {
-            if (iti.isValidNumber()) {
-                validMsg.classList.remove("hide");
-                setTimeout(() => validMsg.classList.add("show"), 10);
-                input.classList.add("valid");
-                input.classList.remove("invalid");
-                return true;
-            } else {
-                input.classList.remove("valid");
-                input.classList.add("invalid");
-                const errorCode = iti.getValidationError();
-                errorMsg.innerHTML = errorMap[errorCode] || "Nomor tidak valid";
-                errorMsg.classList.remove("hide");
-                setTimeout(() => errorMsg.classList.add("show"), 10);
-                return false;
-            }
-        }
-        return false;
-    }
-
-    // Event listeners
-    const phoneInput = document.querySelector("#telepon");
-    phoneInput.addEventListener("blur", validatePhoneNumber);
-    phoneInput.addEventListener("change", validatePhoneNumber);
-    phoneInput.addEventListener("keyup", function (e) {
-        // Validasi hanya jika ada input
-        if (this.value.length > 0) {
-            validatePhoneNumber();
-        } else {
-            // Reset status jika input kosong
-            this.classList.remove("valid", "invalid");
-            document.querySelector("#valid-msg").classList.add("hide");
-            document.querySelector("#error-msg").classList.add("hide");
-        }
-    });
-    //!End Untuk Inputan Telepon
 
 
     //!Start Untuk Inputan Password
@@ -366,6 +273,100 @@ $(document).ready(function () {
     });
     //!End Untuk Inputan Password
 
+    //!Start Untuk Inputan Telepon
+    // Modifikasi fungsi validasi
+    const input = document.querySelector("#telepon");
+    const errorMsg = document.querySelector("#error-msg");
+    const validMsg = document.querySelector("#valid-msg");
+
+    const iti = window.intlTelInput(input, {
+        initialCountry: "id", // Default ke Indonesia
+        preferredCountries: ["id", "my", "sg", "au"], // Negara yang muncul di atas
+        separateDialCode: true,
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    const errorMap = [
+        "Nomor tidak valid",
+        "Kode negara tidak valid",
+        "Nomor terlalu pendek",
+        "Nomor terlalu panjang",
+        "Nomor tidak valid",
+    ];
+
+    // Mencegah input karakter non-angka
+    input.addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9]/)) {
+            e.preventDefault();
+        }
+    });
+
+    // Mencegah paste konten non-angka
+    input.addEventListener("paste", function (e) {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData(
+            "text"
+        );
+        if (pastedText.match(/^\d+$/)) {
+            this.value = pastedText;
+        }
+    });
+
+    // Hapus karakter non-angka jika somehow masuk
+    input.addEventListener("input", function (e) {
+        this.value = this.value.replace(/[^\d]/g, "");
+    });
+
+    // Phone input validation functions
+    function resetPhoneValidation() {
+        input.classList.remove("error", "valid", "invalid");
+        errorMsg.innerHTML = "";
+        errorMsg.classList.remove("show");
+        errorMsg.classList.add("hide");
+        validMsg.classList.remove("show");
+        validMsg.classList.add("hide");
+    }
+
+    function validatePhoneNumber() {
+        resetPhoneValidation();
+
+        if (input.value.trim()) {
+            if (iti.isValidNumber()) {
+                validMsg.classList.remove("hide");
+                setTimeout(() => validMsg.classList.add("show"), 10);
+                input.classList.add("valid");
+                input.classList.remove("invalid");
+                return true;
+            } else {
+                input.classList.remove("valid");
+                input.classList.add("invalid");
+                const errorCode = iti.getValidationError();
+                errorMsg.innerHTML = errorMap[errorCode] || "Nomor tidak valid";
+                errorMsg.classList.remove("hide");
+                setTimeout(() => errorMsg.classList.add("show"), 10);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // Event listeners
+    const phoneInput = document.querySelector("#telepon");
+    phoneInput.addEventListener("blur", validatePhoneNumber);
+    phoneInput.addEventListener("change", validatePhoneNumber);
+    phoneInput.addEventListener("keyup", function (e) {
+        // Validasi hanya jika ada input
+        if (this.value.length > 0) {
+            validatePhoneNumber();
+        } else {
+            // Reset status jika input kosong
+            this.classList.remove("valid", "invalid");
+            document.querySelector("#valid-msg").classList.add("hide");
+            document.querySelector("#error-msg").classList.add("hide");
+        }
+    });
+    //!End Untuk Inputan Telepon
 
     //!Start Untuk Inputan Email
     // Email validation function
