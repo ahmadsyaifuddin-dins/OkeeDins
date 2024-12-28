@@ -25,9 +25,9 @@ return new class extends Migration
             $table->enum('role', ['Pelanggan', 'Administrator', 'Kasir'])->nullable(); // enum nullable
             $table->string('photo', 255)->nullable(); // varchar(255) nullable
             $table->enum('type_char', ['Hero', 'Villain']); // enum, tidak nullable
+            $table->string('remember_token', 255)->nullable(false); // varchar(255), tidak nullable
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps(); // created_at dan updated_at sebagai timestamp, tidak nullable
-            $table->string('remember_token', 255)->nullable(false); // varchar(255), tidak nullable
-            $table->string('remember_token', 255)->nullable(false); // varchar(255), tidak nullable
         });
     }
 
