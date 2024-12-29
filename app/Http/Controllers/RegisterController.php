@@ -51,7 +51,7 @@ class RegisterController extends Controller
 
         $validator = validator($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:email',
             'password' => 'required|min:8|confirmed',
             'alamat' => 'required',
             'tgl_lahir' => 'required|date',
