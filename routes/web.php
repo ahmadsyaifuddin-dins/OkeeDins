@@ -47,6 +47,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+// Tambahkan di dalam route admin yang memiliki middleware ['auth', 'admin']
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/pengguna', [AdminController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
+        Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
+        Route::get('/pengguna/create', [AdminController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
+        Route::post('/pengguna', [AdminController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
+        Route::get('/pengguna/{id}/edit', [AdminController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
+        Route::put('/pengguna/{id}', [AdminController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
+        Route::delete('/pengguna/{id}', [AdminController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
+    });
+});
+
+
 //! Route untuk guest (belum login)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [PelangganController::class, 'showLoginForm'])->name('login');
