@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -20,21 +22,100 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    // public function administrator()
-    // {
-    //     return view('admin.dashboard');
-    // }
+    public function profilePengguna()
+    {
+        // Double check untuk memastikan yang akses adalah Administrator
+        if (Auth::user()->role !== 'Administrator') {
+            Auth::logout();
+            return redirect()->route('admin.login')
+                ->with('error', 'Anda harus login sebagai Administrator.');
+        }
 
-    // public function pelanggan()
-    // {
-    //     return view('/');
-    // }
+        return view('admin.pengguna.profile');
+    }
 
-    // public function kasir()
-    // {
-    //     return view('kasir.dashboard');
-    // }
 
+    public function indexPengguna()
+    {
+        // $pengguna = DB::table('users')->get(); // Ambil semua pengguna dari tabel users
+        // return view('admin.pengguna.index', compact('pengguna'));
+
+        $pengguna = DB::table('users')->get()->map(function ($user) { // Ambil semua pengguna dari tabel users
+            $user->photo = Storage::exists('public/' . $user->photo) ? $user->photo : 'user.svg';
+            return $user;
+        });
+        return view('admin.pengguna.index', compact('pengguna'));
+    }
+
+    public function createPengguna()
+    {
+        return view('admin.pengguna.create'); // Tampilkan form tambah pengguna
+    }
+
+    public function storePengguna(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'tgl_lahir' => 'required|date',
+            'jenis_kelamin' => 'required',
+            'telepon' => 'required',
+            'makanan_fav' => 'required',
+            'type_char' => 'required|in:Hero,Villain',
+        ]);
+
+        DB::table('users')->insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            // 'password' => bcrypt($request->password), // Hash password
+            'password' => $request->password, // No Hash password
+            'role' => $request->role ?? 'Pelanggan', // Default role pelanggan
+            'tgl_lahir' => $request->tgl_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'telepon' => $request->telepon,
+            'makanan_fav' => $request->makanan_fav,
+            'type_char' => $request->type_char,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'remember_token' => $request->remember_token,
+        ]);
+
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
+    }
+
+    public function editPengguna($user_id)
+    {
+        $pengguna = DB::table('users')->where('user_id', $user_id)->first(); // Gunakan 'user_id' bukan 'id'
+        if (!$pengguna) {
+            abort(404);
+        }
+
+        return view('admin.pengguna.edit', compact('pengguna'));
+    }
+
+    public function updatePengguna(Request $request, $user_id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,$user_id",
+        ]);
+
+        DB::table('users')->where('id', $user_id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
+    }
+
+    public function destroyPengguna($user_id)
+    {
+        DB::table('users')->where('user_id', $user_id)->delete();
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus.');
+    }
 
 
     public function login()
