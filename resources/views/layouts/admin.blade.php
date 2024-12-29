@@ -1,289 +1,894 @@
-<!-- resources/views/layouts/admin.blade.php -->
-
 <!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{{ asset('cleopatra/src/img/fav.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('cleopatra/dist/css/style.css') }}">
-    <title>Welcome Administrator</title>
+    @include('layouts.admin_app')
 </head>
 
-<body class="bg-gray-100">
+<body class="g-sidenav-show bg-gray-100">
 
     <!-- start navbar -->
-    <div
-        class="md:fixed md:w-full md:top-0 md:z-20 flex flex-row flex-wrap items-center bg-white p-6 border-b border-gray-300">
-        <!-- logo -->
-        <div class="flex-none w-56 flex flex-row items-center">
-            <img src="{{ asset('cleopatra/src/img/fav.png') }}" class="w-10 flex-none">
-            <strong class="capitalize ml-1 flex-1">Food Fusion Administrator</strong>
-            <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
-                <i class="fad fa-list-ul"></i>
-            </button>
-        </div>
-        <!-- end logo -->
-
-        <!-- navbar content toggle -->
-        <button id="navbarToggle" class="hidden md:block md:fixed right-0 mr-6">
-            <i class="fad fa-chevron-double-down"></i>
-        </button>
-        <!-- end navbar content toggle -->
-
-        <!-- navbar content -->
-        <div id="navbar"
-            class="animated md:hidden md:fixed md:top-0 md:w-full md:left-0 md:mt-16 md:border-t md:border-b md:border-gray-200 md:p-10 md:bg-white flex-1 pl-3 flex flex-row flex-wrap justify-between items-center md:flex-col md:items-center">
-            <!-- left -->
-            <div
-                class="text-gray-600 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
-                <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
-                        class="fad fa-envelope-open-text"></i></a>
-                <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
-                        class="fad fa-comments-alt"></i></a>
-                <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
-                        class="fad fa-check-circle"></i></a>
-                <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
-                        class="fad fa-calendar-exclamation"></i></a>
-            </div>
-            <!-- end left -->
-
-            <!-- right -->
-            <div class="flex flex-row-reverse items-center">
-                {{-- @if (Auth::Check()) --}}
-                <!-- user -->
-                <div class="dropdown relative md:static">
-                    <button class="menu-btn focus:outline-none focus:shadow-outline flex flex-wrap items-center">
-                        <div class="w-8 h-8 overflow-hidden rounded-full">
-                            <img class="w-full h-full object-cover" src="{{ asset('cleopatra/src/img/user.svg') }}">
-                        </div>
-                        <div class="ml-2 capitalize flex ">
-                            <h1 class="text-sm text-gray-800 font-semibold m-0 p-0 leading-none">
-                                {{ Auth::user()->name }}</h1>
-                            <i class="fad fa-chevron-down ml-2 text-xs leading-none"></i>
-                        </div>
-                    </button>
-                    <div
-                        class="text-gray-500 menu hidden md:mt-10 md:w-full rounded bg-white shadow-md absolute z-20 right-0 w-40 mt-5 py-2 animated faster">
-                        <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
-                            href="#">
-                            <i class="fad fa-user-edit text-xs mr-1"></i>
-                            edit my profile
-                        </a>
-                        <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
-                            href="#">
-                            <i class="fad fa-inbox-in text-xs mr-1"></i>
-                            my inbox
-                        </a>
-                        <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
-                            href="#">
-                            <i class="fad fa-badge-check text-xs mr-1"></i>
-                            tasks
-                        </a>
-
-                        <hr>
-                        <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
-                            href="#"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fad fa-user-times text-xs mr-1"></i>
-                            log out
-                        </a>
-                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
-                            style="display: none;">
-                            @csrf
-                        </form>
-
-                    </div>
-                </div>
-                <!-- end user -->
-                {{-- @endif --}}
-            </div>
-            <!-- end right -->
-        </div>
-        <!-- end navbar content -->
-    </div>
+    @include('components.admin-navbar')
     <!-- end navbar -->
 
-    <!-- start wrapper -->
-    <div class="h-screen flex flex-row flex-wrap">
-        <!-- start sidebar -->
-        <div id="sideBar"
-            class="relative flex flex-col flex-wrap bg-white border-r border-gray-300 p-6 flex-none w-64 md:-ml-64 md:fixed md:top-0 md:z-30 md:h-screen md:shadow-xl animated faster">
-            <div class="flex flex-col">
-                <div class="text-right hidden md:block mb-4">
-                    <button id="sideBarHideBtn">
-                        <i class="fad fa-times-circle"></i>
-                    </button>
+    <!-- start sidebar -->
+    @include('components.admin-sidebar')
+    <!-- end sidebar -->
+
+    <!-- start main -->
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="ms-3">
+                    <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
+                    <p class="mb-4">
+                        Check the sales, value and bounce rate by country.
+                    </p>
                 </div>
-                <p class="uppercase text-xs text-gray-600 mb-4 tracking-wider">homes</p>
-                <a href="{{ route('admin.dashboard') }}"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-chart-pie text-xs mr-2"></i>
-                    Analytics dashboard
-                </a>
-                <a href="#"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-shopping-cart text-xs mr-2"></i>
-                    ecommerce dashboard
-                </a>
-                <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Data Center</p>
-
-                <a href="./email.html"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-user text-xs mr-2"></i>
-                    Pengguna
-                </a>
-
-                <a href="./email.html"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-table text-xs mr-2"></i>
-                    Kategori
-                </a>
-
-                <a href="./email.html"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-burger-soda text-xs mr-2"></i>
-                    Produk
-                </a>
-
-                <a href="#"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-shopping-cart text-xs mr-2"></i>
-                    {{-- <i class="fad fa-shield-check text-xs mr-2"></i> --}}
-                    Pesanan
-                </a>
-                <a href="#"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-calendar-edit text-xs mr-2"></i>
-                    Kalendar
-                </a>
-                <a href="#"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-wallet text-xs mr-2"></i>
-                    {{-- <i class="fad fa-file-invoice-dollar text-xs mr-2"></i> --}}
-                    Pembayaran
-                </a>
-                <a href="#"
-                    class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                    <i class="fad fa-folder-open text-xs mr-2"></i>
-                    file manager
-                </a>
-
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-2 ps-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-sm mb-0 text-capitalize">Today's Money</p>
+                                    <h4 class="mb-0">Rp. 53k</h4>
+                                </div>
+                                <div
+                                    class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                    <i class="material-symbols-rounded opacity-10">weekend</i>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-2 ps-3">
+                            <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+55% </span>than last
+                                week</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-2 ps-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-sm mb-0 text-capitalize">Today's Users</p>
+                                    <h4 class="mb-0">2300</h4>
+                                </div>
+                                <div
+                                    class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                    <i class="material-symbols-rounded opacity-10">person</i>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-2 ps-3">
+                            <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+3% </span>than last
+                                month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-2 ps-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-sm mb-0 text-capitalize">Ads Views</p>
+                                    <h4 class="mb-0">3,462</h4>
+                                </div>
+                                <div
+                                    class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                    <i class="material-symbols-rounded opacity-10">leaderboard</i>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-2 ps-3">
+                            <p class="mb-0 text-sm"><span class="text-danger font-weight-bolder">-2% </span>than
+                                yesterday</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-header p-2 ps-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-sm mb-0 text-capitalize">Sales</p>
+                                    <h4 class="mb-0">Rp. 103,000</h4>
+                                </div>
+                                <div
+                                    class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                    <i class="material-symbols-rounded opacity-10">weekend</i>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-2 ps-3">
+                            <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+5% </span>than
+                                yesterday</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-0 ">Website Views</h6>
+                            <p class="text-sm ">Last Campaign Performance</p>
+                            <div class="pe-2">
+                                <div class="chart">
+                                    <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> campaign sent 2 days ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h6 class="mb-0 "> Daily Sales </h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today sales.
+                            </p>
+                            <div class="pe-2">
+                                <div class="chart">
+                                    <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-0 ">Completed Tasks</h6>
+                            <p class="text-sm ">Last Campaign Performance</p>
+                            <div class="pe-2">
+                                <div class="chart">
+                                    <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm">just updated</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <div class="row">
+                                <div class="col-lg-6 col-7">
+                                    <h6>Projects</h6>
+                                    <p class="text-sm mb-0">
+                                        <i class="fa fa-check text-info" aria-hidden="true"></i>
+                                        <span class="font-weight-bold ms-1">30 done</span> this month
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-5 my-auto text-end">
+                                    <div class="dropdown float-lg-end pe-4">
+                                        <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v text-secondary"></i>
+                                        </a>
+                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5"
+                                            aria-labelledby="dropdownTable">
+                                            <li><a class="dropdown-item border-radius-md"
+                                                    href="javascript:;">Action</a></li>
+                                            <li><a class="dropdown-item border-radius-md" href="javascript:;">Another
+                                                    action</a></li>
+                                            <li><a class="dropdown-item border-radius-md"
+                                                    href="javascript:;">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Companies</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Members</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Budget</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Completion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="../assets/img/small-logos/logo-xd.svg"
+                                                            class="avatar avatar-sm me-3" alt="xd">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Material XD Version</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Ryan Tompson">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-1.jpg') }}"
+                                                            alt="team1">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Romina Hadid">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-2.jpg') }}"
+                                                            alt="team2">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Alexander Smith">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-3.jpg') }}"
+                                                            alt="team3">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Jessica Doe">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="team4">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> $14,000 </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">60%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info w-60"
+                                                            role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="{{ asset('material-dashboard/assets/img/small-logos/logo-atlassian.svg') }}"
+                                                            class="avatar avatar-sm me-3" alt="atlassian">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Add Progress Track</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Romina Hadid">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-2.jpg') }}"
+                                                            alt="team5">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Jessica Doe">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="team6">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> $3,000 </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">10%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info w-10"
+                                                            role="progressbar" aria-valuenow="10" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="../assets/img/small-logos/logo-slack.svg"
+                                                            class="avatar avatar-sm me-3" alt="team7">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Romina Hadid">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-3.jpg') }}"
+                                                            alt="team8">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Jessica Doe">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-1.jpg') }}"
+                                                            alt="team9">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> Not set </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">100%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-success w-100"
+                                                            role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="../assets/img/small-logos/logo-spotify.svg"
+                                                            class="avatar avatar-sm me-3" alt="spotify">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Ryan Tompson">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="user1">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Romina Hadid">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-3.jpg') }}"
+                                                            alt="user2">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Alexander Smith">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="user3">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Jessica Doe">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-1.jpg') }}"
+                                                            alt="user4">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> $20,500 </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">100%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-success w-100"
+                                                            role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="../assets/img/small-logos/logo-jira.svg"
+                                                            class="avatar avatar-sm me-3" alt="jira">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Ryan Tompson">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="user5">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> $500 </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">25%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info w-25"
+                                                            role="progressbar" aria-valuenow="25" aria-valuemin="0"
+                                                            aria-valuemax="25"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="../assets/img/small-logos/logo-invision.svg"
+                                                            class="avatar avatar-sm me-3" alt="invision">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="avatar-group mt-2">
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Ryan Tompson">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-1.jpg') }}"
+                                                            alt="user6">
+                                                    </a>
+                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Jessica Doe">
+                                                        <img src="{{ asset('material-dashboard/assets/img/team-4.jpg') }}"
+                                                            alt="user7">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-xs font-weight-bold"> $2,000 </span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="progress-wrapper w-75 mx-auto">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-xs font-weight-bold">40%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info w-40"
+                                                            role="progressbar" aria-valuenow="40" aria-valuemin="0"
+                                                            aria-valuemax="40"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header pb-0">
+                            <h6>Orders overview</h6>
+                            <p class="text-sm">
+                                <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
+                                <span class="font-weight-bold">24%</span> this month
+                            </p>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="timeline timeline-one-side">
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i
+                                            class="material-symbols-rounded text-success text-gradient">notifications</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">$2400, Design changes</h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">22 DEC 7:20 PM</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="material-symbols-rounded text-danger text-gradient">code</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">New order #1832412</h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 11 PM</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="material-symbols-rounded text-info text-gradient">shopping_cart</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Server payments for April
+                                        </h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 9:34 PM</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="material-symbols-rounded text-warning text-gradient">credit_card</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">New card added for order
+                                            #4395133</h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">20 DEC 2:20 AM</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="material-symbols-rounded text-primary text-gradient">key</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Unlock packages for
+                                            development</h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">18 DEC 4:54 AM</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block">
+                                    <span class="timeline-step">
+                                        <i class="material-symbols-rounded text-dark text-gradient">payments</i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">New order #9583120</h6>
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">17 DEC</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer py-4  ">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-lg-between">
+                        <div class="col-lg-6 mb-lg-0 mb-4">
+                            <div class="copyright text-center text-sm text-muted text-lg-start">
+                                ©
+                                <script>
+                                    document.write(new Date().getFullYear())
+                                </script>,
+                                made with <i class="fa fa-heart"></i> by
+                                <a href="https://www.creative-tim.com" class="font-weight-bold"
+                                    target="_blank">Creative Tim</a>
+                                for a better web.
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                                <li class="nav-item">
+                                    <a href="https://www.creative-tim.com" class="nav-link text-muted"
+                                        target="_blank">Creative Tim</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted"
+                                        target="_blank">About Us</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="https://www.creative-tim.com/blog" class="nav-link text-muted"
+                                        target="_blank">Blog</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted"
+                                        target="_blank">License</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-        <!-- end sidebar -->
+    </main>
 
-        <!-- start content -->
-        <div class="bg-gray-100 flex-1 p-6 md:mt-16">
-            <div class="mt-4">
-                @yield('content')
-            </div>
-            <!-- General Report -->
-            <div class="grid grid-cols-4 gap-6 xl:grid-cols-1">
+    <!--   Core JS Files   -->
+    <script src="{{ asset('material-dashboard/assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/chartjs.min.js') }}"></script>
 
-                <!-- Card for Total Products -->
-                <div class="report-card">
-                    <br>
-                    <div class="card">
-                        <div class="card-body flex flex-col">
-                            <div class="flex flex-row justify-between items-center">
-                                <div class="h6 text-yellow-600 fad fa-sitemap"></div>
-                                <span class="rounded-full text-white badge bg-teal-400 text-xs">72%<i
-                                        class="fal fa-chevron-up ml-1"></i></span>
-                            </div>
-                            <div class="mt-8">
-                                <h1 class="h5 num-4">1,500</h1>
-                                <p>total Products</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"></div>
-                </div>
+    <script>
+        var ctx = document.getElementById("chart-bars").getContext("2d");
 
-                <!-- card sales-->
-                <div class="report-card">
-                    <br>
-                    <div class="card">
-                        <div class="card-body flex flex-col">
-                            <div class="flex flex-row justify-between items-center">
-                                <div class="h6 text-indigo-700 fad fa-shopping-cart"></div>
-                                <span class="rounded-full text-white badge bg-teal-400 text-xs">12%<i
-                                        class="fal fa-chevron-up ml-1"></i></span>
-                            </div>
-                            <div class="mt-8">
-                                <h1 class="h5 num-4"></h1>
-                                <p>items sales</p>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"></div>
-                </div>
-                <!-- end card -->
-                <!-- Additional cards can be added here -->
-
-                <!-- Card for New Orders -->
-                <div class="report-card">
-                    <br>
-                    <div class="card">
-                        <div class="card-body flex flex-col">
-                            <div class="flex flex-row justify-between items-center">
-                                <div class="h6 text-red-700 fad fa-store"></div>
-                                <span class="rounded-full text-white badge bg-red-400 text-xs">6%<i
-                                        class="fal fa-chevron-down ml-1"></i></span>
-                            </div>
-                            <div class="mt-8">
-                                <h1 class="h5 num-4">567</h1>
-                                <p>new orders</p>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"></div>
-                </div>
-
-                <!-- Card for New Visitors -->
-                <div class="report-card">
-                    <br>
-                    <div class="card">
-                        <div class="card-body flex flex-col">
-                            <div class="flex flex-row justify-between items-center">
-                                <div class="h6 text-green-700 fad fa-users"></div>
-                                <span class="rounded-full text-white badge bg-teal-400 text-xs">150%<i
-                                        class="fal fa-chevron-up ml-1"></i></span>
-                            </div>
-                            <div class="mt-8">
-                                <h1 class="h5 num-4">2,345</h1>
-                                <p>new Visitors</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"></div>
-                </div>
-                <!-- End Card -->
-                <!-- End General Report -->
-
-                <!-- Additional content sections can be added here -->
-            </div>
-            <!-- end content -->
-        </div>
-        <!-- end wrapper -->
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["M", "T", "W", "T", "F", "S", "S"],
+                datasets: [{
+                    label: "Views",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    backgroundColor: "#43A047",
+                    data: [50, 45, 22, 28, 50, 60, 76],
+                    barThickness: 'flex'
+                }, ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: '#e5e5e5'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 500,
+                            beginAtZero: true,
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                lineHeight: 2
+                            },
+                            color: "#737373"
+                        },
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#737373',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
 
 
+        var ctx2 = document.getElementById("chart-line").getContext("2d");
 
+        new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+                datasets: [{
+                    label: "Sales",
+                    tension: 0,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: "#43A047",
+                    pointBorderColor: "transparent",
+                    borderColor: "#43A047",
+                    backgroundColor: "transparent",
+                    fill: true,
+                    data: [120, 230, 130, 440, 250, 360, 270, 180, 90, 300, 310, 220],
+                    maxBarThickness: 6
 
-        <!-- Additional content sections can be added here -->
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                const fullMonths = ["January", "February", "March", "April", "May", "June",
+                                    "July", "August", "September", "October", "November", "December"
+                                ];
+                                return fullMonths[context[0].dataIndex];
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [4, 4],
+                            color: '#e5e5e5'
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#737373',
+                            padding: 10,
+                            font: {
+                                size: 12,
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#737373',
+                            padding: 10,
+                            font: {
+                                size: 12,
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
 
-        <!-- script -->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-        <script src="{{ asset('cleopatra/dist/js/scripts.js') }}"></script>
-        <!-- end script -->
+        var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+        new Chart(ctx3, {
+            type: "line",
+            data: {
+                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [{
+                    label: "Tasks",
+                    tension: 0,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: "#43A047",
+                    pointBorderColor: "transparent",
+                    borderColor: "#43A047",
+                    backgroundColor: "transparent",
+                    fill: true,
+                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                    maxBarThickness: 6
+
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [4, 4],
+                            color: '#e5e5e5'
+                        },
+                        ticks: {
+                            display: true,
+                            padding: 10,
+                            color: '#737373',
+                            font: {
+                                size: 14,
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [4, 4]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#737373',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
+    </script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="{{ asset('material-dashboard/assets/js/material-dashboard.min.js') }}"></script>
 
 </body>
 
