@@ -19,8 +19,8 @@
                             <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
                                 <h6 class="text-white text-capitalize ps-3">Data Pengguna</h6>
                             </div>
-                            <a href="{{ route('admin.pengguna.create') }}" class="btn btn-primary btn-sm me-3 mt-3"
-                                style="background-color: #5e72e4; border-color: #5e72e4;">
+                            <a href="{{ route('admin.pengguna.create') }}"
+                                class=" btn bg-gradient-dark btn-md me-3 mt-3">
                                 <i class="material-symbols-rounded me-1" style="font-size: 18px;">person_add</i> Tambah
                                 Data Pengguna </a>
                         </div>
@@ -99,8 +99,18 @@
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <span
-                                                        class="badge badge-sm {{ $user->role == 'Administrator' ? 'bg-gradient-primary' : 'bg-gradient-secondary' }}">{{ $user->role }}</span>
+                                                        class="badge badge-sm 
+                                                        {{ $user->role == 'Administrator'
+                                                            ? 'bg-gradient-primary'
+                                                            : ($user->role == 'Kasir'
+                                                                ? 'bg-gradient-warning'
+                                                                : ($user->role == 'Pelanggan'
+                                                                    ? 'bg-gradient-info'
+                                                                    : 'bg-gradient-secondary')) }}">
+                                                        {{ $user->role }}
+                                                    </span>
                                                 </td>
+
                                                 <td class="align-middle text-center">
                                                     <span
                                                         class="text-secondary text-xs font-weight-bold">{{ $user->jenis_kelamin }}</span>
@@ -159,44 +169,7 @@
                 </div>
             </div>
 
-            <footer class="footer py-4  ">
-                <div class="container-fluid">
-                    <div class="row align-items-center justify-content-lg-between">
-                        <div class="col-lg-6 mb-lg-0 mb-4">
-                            <div class="copyright text-center text-sm text-muted text-lg-start">
-                                ©
-                                <script>
-                                    document.write(new Date().getFullYear())
-                                </script>,
-                                made with <i class="fa fa-heart"></i> by
-                                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative
-                                    Tim</a>
-                                for a better web.
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com" class="nav-link text-muted"
-                                        target="_blank">Creative Tim</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted"
-                                        target="_blank">About Us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com/blog" class="nav-link text-muted"
-                                        target="_blank">Blog</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted"
-                                        target="_blank">License</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            @include('components.footer')
         </div>
     </main>
     @include('components.function')

@@ -29,13 +29,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('admin.pengguna.index') }} ">
+                <a class="nav-link {{ Request::routeIs('admin.kategori.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}"
+                    href="{{ route('admin.kategori.index') }} ">
                     <i class="material-symbols-rounded opacity-5">category</i>
                     <span class="nav-link-text ms-1">Kategori Produk</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('admin.pengguna.index') }} ">
+                <a class="nav-link {{ Request::routeIs('admin.produk.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}"
+                    href="{{ route('admin.produk.index') }} ">
                     <i class="material-symbols-rounded opacity-5">trolley</i>
                     <span class="nav-link-text ms-1">Produk</span>
                 </a>

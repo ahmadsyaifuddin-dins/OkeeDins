@@ -1,102 +1,203 @@
-<!-- resources/views/admin/pengguna/edit.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Edit Pengguna</title>
-    <link rel="shortcut icon" href="{{ asset('cleopatra/src/img/fav.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('cleopatra/dist/css/style.css') }}">
+    @include('layouts.admin_app')
 </head>
 
-<body class="bg-gray-100">
-    <!-- start navbar -->
-    @include('components.admin-navbar')
-    <!-- end navbar -->
-
-    <!-- start wrapper -->
-    <div class="h-screen flex md:flex-row">
-        <!-- start Sidebar -->
-        @include('components.admin-sidebar')
-        <!-- end sidebar -->
-
-        <!-- Start Form Edit Pengguna -->
-        <div class="flex-1 p-6 mt-32 md:mt-16">
-            <div class="card w-full">
-                <div class="card-header">Edit Pengguna</div>
-                <div class="card-body">
-                    <!-- Form Edit Pengguna -->
-                    <form action="{{ route('admin.pengguna.update', $pengguna->user_id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <!-- Input Nama Pengguna -->
-                        <div class="mb-4">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                            <input type="text" name="name" id="name"
-                                value="{{ old('name', $pengguna->name) }}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                required>
-                            @error('name')
-                                <p class="text-sm text-red-500">{{ $message }}</p>
-                            @enderror
+<body class="g-sidenav-show bg-gray-100">
+    @include('components.admin-sidebar')
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        @include('components.admin-navbar')
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                                <h6 class="text-white text-capitalize ps-3">Edit Data Pengguna</h6>
+                            </div>
                         </div>
+                        <div class="card-body px-4 pb-2">
+                            <form action="{{ route('admin.pengguna.update', $pengguna->user_id) }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="name" class="mb-2">Nama Pengguna</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="name" id="name" class="form-control"
+                                                    value="{{ $pengguna->name }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="email" class="mb-2">Email</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="email" name="email" id="email" class="form-control"
+                                                    value="{{ $pengguna->email }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <!-- Input Email Pengguna -->
-                        <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" name="email" id="email"
-                                value="{{ old('email', $pengguna->email) }}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                required>
-                            @error('email')
-                                <p class="text-sm text-red-500">{{ $message }}</p>
-                            @enderror
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="password" class="mb-2">Password Baru (Kosongkan jika tidak
+                                                diubah)</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="password" name="password" id="password"
+                                                    class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="role" class="mb-2">Role Pengguna</label>
+                                            <div class="input-group input-group-outline">
+                                                <select name="role" id="role" class="form-control" required>
+                                                    <option value="Pelanggan"
+                                                        {{ $pengguna->role == 'Pelanggan' ? 'selected' : '' }}>Pelanggan
+                                                    </option>
+                                                    <option value="Administrator"
+                                                        {{ $pengguna->role == 'Administrator' ? 'selected' : '' }}>
+                                                        Administrator
+                                                    </option>
+                                                    <option value="Kasir"
+                                                        {{ $pengguna->role == 'Kasir' ? 'selected' : '' }}>
+                                                        Kasir
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="jenis_kelamin" class="mb-2">Jenis Kelamin</label>
+                                            <div class="input-group input-group-outline">
+                                                <select name="jenis_kelamin" id="jenis_kelamin" class="form-control"
+                                                    required>
+                                                    <option value="Laki-laki"
+                                                        {{ $pengguna->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>
+                                                        Laki-laki</option>
+                                                    <option value="Perempuan"
+                                                        {{ $pengguna->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
+                                                        Perempuan</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="tgl_lahir" class="mb-2">Tanggal Lahir</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="date" name="tgl_lahir" id="tgl_lahir"
+                                                    class="form-control" value="{{ $pengguna->tgl_lahir }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="telepon" class="mb-2">Telepon</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="telepon" id="telepon" class="form-control"
+                                                    value="{{ $pengguna->telepon }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="makanan_fav" class="mb-2">Makanan Favorit</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="makanan_fav" id="makanan_fav"
+                                                    class="form-control" value="{{ $pengguna->makanan_fav }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="type_char" class="mb-2">Tipe Karakter</label>
+                                            <div class="input-group input-group-outline">
+                                                <select name="type_char" id="type_char" class="form-control"
+                                                    required>
+                                                    <option value="Hero"
+                                                        {{ $pengguna->type_char == 'Hero' ? 'selected' : '' }}>
+                                                        Hero</option>
+                                                    <option value="Villain"
+                                                        {{ $pengguna->type_char == 'Villain' ? 'selected' : '' }}>
+                                                        Villain
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="photo" class="mb-2">Foto Profil</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="file" name="photo" id="photo"
+                                                    class="form-control">
+                                            </div>
+                                            @if ($pengguna->photo)
+                                                <div class="mt-2">
+                                                    <img src="{{ asset('storage/' . $pengguna->photo) }}"
+                                                        alt="Current photo"
+                                                        class="avatar avatar-md me-3 border-radius-lg">
+                                                    <span class="text-sm">Current photo</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn bg-gradient-dark">Update</button>
+                                        <a href="{{ route('admin.pengguna.index') }}"
+                                            class="btn btn-outline-dark">Kembali</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <!-- Input Role Pengguna -->
-                        <div class="mb-4">
-                            <label for="role" class="block text-sm font-medium text-gray-700">Role Pengguna</label>
-                            <select name="role" id="role"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600">
-                                <option value="Administrator"
-                                    {{ $pengguna->role === 'Administrator' ? 'selected' : '' }}>Administrator</option>
-                                <option value="Pelanggan" {{ $pengguna->role === 'Pelanggan' ? 'selected' : '' }}>
-                                    Pelanggan</option>
-                            </select>
-                            @error('role')
-                                <p class="text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Tombol Submit -->
-                        <div class="mb-4">
-                            <button type="submit"
-                                class="w-full bg-teal-600 text-black py-2 rounded-md hover:bg-teal-700 transition duration-200">
-                                Perbarui Pengguna
-                            </button>
-                        </div>
-
-                    </form>
-                    <!-- End Form Edit Pengguna -->
-
-                    <!-- Tombol Menuju Form Tambah Pengguna -->
-                    <div class="mt-6 text-center">
-                        <a href="{{ route('admin.pengguna.create') }}"
-                            class="w-full bg-blue-600 text-black py-2 rounded-md hover:bg-blue-700 transition duration-200">
-                            Tambah Pengguna Baru
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end wrapper -->
-    </div>
+    </main>
+    @include('components.function')
+    <!--   Core JS Files   -->
+    <script src="{{ asset('material-dashboard/assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('material-dashboard/assets/js/plugins/chartjs.min.js') }}"></script>
 
-    <script src="{{ asset('cleopatra/dist/js/scripts.js') }}"></script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="{{ asset('material-dashboard/assets/js/material-dashboard.min.js') }}"></script>
 </body>
 
 </html>

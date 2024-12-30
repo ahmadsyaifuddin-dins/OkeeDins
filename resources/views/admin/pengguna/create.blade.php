@@ -7,101 +7,116 @@
 
 <body class="g-sidenav-show bg-gray-100">
     @include('components.admin-sidebar')
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         @include('components.admin-navbar')
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-gradient-dark text-white">
-                            <h6 class="text-white text-capitalize">Tambah Data Pengguna</h6>
+                    <div class="card my-4">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                                <h6 class="text-white text-capitalize ps-3">Tambah Data Pengguna</h6>
+                            </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body px-4 pb-2">
                             <form action="{{ route('admin.pengguna.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
-                                    <!-- Nama -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="name" class="form-label">Nama Pengguna</label>
-                                        <input type="text" name="name" id="name" class="form-control"
-                                            placeholder="Masukkan Nama" required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="name" class="form-label">Nama Pengguna</label>
+                                            <input type="text" name="name" id="name" class="form-control"
+                                                required>
+                                        </div>
                                     </div>
-                                    <!-- Email -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control"
-                                            placeholder="Masukkan Email" required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" id="email" class="form-control"
+                                                required>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
-                                    <!-- Password -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input type="password" name="password" id="password" class="form-control"
-                                            placeholder="Masukkan Password" required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" name="password" id="password" class="form-control"
+                                                required>
+                                        </div>
                                     </div>
-                                    <!-- Role -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="role" class="form-label">Role Pengguna</label>
-                                        <select name="role" id="role" class="form-select" required>
-                                            <option value="Administrator">Administrator</option>
-                                            <option value="Pelanggan">Pelanggan</option>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <select name="role" id="role" class="form-control" required>
+                                                <option value="">Pilih Role Pengguna</option>
+                                                <option value="Pelanggan">Pelanggan</option>
+                                                <option value="Administrator">Administrator</option>
+                                                <option value="Kasir">Kasir</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
-                                    <!-- Jenis Kelamin -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
-                                            <option value="Laki-laki">Laki-laki</option>
-                                            <option value="Perempuan">Perempuan</option>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <select name="jenis_kelamin" id="jenis_kelamin" class="form-control"
+                                                required>
+                                                <option value="">Pilih Jenis Kelamin</option>
+                                                <option value="Laki-laki">Laki-laki</option>
+                                                <option value="Perempuan">Perempuan</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <!-- Tanggal Lahir -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                        <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control"
-                                            required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control"
+                                                required>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
-                                    <!-- Telepon -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="telepon" class="form-label">Telepon</label>
-                                        <input type="text" name="telepon" id="telepon" class="form-control"
-                                            placeholder="Masukkan Telepon" required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="telepon" class="form-label">Telepon</label>
+                                            <input type="text" name="telepon" id="telepon" class="form-control"
+                                                required>
+                                        </div>
                                     </div>
-                                    <!-- Makanan Favorit -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="makanan_fav" class="form-label">Makanan Favorit</label>
-                                        <input type="text" name="makanan_fav" id="makanan_fav" class="form-control"
-                                            placeholder="Masukkan Makanan Favorit" required>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="makanan_fav" class="form-label">Makanan Favorit</label>
+                                            <input type="text" name="makanan_fav" id="makanan_fav"
+                                                class="form-control" required>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
-                                    <!-- Tipe Karakter -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="type_char" class="form-label">Tipe Karakter</label>
-                                        <select name="type_char" id="type_char" class="form-select" required>
-                                            <option value="Hero">Hero</option>
-                                            <option value="Villain">Villain</option>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <select name="type_char" id="type_char" class="form-control" required>
+                                                <option value="">Pilih Tipe Karakter</option>
+                                                <option value="Hero">Hero</option>
+                                                <option value="Villain">Villain</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <!-- Foto -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="photo" class="form-label">Foto Profil</label>
-                                        <input type="file" name="photo" id="photo" class="form-control">
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <input type="file" name="photo" id="photo" class="form-control">
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Tombol Submit -->
+
                                 <div class="row">
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-success">Simpan</button>
+                                        <button type="submit" class="btn bg-gradient-dark">Simpan</button>
                                         <a href="{{ route('admin.pengguna.index') }}"
-                                            class="btn btn-secondary">Batal</a>
+                                            class="btn btn-outline-dark">Kembali</a>
                                     </div>
                                 </div>
                             </form>
@@ -112,8 +127,6 @@
         </div>
     </main>
     @include('components.function')
-
-
     <!--   Core JS Files   -->
     <script src="{{ asset('material-dashboard/assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('material-dashboard/assets/js/core/bootstrap.min.js') }}"></script>

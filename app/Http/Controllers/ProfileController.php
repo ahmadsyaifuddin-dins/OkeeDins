@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -82,7 +83,12 @@ class ProfileController extends Controller
             $user->password = $validated['password'];
         }
 
-        $user->save();
+        if ($user instanceof User) {
+            $user->save();
+        } else {
+            // Menangani error jika $user bukan instance dari User
+        }
+        // dd($user);
 
         return back()->with('success', 'Profile Berhasil disimpan!');
     }
