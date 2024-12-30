@@ -30,32 +30,32 @@
                                     <thead>
                                         <tr>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 No</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Gambar Produk</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Nama Produk</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Deskripsi</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Harga</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Stok</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Kategori</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Ditambahkan pada tanggal</th>
 
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Aksi</th>
                                         </tr>
                                     </thead>
@@ -82,7 +82,7 @@
                                                     </p>
                                                 </td>
 
-                                                <td class="text-wrap">
+                                                <td class=" text-wrap">
                                                     <span class="text-secondary text-xs font-weight-bold">
                                                         {{ $prod->deskripsi }}
                                                     </span>

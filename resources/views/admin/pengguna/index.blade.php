@@ -30,43 +30,43 @@
                                     <thead>
                                         <tr>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 No</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Foto</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Nama Pengguna & Email</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Password</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Role Pengguna</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Jenis Kelamin</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Tanggal Lahir</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Telepon</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Makanan Favorit</th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Tipe Karakter</th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Tanggal Daftar</th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Status Pengguna</th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Aksi</th>
                                         </tr>
                                     </thead>
@@ -190,8 +190,14 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('material-dashboard/assets/js/material-dashboard.min.js') }}"></script>
 </body>

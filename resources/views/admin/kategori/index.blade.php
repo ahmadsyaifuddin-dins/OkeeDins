@@ -30,19 +30,19 @@
                                     <thead>
                                         <tr>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 No</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Nama Kategori</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Deskripsi</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Ditambahkan pada tanggal</th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Aksi</th>
                                         </tr>
                                     </thead>
