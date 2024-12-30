@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -64,22 +66,29 @@ class AdminController extends Controller
             'telepon' => 'required',
             'makanan_fav' => 'required',
             'type_char' => 'required|in:Hero,Villain',
+            'photo' => 'nullable|image|max:2048',
         ]);
 
+        // Proses upload foto terlebih dahulu jika ada
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('uploads_photo_pelanggan', 'public');
+        }
+
+        // Insert data dengan foto yang sudah diupload
         DB::table('users')->insert([
             'name' => $request->name,
             'email' => $request->email,
-            // 'password' => bcrypt($request->password), // Hash password
-            'password' => $request->password, // No Hash password
-            'role' => $request->role ?? 'Pelanggan', // Default role pelanggan
+            'password' => $request->password,
+            'role' => $request->role ?? 'Pelanggan',
             'tgl_lahir' => $request->tgl_lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
             'telepon' => $request->telepon,
             'makanan_fav' => $request->makanan_fav,
             'type_char' => $request->type_char,
+            'photo' => $photoPath, // Gunakan path foto yang sudah diupload
             'created_at' => now(),
-            'updated_at' => now(),
-            'remember_token' => $request->remember_token,
+            'updated_at' => now()
         ]);
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
@@ -99,17 +108,19 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user_id . ',user_id',
-            'password' => 'nullable|string|min:8', // Password opsional
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user_id, 'user_id')],
+            'password' => 'nullable|string|min:8',
             'role' => 'required|in:Pelanggan,Administrator,Kasir',
             'tgl_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
+            'jenis_kelamin' => 'required',
             'telepon' => 'required',
             'makanan_fav' => 'required',
             'type_char' => 'required|in:Hero,Villain',
+            'photo' => 'nullable|image|max:2048',
         ]);
 
-        $data = [
+        // Menyiapkan data untuk diupdate
+        $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
@@ -121,20 +132,38 @@ class AdminController extends Controller
             'updated_at' => now(),
         ];
 
-        // Perbarui password jika ada input password baru (tidak pake hash)
+        // Handle password jika diisi
         if ($request->filled('password')) {
-            $data['password'] = $request->password;
+            $updateData['password'] = $request->password;
         }
 
-        // Update password hanya jika diisi (pake hash)
-        // if ($request->filled('password')) {
-        //     $data['password'] = Hash::make($request->password); // Hash password
-        // }    
+        // Handle photo
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            $oldPhoto = DB::table('users')->where('user_id', $user_id)->value('photo');
+            if ($oldPhoto) {
+                Storage::disk('public')->delete($oldPhoto);
+            }
 
-        DB::table('users')->where('user_id', $user_id)->update($data);
+            // Simpan foto baru
+            $photoPath = $request->file('photo')->store('uploads_photo_pelanggan', 'public');
+            $updateData['photo'] = $photoPath;
+        }
 
+        try {
+            DB::table('users')
+                ->where('user_id', $user_id)
+                ->update($updateData);
 
-        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
+            return redirect()
+                ->route('admin.pengguna.index')
+                ->with('success', 'Pengguna berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal memperbarui pengguna: ' . $e->getMessage());
+        }
     }
 
     public function destroyPengguna($user_id)
