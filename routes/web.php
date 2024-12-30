@@ -51,12 +51,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/pengguna', [AdminController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
-        Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
+        Route::get('/kategori', [AdminController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
+        Route::get('/produk', [AdminController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
+
         Route::get('/pengguna/create', [AdminController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
+        Route::get('/kategori/create', [AdminController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
+        Route::get('/produk/create', [AdminController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
+
         Route::post('/pengguna', [AdminController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
+        Route::post('/kategori', [AdminController::class, 'storeKategori'])->name('kategori.store'); // Proses tambah kategori
+        Route::post('/produk', [AdminController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
+
         Route::get('/pengguna/{id}/edit', [AdminController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
+        Route::get('/kategori/{id}/edit', [AdminController::class, 'editKategori'])->name('kategori.edit'); // Halaman form edit kategori
+        Route::get('/produk/{id}/edit', [AdminController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
+
         Route::put('/pengguna/{id}', [AdminController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
+        Route::put('/kategori/{id}', [AdminController::class, 'updateKategori'])->name('kategori.update'); // Proses edit kategori
+        Route::put('/produk/{id}', [AdminController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
+
         Route::delete('/pengguna/{id}', [AdminController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
+        Route::delete('/kategori/{id}', [AdminController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
+        Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
+
+        Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
+
     });
 });
 
