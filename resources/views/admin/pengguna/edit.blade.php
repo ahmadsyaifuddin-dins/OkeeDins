@@ -84,9 +84,9 @@
                                             <div class="input-group input-group-outline">
                                                 <select name="jenis_kelamin" id="jenis_kelamin" class="form-control"
                                                     required>
-                                                    <option value="Laki-laki"
-                                                        {{ $pengguna->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>
-                                                        Laki-laki</option>
+                                                    <option value="Laki-Laki"
+                                                        {{ $pengguna->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
+                                                        Laki-Laki</option>
                                                     <option value="Perempuan"
                                                         {{ $pengguna->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
                                                         Perempuan</option>
