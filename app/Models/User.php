@@ -7,13 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-// use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable  implements MustVerifyEmail
 {
 
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'users'; // Nama tabel
 
     // Menyatakan bahwa primary key menggunakan `user_id`
     protected $primaryKey = 'user_id';
@@ -25,11 +26,8 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $keyType = 'int';
 
 
-    use HasApiTokens, HasFactory, Notifiable;
-
-
     /** * Indicates if the model should be timestamped. * * @var bool */
-    // public $timestamps = false;
+    public $timestamps = true;
     /**
      * The attributes that are mass assignable.
      *
