@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 
@@ -24,8 +26,17 @@ Route::get('/', function () {
     if (auth()->check() && auth()->user()->role === 'Administrator') {
         return redirect()->route('admin.dashboard');
     }
-    return view('market');
+    return view('market.index');
 })->name('market');
+
+Route::get('/', [MarketController::class, 'index'])->name('market.index');
+Route::get('/product/{id}', [MarketController::class, 'productDetail'])->name('market.product-detail');
+Route::get('/category/{id}', [MarketController::class, 'category'])->name('market.category');
+Route::get('/cart', [MarketController::class, 'cart'])->name('market.cart');
+Route::get('/wishlist', [MarketController::class, 'wishlist'])->name('market.wishlist');
+Route::get('/profile', [MarketController::class, 'profile'])->name('market.profile');
+Route::get('/orders', [MarketController::class, 'orderHistory'])->name('market.orders');
+
 
 //? Route Admin
 Route::prefix('admin')->name('admin.')->group(function () {

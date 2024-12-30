@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
                 if ($request->is('pelanggan/profile*')) {
                     return redirect()->route('pelanggan.profile.show');
                 }
-                return redirect()->route('market');
+                return redirect()->route('market.index');
             }
         }
 

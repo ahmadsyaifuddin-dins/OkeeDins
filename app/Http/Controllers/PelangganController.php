@@ -47,7 +47,7 @@ class PelangganController extends Controller
                 if ($user->role === 'Pelanggan') {
                     // Login dengan Remember Me
                     Auth::loginUsingId($user->user_id, $request->boolean('remember'));
-                    return redirect()->route('market')->with('success', 'Login berhasil! Selamat datang di Market');
+                    return redirect()->route('market.index')->with('success', 'Login berhasil! Selamat datang di Market');
                 } elseif ($user->role === 'Administrator') {
                     return back()->withErrors([
                         'email' => 'Bukan Email untuk Pelanggan!',

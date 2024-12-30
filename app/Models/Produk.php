@@ -17,8 +17,8 @@ class Produk extends Model
         'deskripsi',
         'harga',
         'stok',
-        'kategori_id',
         'gambar',
+        'kategori_id',
     ];
 
     // Relasi ke tabel kategori_produk
