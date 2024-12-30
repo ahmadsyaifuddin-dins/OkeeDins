@@ -70,3 +70,59 @@
         </div>
     </div>
 </div>
+
+<!-- Toastr Configuration -->
+<script>
+    // Tunggu hingga DOM sepenuhnya dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cek apakah jQuery sudah dimuat
+        if (typeof jQuery != 'undefined') {
+            // Konfigurasi dasar
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": true,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "2500",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "tapToDismiss": false,
+                // Tambahkan opsi ini untuk mencegah notifikasi hilang saat navigasi
+                "persistent": true
+            };
+
+            // Cek session flash message dan tampilkan notifikasi
+            @if (Session::has('success'))
+                // Tunda eksekusi untuk memastikan halaman sudah siap
+                setTimeout(function() {
+                    toastr.success("{{ Session::get('success') }}");
+                }, 300);
+            @endif
+
+            @if (Session::has('error'))
+                setTimeout(function() {
+                    toastr.error("{{ Session::get('error') }}");
+                }, 300);
+            @endif
+
+            @if (Session::has('info'))
+                setTimeout(function() {
+                    toastr.info("{{ Session::get('info') }}");
+                }, 300);
+            @endif
+
+            @if (Session::has('warning'))
+                setTimeout(function() {
+                    toastr.warning("{{ Session::get('warning') }}");
+                }, 300);
+            @endif
+        }
+    });
+</script>
