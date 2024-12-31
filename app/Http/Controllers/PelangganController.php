@@ -37,7 +37,7 @@ class PelangganController extends Controller
 
         // Cek apakah email ada di database
         $user = DB::table('users')
-            ->select('user_id', 'email', 'password', 'role')
+            ->select('id', 'email', 'password', 'role')
             ->where('email', $request->email)
             ->first();
 
@@ -46,7 +46,7 @@ class PelangganController extends Controller
             if ($request->password === $user->password) { // Sesuaikan hashing password jika menggunakan bcrypt
                 if ($user->role === 'Pelanggan') {
                     // Login dengan Remember Me
-                    Auth::loginUsingId($user->user_id, $request->boolean('remember'));
+                    Auth::loginUsingId($user->id, $request->boolean('remember'));
                     return redirect()->route('market.index')->with('success', 'Login berhasil! Selamat datang di Market');
                 } elseif ($user->role === 'Administrator') {
                     return back()->withErrors([

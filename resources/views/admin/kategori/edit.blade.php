@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="card-body px-4 pb-2">
-                            <form action="{{ route('admin.kategori.update', $kategori->kategori_id) }}" method="POST"
+                            <form action="{{ route('admin.kategori.update', $kategori->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')

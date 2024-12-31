@@ -18,12 +18,12 @@ class Produk extends Model
         'harga',
         'stok',
         'gambar',
-        'kategori_id',
+        'id',
     ];
 
     // Relasi ke tabel kategori_produk
     public function kategori()
     {
-        return $this->belongsTo(KategoriProduk::class, 'kategori_id', 'kategori_id');
+        return $this->belongsTo(KategoriProduk::class, 'id', 'id');
     }
 }

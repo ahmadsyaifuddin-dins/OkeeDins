@@ -94,9 +94,9 @@ class AdminController extends Controller
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
-    public function editPengguna($user_id)
+    public function editPengguna($id)
     {
-        $pengguna = DB::table('users')->where('user_id', $user_id)->first(); // Gunakan 'user_id' bukan 'id'
+        $pengguna = DB::table('users')->where('id', $id)->first(); // Gunakan 'id' bukan 'id'
         if (!$pengguna) {
             abort(404);
         }
@@ -104,11 +104,11 @@ class AdminController extends Controller
         return view('admin.pengguna.edit', compact('pengguna'));
     }
 
-    public function updatePengguna(Request $request, $user_id)
+    public function updatePengguna(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user_id, 'user_id')],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($id, 'id')],
             'password' => 'nullable|string|min:8',
             'role' => 'required|in:Pelanggan,Administrator,Kasir',
             'tgl_lahir' => 'required|date',
@@ -140,7 +140,7 @@ class AdminController extends Controller
         // Handle photo
         if ($request->hasFile('photo')) {
             // Hapus foto lama jika ada
-            $oldPhoto = DB::table('users')->where('user_id', $user_id)->value('photo');
+            $oldPhoto = DB::table('users')->where('id', $id)->value('photo');
             if ($oldPhoto) {
                 Storage::disk('public')->delete($oldPhoto);
             }
@@ -152,7 +152,7 @@ class AdminController extends Controller
 
         try {
             DB::table('users')
-                ->where('user_id', $user_id)
+                ->where('id', $id)
                 ->update($updateData);
 
             return redirect()
@@ -166,9 +166,9 @@ class AdminController extends Controller
         }
     }
 
-    public function destroyPengguna($user_id)
+    public function destroyPengguna($id)
     {
-        DB::table('users')->where('user_id', $user_id)->delete();
+        DB::table('users')->where('id', $id)->delete();
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus.');
     }
     // End CRUD Pengguna 
@@ -206,9 +206,9 @@ class AdminController extends Controller
     }
 
 
-    public function editKategori($kategori_id)
+    public function editKategori($id)
     {
-        $kategori = DB::table('kategori_produk')->where('kategori_id', $kategori_id)->first(); // Gunakan 'kategori_id' bukan 'id'
+        $kategori = DB::table('kategori_produk')->where('id', $id)->first(); // Gunakan 'id' bukan 'id'
         if (!$kategori) {
             abort(404);
         }
@@ -217,14 +217,14 @@ class AdminController extends Controller
     }
 
 
-    public function updateKategori(Request $request, $kategori_id)
+    public function updateKategori(Request $request, $id)
     {
         $request->validate([
             'nama_kategori' => 'required|string|max:150',
             'deskripsi' => 'required|string',
         ]);
 
-        DB::table('kategori_produk')->where('kategori_id', $kategori_id)->update([
+        DB::table('kategori_produk')->where('id', $id)->update([
             'nama_kategori' => $request->nama_kategori,
             'deskripsi' => $request->deskripsi,
             'updated_at' => now(),
@@ -234,9 +234,9 @@ class AdminController extends Controller
     }
 
 
-    public function destroyKategori($kategori_id)
+    public function destroyKategori($id)
     {
-        DB::table('kategori_produk')->where('kategori_id', $kategori_id)->delete();
+        DB::table('kategori_produk')->where('id', $id)->delete();
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori Produk berhasil dihapus.');
     }
     // End CRUD Kategori Produk
@@ -265,7 +265,7 @@ class AdminController extends Controller
             'deskripsi' => 'nullable|string',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'kategori_id' => 'nullable|exists:kategori_produk,kategori_id',
+            'id' => 'nullable|exists:kategori_produk,id',
         ]);
 
         $gambarPath = $request->file('gambar')
@@ -278,7 +278,7 @@ class AdminController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'kategori_id' => $request->kategori_id,
+            'id' => $request->id,
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
@@ -301,7 +301,7 @@ class AdminController extends Controller
             'deskripsi' => 'nullable|string',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'kategori_id' => 'nullable|exists:kategori_produk,kategori_id',
+            'id' => 'nullable|exists:kategori_produk,id',
         ]);
 
         $produk = Produk::findOrFail($produk_id);
@@ -321,7 +321,7 @@ class AdminController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'kategori_id' => $request->kategori_id,
+            'id' => $request->id,
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui.');

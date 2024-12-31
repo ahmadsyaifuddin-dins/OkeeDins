@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [PelangganController::class, 'logout'])->name('logout');
 
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        // Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });

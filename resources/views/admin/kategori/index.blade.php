@@ -73,13 +73,12 @@
                                                 </td>
 
                                                 <td class="align-middle">
-                                                    <a href="{{ route('admin.kategori.edit', $kat->kategori_id) }}"
+                                                    <a href="{{ route('admin.kategori.edit', $kat->id) }}"
                                                         class="text-secondary font-weight-bold text-xs"
                                                         data-toggle="tooltip" data-original-title="Edit user">
                                                         Edit
                                                     </a>
-                                                    <form
-                                                        action="{{ route('admin.kategori.destroy', $kat->kategori_id) }}"
+                                                    <form action="{{ route('admin.kategori.destroy', $kat->id) }}"
                                                         method="POST" style="display: inline-block;">
                                                         @csrf
                                                         @method('DELETE')

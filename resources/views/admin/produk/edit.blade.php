@@ -37,11 +37,11 @@
                                         <div class="mb-4">
                                             <label class="mb-2">Kategori</label>
                                             <div class="input-group input-group-outline">
-                                                <select name="kategori_id" id="kategori" class="form-control" required>
+                                                <select name="id" id="kategori" class="form-control" required>
                                                     <option value="" disabled>Pilih Kategori</option>
                                                     @foreach ($kategori as $kat)
-                                                        <option value="{{ $kat->kategori_id }}"
-                                                            {{ $produk->kategori_id == $kat->kategori_id ? 'selected' : '' }}>
+                                                        <option value="{{ $kat->id }}"
+                                                            {{ $produk->id == $kat->id ? 'selected' : '' }}>
                                                             {{ $kat->nama_kategori }}
                                                         </option>
                                                     @endforeach

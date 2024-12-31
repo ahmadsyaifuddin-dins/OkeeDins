@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('user_id'); // Menyesuaikan tipe primary key sebagai int(11) auto increment
+            $table->increments('id'); // Menyesuaikan tipe primary key sebagai int(11) auto increment
             $table->string('name', 255); // varchar(255) 
             $table->string('email', 150)->unique(); // varchar(150) unique
             // $table->timestamp('email_verified_at')->nullable();

@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function show()
     {
-        return view('pelanggan.profile.show');
+        return view('market.profile');
     }
     public function update(Request $request)
     {
@@ -28,7 +28,7 @@ class ProfileController extends Controller
         // Validasi input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id, 'id')],
             'telepon' => ['nullable', 'string', 'max:20'],
             'alamat' => ['nullable', 'string', 'max:500'],
             'tgl_lahir' => ['nullable', 'date'],

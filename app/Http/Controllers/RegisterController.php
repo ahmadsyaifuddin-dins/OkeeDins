@@ -21,9 +21,9 @@ class RegisterController extends Controller
         if (Auth::check()) {
             // Cek jika user sedang di halaman profile
             if (request()->is('pelanggan/profile*')) {
-                return redirect()->route('pelanggan.profile.show');
+                return redirect()->route('market.profile');
             }
-            return redirect()->route('market');
+            return redirect()->route('market.index');
         }
         return view('pelanggan.register');
     }

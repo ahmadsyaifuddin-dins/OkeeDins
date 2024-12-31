@@ -20,11 +20,11 @@ class CreateProdukTable extends Migration
             $table->text('deskripsi')->nullable();
             $table->decimal('harga', 10, 0)->nullable();
             $table->integer('stok')->nullable();
-            $table->unsignedInteger('kategori_id')->nullable(); // Foreign key
+            $table->unsignedInteger('id')->nullable(); // Foreign key
             $table->timestamps(); // created_at and updated_at
 
             // Add foreign key constraint
-            $table->foreign('kategori_id')->references('kategori_id')->on('kategori_produk')->onDelete('set null');
+            $table->foreign('id')->references('id')->on('kategori_produk')->onDelete('set null');
         });
     }
 

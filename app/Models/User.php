@@ -16,8 +16,8 @@ class User extends Authenticatable  implements MustVerifyEmail
 
     protected $table = 'users'; // Nama tabel
 
-    // Menyatakan bahwa primary key menggunakan `user_id`
-    protected $primaryKey = 'user_id';
+    // Menyatakan bahwa primary key menggunakan `id`
+    protected $primaryKey = 'id';
 
     // Tentukan jika menggunakan auto-increment
     public $incrementing = true;

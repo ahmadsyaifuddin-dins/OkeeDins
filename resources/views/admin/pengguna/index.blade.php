@@ -140,13 +140,12 @@
                                                         class="badge badge-sm bg-gradient-{{ $user->role == 'Administrator' ? 'success' : 'secondary' }}">{{ $user->role == 'Administrator' ? 'Online' : 'Offline' }}</span>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <a href="{{ route('admin.pengguna.edit', $user->user_id) }}"
+                                                    <a href="{{ route('admin.pengguna.edit', $user->id) }}"
                                                         class="text-secondary font-weight-bold text-xs"
                                                         data-toggle="tooltip" data-original-title="Edit user">
                                                         Edit
                                                     </a>
-                                                    <form
-                                                        action="{{ route('admin.pengguna.destroy', $user->user_id) }}"
+                                                    <form action="{{ route('admin.pengguna.destroy', $user->id) }}"
                                                         method="POST" style="display: inline-block;">
                                                         @csrf
                                                         @method('DELETE')

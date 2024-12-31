@@ -24,7 +24,7 @@
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('market.profile') }}">
+                        <a class="dropdown-item" href="{{ route('pelanggan.profile.show') }}">
                             <i class="bi bi-person me-2"></i>Profil
                         </a>
                     </li>
@@ -99,7 +99,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end animate-dropdown">
                         <li>
-                            <a class="dropdown-item" href="{{ route('market.profile') }}">
+                            <a class="dropdown-item" href="{{ route('pelanggan.profile.show') }}">
                                 <i class="bi bi-person me-2"></i>Profil
                             </a>
                         </li>

@@ -14,7 +14,7 @@ class CreateKategoriProdukTable extends Migration
     public function up()
     {
         Schema::create('kategori_produk', function (Blueprint $table) {
-            $table->id('kategori_id'); // Primary key
+            $table->id('id'); // Primary key
             $table->string('nama_kategori', 150);
             $table->text('deskripsi')->nullable();
             $table->timestamps(); // created_at and updated_at
