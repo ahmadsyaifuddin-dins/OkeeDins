@@ -265,7 +265,8 @@ class AdminController extends Controller
             'deskripsi' => 'nullable|string',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'id' => 'nullable|exists:kategori_produk,id',
+            'kategori_id' => 'required',
+            'recommended' => 'nullable',
         ]);
 
         $gambarPath = $request->file('gambar')
@@ -278,33 +279,37 @@ class AdminController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'id' => $request->id,
+            'kategori_id' => $request->kategori_id,
+            'recommended' => $request->recommended ?? 0, // Tambahkan nilai default jika tidak ada input
+
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
     // Menampilkan form untuk mengedit produk
-    public function editProduk($produk_id)
+    public function editProduk($id)
     {
-        $produk = Produk::findOrFail($produk_id);
+        $produk = Produk::findOrFail($id);
         $kategori = KategoriProduk::all();
         return view('admin.produk.edit', compact('produk', 'kategori'));
     }
 
     // Memperbarui produk
-    public function updateProduk(Request $request, $produk_id)
+    public function updateProduk(Request $request, $id)
     {
         $request->validate([
-            'gambar' => 'nullable|image|max:2048', // Validasi untuk gambar
             'nama_produk' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|max:2048', // Validasi untuk gambar
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'id' => 'nullable|exists:kategori_produk,id',
+            'kategori_id' => 'required',
+            'recommended' => 'nullable',
+
         ]);
 
-        $produk = Produk::findOrFail($produk_id);
+        $produk = Produk::findOrFail($id);
 
         if ($request->file('gambar')) {
             if ($produk->gambar) {
@@ -316,21 +321,22 @@ class AdminController extends Controller
         }
 
         $produk->update([
-            'gambar' => $gambarPath,
             'nama_produk' => $request->nama_produk,
             'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarPath,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'id' => $request->id,
+            'kategori_id' => $request->kategori_id,
+            'recommended' => $request->recommended ?? 0, // Tambahkan nilai default jika tidak ada input
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
     // Menghapus produk
-    public function destroyProduk($produk_id)
+    public function destroyProduk($id)
     {
-        $produk = Produk::findOrFail($produk_id);
+        $produk = Produk::findOrFail($id);
         if ($produk->gambar) {
             Storage::disk('public')->delete($produk->gambar);
         }

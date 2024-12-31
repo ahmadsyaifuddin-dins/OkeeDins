@@ -33,7 +33,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
                                             <label class="form-label">Kategori</label>
-                                            <select name="id" id="kategori" class="form-control" required>
+                                            <select name="kategori_id" id="kategori" class="form-control" required>
                                                 <option value="" disabled selected></option>
                                                 @foreach ($kategori as $kat)
                                                     <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}

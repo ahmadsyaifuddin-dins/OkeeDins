@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="card-body px-4 pb-2">
-                            <form action="{{ route('admin.produk.update', $produk->produk_id) }}" method="POST"
+                            <form action="{{ route('admin.produk.update', $produk->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -37,7 +37,7 @@
                                         <div class="mb-4">
                                             <label class="mb-2">Kategori</label>
                                             <div class="input-group input-group-outline">
-                                                <select name="id" id="kategori" class="form-control" required>
+                                                <select name="kategori_id" id="kategori" class="form-control" required>
                                                     <option value="" disabled>Pilih Kategori</option>
                                                     @foreach ($kategori as $kat)
                                                         <option value="{{ $kat->id }}"

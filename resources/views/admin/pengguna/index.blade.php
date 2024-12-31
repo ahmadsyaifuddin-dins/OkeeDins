@@ -168,7 +168,7 @@
                 </div>
             </div>
 
-            @include('components.footer')
+            @include('layouts.footer')
         </div>
     </main>
     @include('components.function')

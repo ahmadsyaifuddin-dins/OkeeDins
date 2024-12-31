@@ -109,13 +109,12 @@
                                                 </td>
 
                                                 <td class="align-middle">
-                                                    <a href="{{ route('admin.produk.edit', $prod->produk_id) }}"
+                                                    <a href="{{ route('admin.produk.edit', $prod->id) }}"
                                                         class="text-secondary font-weight-bold text-xs"
                                                         data-toggle="tooltip" data-original-title="Edit produk">
                                                         Edit
                                                     </a>
-                                                    <form
-                                                        action="{{ route('admin.produk.destroy', $prod->produk_id) }}"
+                                                    <form action="{{ route('admin.produk.destroy', $prod->id) }}"
                                                         method="POST" style="display: inline-block;">
                                                         @csrf
                                                         @method('DELETE')
@@ -138,7 +137,7 @@
                 </div>
             </div>
 
-            @include('components.footer')
+            @include('layouts.footer')
         </div>
     </main>
     @include('components.function')

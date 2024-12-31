@@ -457,7 +457,7 @@
                 </div>
             </div>
         </div>
-        @include('components.footer')
+        @include('layouts.footer')
     </div>
 
     @include('components.function')

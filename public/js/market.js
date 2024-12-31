@@ -1,16 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.main-swiper', {
+    new Swiper(".main-swiper", {
         loop: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-        },
         autoplay: {
             delay: 5000,
             disableOnInteraction: false,
-        }
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
     });
 });
+
+
 
 
 document.addEventListener('DOMContentLoaded', function () {

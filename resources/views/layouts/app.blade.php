@@ -14,14 +14,14 @@
 </head>
 
 <body>
+    {{-- @include('components.svg') --}}
     @include('layouts.navbar')
-    @include('components.svg')
-
     <div class="container mt-4">
 
         @yield('content')
         @include('layouts.footer')
     </div>
+    @include('layouts.bottom-nav') <!-- Only for mobile -->
 
     <script src="{{ asset('js/market.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
