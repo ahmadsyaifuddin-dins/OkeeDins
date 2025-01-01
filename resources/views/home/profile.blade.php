@@ -23,7 +23,7 @@
                             <h5 class="mb-1">{{ Auth::user()->name }}</h5>
                             <p class="text-muted mb-3">Pelanggan</p>
                             <div class="list-group">
-                                <a href="{{ route('pelanggan.profile.show') }}"
+                                <a href="{{ route('pelanggan.profile') }}"
                                     class="list-group-item list-group-item-action bg-warning ">
                                     <i class="fas fa-user me-2"></i> Profile
                                 </a>
@@ -36,7 +36,7 @@
                                 <br>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <!-- Tombol Kembali -->
-                                    <a href="{{ route('market.index') }}" class="btn btn-warning text-white">
+                                    <a href="{{ route('home.index') }}" class="btn btn-warning text-white">
                                         <i class="fas fa-arrow-left me-1"></i> Kembali
                                     </a>
                                     <!-- Tombol Logout -->
