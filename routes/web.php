@@ -26,15 +26,15 @@ Route::get('/', function () {
     if (auth()->check() && auth()->user()->role === 'Administrator') {
         return redirect()->route('admin.dashboard');
     }
-    return view('market.index');
-})->name('market');
+    return view('home.index');
+})->name('home');
 
-Route::get('/', [MarketController::class, 'index'])->name('market.index');
+Route::get('/', [MarketController::class, 'index'])->name('home.index');
 Route::get('/product/{id}', [MarketController::class, 'productDetail'])->name('market.product-detail');
 Route::get('/category/{id}', [MarketController::class, 'category'])->name('market.category');
 Route::get('/cart', [MarketController::class, 'cart'])->name('market.cart');
 Route::get('/wishlist', [MarketController::class, 'wishlist'])->name('market.wishlist');
-Route::get('/profile', [MarketController::class, 'profile'])->name('market.profile');
+// Route::get('/profile', [MarketController::class, 'profile'])->name('profile');
 Route::get('/orders', [MarketController::class, 'orderHistory'])->name('market.orders');
 
 
@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
 // Route untuk profile pelanggan
 Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middleware pelanggan
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });

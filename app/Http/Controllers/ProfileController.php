@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function show()
     {
-        return view('market.profile');
+        return view('home.profile');
     }
     public function update(Request $request)
     {

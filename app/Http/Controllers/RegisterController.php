@@ -23,7 +23,7 @@ class RegisterController extends Controller
             if (request()->is('pelanggan/profile*')) {
                 return redirect()->route('market.profile');
             }
-            return redirect()->route('market.index');
+            return redirect()->route('home.index');
         }
         return view('pelanggan.register');
     }
