@@ -7,7 +7,8 @@
                     <i class="bi bi-heart"></i>
                 </button>
                 <!-- Gambar Produk -->
-                <img src="{{ asset('storage/' . $recom->gambar) }}" class="card-img-top" alt="{{ $recom->nama_produk }}">
+                <img loading="lazy" src="{{ asset('storage/' . $recom->gambar) }}" class="card-img-top"
+                    alt="{{ $recom->nama_produk }}">
                 <!-- Konten Produk -->
                 <div class="card-body">
                     <h5 class="card-title h6 text-truncate">{{ $recom->nama_produk }}</h5>
