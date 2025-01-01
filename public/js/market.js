@@ -1,8 +1,42 @@
-document.addEventListener('DOMContentLoaded', function () {
+// Toast configuration
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-start',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
+// Show toast alert if success or error messages exist
+function showToast() {
+    const successMessage = document.querySelector('meta[name="success-message"]')?.content;
+    const errorMessage = document.querySelector('meta[name="error-message"]')?.content;
+
+    if (successMessage) {
+        return Toast.fire({
+            icon: 'success',
+            title: successMessage
+        });
+    }
+
+    if (errorMessage) {
+        return Toast.fire({
+            icon: 'error',
+            title: errorMessage
+        });
+    }
+}
+
+// Initialize Swiper
+function initSwiper() {
     new Swiper(".main-swiper", {
         loop: true,
         autoplay: {
-            delay: 5000,
+            delay: 3000,
             disableOnInteraction: false,
         },
         pagination: {
@@ -14,9 +48,13 @@ document.addEventListener('DOMContentLoaded', function () {
             prevEl: ".swiper-button-prev",
         },
     });
+}
+
+// Initialize components
+document.addEventListener('DOMContentLoaded', async () => {
+    await showToast();
+    initSwiper();
 });
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
