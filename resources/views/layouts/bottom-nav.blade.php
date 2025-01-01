@@ -12,7 +12,7 @@
             <i class="bi bi-receipt fs-4"></i>
             <div>Transaksi</div>
         </a>
-        <a href="/profile" class="text-center text-decoration-none">
+        <a href="{{ route('pelanggan.profile') }}" class="text-center text-decoration-none">
             <i class="bi bi-person fs-4"></i>
             <div>Profil</div>
         </a>
