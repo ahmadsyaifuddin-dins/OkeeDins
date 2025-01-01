@@ -1,6 +1,7 @@
 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
     <div class="card h-100 product-card shadow-sm">
-        <img src="{{ asset('storage/' . $prod->gambar) }}" class="card-img-top" alt="{{ $prod->nama_produk }}">
+        <img loading="lazy" src="{{ asset('storage/' . $prod->gambar) }}" class="card-img-top"
+            alt="{{ $prod->nama_produk }}">
         <div class="card-body">
             <h5 class="card-title text-truncate">{{ $prod->nama_produk }}</h5>
             <p class="card-text fw-bold text-primary">Rp{{ number_format($prod->harga, 0, ',', '.') }}</p>
