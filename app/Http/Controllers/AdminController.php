@@ -177,8 +177,8 @@ class AdminController extends Controller
     // Begin CRUD Kategori Produk 
     public function indexKategori()
     {
-        $kategori = DB::table('kategori_produk')->get()->map(function ($categori) { // Ambil semua kategori dari tabel kategori_produk
-            return $categori;
+        $kategori = DB::table('kategori_produk')->get()->map(function ($kat) { // Ambil semua kategori dari tabel kategori_produk
+            return $kat;
         });
         return view('admin.kategori.index', compact('kategori'));
     }

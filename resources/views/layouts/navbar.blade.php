@@ -1,7 +1,7 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container">
-        <a class="text-decoration-none h5 fw-bold text-primary" href="{{ route('home.index') }}">
-            Food <span class="text-warning">Fusion</span>
+        <a class="text-decoration-none h5 fw-bold text-custom" href="{{ route('home.index') }}">
+            Food <span class="text-primary">Fusion</span>
         </a>
 
         <!-- Mobile Icons -->
@@ -40,12 +40,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('market.wishlist') }}">
+                    {{-- <a class="nav-link" href="{{ route('market.wishlist') }}"> --}}
+                    <a class="nav-link" href="#">
                         <i class="bi bi-heart me-1"></i> Favorit
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block">
-                    <a class="nav-link" href="{{ route('market.cart') }}">
+                    {{-- <a class="nav-link" href="{{ route('market.cart') }}"> --}}
+                    <a class="nav-link" href="#">
                         <i class="bi bi-cart me-1"></i> Keranjang
                     </a>
                 </li>
@@ -73,8 +75,9 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i
-                                    class="bi bi-clock-history me-2"></i> Riwayat Pesanan</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i --}}
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
+                                Pesanan</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -101,8 +104,9 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdownMobile">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i
-                                    class="bi bi-clock-history me-2"></i> Riwayat Pesanan</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i --}}
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
+                                Pesanan</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

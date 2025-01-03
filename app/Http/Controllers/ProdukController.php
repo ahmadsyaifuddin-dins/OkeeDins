@@ -20,6 +20,6 @@ class ProdukController extends Controller
     {
         $produk = Produk::orderBy('popularity', 'desc')->take(10)->get();
 
-        return view('market', compact('produk'));
+        return view('home.index', compact('produk'));
     }
 }

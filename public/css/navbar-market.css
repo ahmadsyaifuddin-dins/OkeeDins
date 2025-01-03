@@ -1,36 +1,96 @@
+:root {
+    --marketColorPrimary: #D32F2F;
+    /* Warna utama */
+    --marketColorSecondary: #007bff;
+    /* Warna sekunder */
+    --marketColorThirty: #fff;
+    /* Warna teks */
+}
+
 /* Posisi dropdown tetap di tengah */
 .dropdown-menu[data-bs-popper] {
     top: 100%;
     left: 50%;
-    /* Letakkan di tengah */
     transform: translateX(-50%);
-    /* Pastikan dropdown benar-benar di tengah */
     margin-top: var(--bs-dropdown-spacer);
     opacity: 0;
-    /* Awalnya tidak terlihat */
     transition: transform 0.3s ease, opacity 0.3s ease;
-    /* Transisi hanya untuk efek visual */
 }
 
 /* Tampilkan dropdown dengan transisi */
 .dropdown-menu.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
-    /* Dropdown terlihat */
 }
 
 /* Hover pada item */
 .dropdown-menu .dropdown-item:hover {
-    background-color: #f8f9fa;
-    /* Warna latar belakang saat di-hover */
-    color: #0d6efd;
-    /* Warna teks saat di-hover */
+    background-color: var(--marketColorThirty);
+    color: var(--marketColorSecondary);
     transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Pastikan tombol dropdown memiliki warna yang benar saat aktif atau fokus */
+.dropdown-toggle {
+    background-color: var(--marketColorThirty) !important;
+    /* Warna putih */
+    color: var(--marketColorPrimary);
+    /* Warna teks sesuai tema */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-toggle:active,
+.dropdown-toggle:focus {
+    background-color: var(--marketColorThirty);
+    /* Warna putih */
+    color: var(--marketColorPrimary);
+    /* Warna teks sesuai tema */
+    box-shadow: none;
+    /* Hilangkan shadow default Bootstrap */
 }
 
 /* Hover pada tombol dropdown */
 .dropdown-toggle:hover {
-    background-color: #e9ecef;
-    color: #0d6efd;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    background-color: var(--marketColorThirty);
+    color: var(--marketColorSecondary);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+
+/* Default style untuk tombol di Mobile Icons */
+.d-lg-none .btn {
+    color: var(--marketColorPrimary);
+    background-color: transparent;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    padding: 0.5rem;
+}
+
+/* Hover dan fokus untuk tombol Mobile Icons */
+.d-lg-none .btn:hover,
+.d-lg-none .btn:focus {
+    color: var(--marketColorThirty);
+    background-color: var(--marketColorPrimary);
+}
+
+/* Style untuk nav-link DESKTOP */
+.navbar-nav .nav-link {
+    margin-left: 10px;
+    color: var(--marketColorPrimary);
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    color: var(--marketColorSecondary);
+}
+
+/* Style untuk ikon dalam nav-link */
+.navbar-nav .nav-link i {
+    color: var(--marketColorPrimary);
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover i,
+.navbar-nav .nav-link:focus i {
+    color: var(--marketColorSecondary);
 }

@@ -24,7 +24,7 @@
                             <p class="text-muted mb-3">Pelanggan</p>
                             <div class="list-group">
                                 <a href="{{ route('pelanggan.profile') }}"
-                                    class="list-group-item list-group-item-action bg-warning ">
+                                    class="list-group-item list-group-item-action text-white bg-primary ">
                                     <i class="fas fa-user me-2"></i> Profile
                                 </a>
                                 <a href="#" class="list-group-item list-group-item-action">
@@ -36,13 +36,13 @@
                                 <br>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <!-- Tombol Kembali -->
-                                    <a href="{{ route('home.index') }}" class="btn btn-warning text-white">
+                                    <a href="{{ route('home.index') }}" class="btn btn-primary text-white">
                                         <i class="fas fa-arrow-left me-1"></i> Kembali
                                     </a>
                                     <!-- Tombol Logout -->
                                     <form action="{{ route('logout') }}" method="POST" class=" d-inline m-0">
                                         @csrf
-                                        <button type="submit" class="btn btn-danger text-white">
+                                        <button type="submit" class="btn btn-custom text-white">
                                             <i class="fas fa-sign-out-alt me-2"></i> Logout
                                         </button>
                                     </form>
@@ -57,7 +57,7 @@
                 <!-- Profile Content -->
                 <div class="col-lg-9">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-warning text-white">
+                        <div class="card-header bg-primary text-white">
                             <h5 class="card-title mb-0">Informasi Profil Saya
                             </h5>
                         </div>
@@ -228,7 +228,7 @@
 
                             <div class="row">
                                 <div class="col-sm-9 offset-sm-3">
-                                    <button type="submit" class="btn btn-warning">Simpan Profile</button>
+                                    <button type="submit" class="btn btn-custom text-white">Simpan Profile</button>
                                 </div>
                             </div>
                         </form>

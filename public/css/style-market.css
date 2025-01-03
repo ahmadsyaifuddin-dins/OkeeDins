@@ -1,16 +1,101 @@
+:root {
+    --marketColorPrimary: #D32F2F;
+    --marketColorSecondary: #007bff;
+    --marketColorThirty: #fff;
+}
+
+
 * {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+/* TULISAN CUSTOM UNTUK WARNA LOGO, HARGA PRODUK */
+.text-custom {
+    color: var(--marketColorPrimary);
+}
+
+
+.btn-primary {
+    background-color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorPrimary) !important;
+    color: var(--marketColorThirty) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorThirty) !important;
+    color: var(--marketColorThirty) !important;
+}
+
+
+/* Untuk tombol btn-outline-primary */
+.btn-outline-primary {
+    color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorPrimary) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorPrimary) !important;
+    color: var(--marketColorThirty) !important;
+}
+
+
+
+/* Custom Swiper Pagination Bullets */
+.swiper-pagination-bullet {
+    background-color: var(--marketColorPrimary) !important;
+    opacity: 0.7;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: var(--marketColorPrimary) !important;
+    opacity: 1;
+}
+
+
+/* Style untuk navigasi bawah */
+.fixed-bottom {
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--marketColorThirty);
+}
+
+.fixed-bottom a {
+    color: black;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.fixed-bottom a:hover,
+.fixed-bottom a:focus {
+    color: var(--marketColorPrimary);
+
+}
+
+.fixed-bottom i {
+    transition: color 0.3s ease;
+}
+
+.fixed-bottom a:hover i,
+.fixed-bottom a:focus i {
+    color: var(--marketColorPrimary);
+}
+
+
+
 /* produk card & img konsisten */
 .product-card {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     /* Memberikan jarak antar card */
     display: flex;
     flex-direction: column;
     height: 100%;
 
-    border: 1px solid #eeeeee;
+    border: 1px solid var(--marketColorThirty);
     /* Border tipis dengan warna abu-abu */
     border-radius: 8px;
     /* Sudut membulat */
@@ -19,7 +104,7 @@
 }
 
 .product-card:hover {
-    border-color: #007bff;
+    border-color: var(--marketColorPrimary);
     /* Warna border berubah saat hover */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* Efek bayangan halus saat hover */
@@ -29,11 +114,38 @@
     flex-grow: 1;
 }
 
+/* Desktop */
 .product-card .card-img-top {
     object-fit: cover;
     height: 200px;
-    /* Sesuaikan dengan tinggi yang diinginkan */
+    /* Tinggi yang tetap */
+    max-height: 200px;
+    width: 100%;
+    border-radius: 8px;
+    /* Opsional: memberi sudut tumpul */
 }
+
+/* Mobile */
+@media only screen and (max-width: 600px) {
+    .product-card .card-img-top {
+        object-fit: cover;
+        height: 150px;
+        /* Tinggi untuk layar kecil */
+        max-height: 150px;
+    }
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+    .product-card .card-img-top {
+        object-fit: cover;
+        height: 180px;
+        /* Tinggi untuk layar sedang */
+        max-height: 180px;
+    }
+}
+
+
 
 .product-card .card-title {
     white-space: nowrap;
@@ -45,8 +157,8 @@
 /* Tombol Wishlist */
 .wishlist-btn {
     border: none;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #0d6efd;
+    background-color: var(--marketColorThirty);
+    color: var(--marketColorPrimary);
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -58,7 +170,7 @@
 
 .wishlist-btn:hover {
     background-color: red;
-    color: #fff;
+    color: var(--marketColorThirty);
 }
 
 /* end tombol wishlist */
@@ -67,7 +179,7 @@
 .btn-hover-warning:hover {
     background-color: var(--bs-primary);
     /* Background jadi warna warning */
-    color: white;
+    color: var(--marketColorThirty);
     /* Teks jadi putih */
     transition: background-color 0.3s, color 0.3s;
     /* Efek transisi */
@@ -95,7 +207,7 @@
 .banner-slider .swiper-button-prev {
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--marketColorThirty);
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -103,7 +215,7 @@
 .banner-slider .swiper-button-next:after,
 .banner-slider .swiper-button-prev:after {
     font-size: 18px;
-    color: #007bff;
+    color: var(--marketColorPrimary);
 }
 
 /* Add translation animation */
@@ -128,7 +240,7 @@
 /* Optional: Add hover effect on the buttons themselves */
 .banner-slider .swiper-button-next:hover,
 .banner-slider .swiper-button-prev:hover {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--marketColorThirty);
 }
 
 /* End Custom Banner Slider Hover */

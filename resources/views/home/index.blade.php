@@ -11,11 +11,11 @@
                 <!-- Flash Sale Banner -->
                 @include('home.flash-sale')
 
-                <!-- Sidebar Kategori untuk Desktop dan Mobile secara horizontal -->
+                <!-- Kategori untuk Desktop dan Mobile secara horizontal -->
                 <div class="col-12">
                     <div class="d-flex justify-content-start flex-wrap mb-4">
                         @foreach ($kategori as $kat)
-                            <a href="{{ route('market.category', $kat->id) }}" class="btn btn-outline-primary me-2 mb-2">
+                            <a href="{{ route('market.kategori', $kat->id) }}" class="btn btn-outline-primary me-2 mb-2">
                                 {{ $kat->nama_kategori }}
                             </a>
                         @endforeach

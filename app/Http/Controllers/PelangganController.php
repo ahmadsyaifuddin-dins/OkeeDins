@@ -19,7 +19,7 @@ class PelangganController extends Controller
         if (Auth::check()) {
             // Jika user sudah login, arahkan sesuai role
             if (Auth::user()->role === 'Pelanggan') {
-                return redirect()->route('market');
+                return redirect()->route('home.index');
             } elseif (Auth::user()->role === 'Administrator') {
                 return redirect()->route('admin.dashboard');
             }

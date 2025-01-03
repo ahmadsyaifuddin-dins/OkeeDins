@@ -23,7 +23,7 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 // Cek jika user sedang di halaman profile
                 if ($request->is('pelanggan/profile*')) {
-                    return redirect()->route('pelanggan.profile.show');
+                    return redirect()->route('home.profile');
                 }
                 return redirect()->route('home.index');
             }
