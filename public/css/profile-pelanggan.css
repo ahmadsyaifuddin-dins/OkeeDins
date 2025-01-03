@@ -1,0 +1,37 @@
+:root {
+    --marketColorPrimary: #D32F2F;
+    /* Warna utama */
+    --marketColorSecondary: #007bff;
+    /* Warna sekunder */
+    --marketColorThirty: #fff;
+    /* Warna teks (putih) */
+}
+
+.bg-primary {
+    background-color: var(--marketColorPrimary) !important;
+}
+
+.btn-custom {
+    background-color: var(--marketColorPrimary);
+    /* Pastikan teks berwarna putih */
+    color: var(--marketColorThirty);
+    /* Hapus border jika tidak diperlukan */
+    border: none;
+    /* Animasi lembut */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+    /* Lebih gelap saat hover */
+    background-color: #B71C1C !important;
+    /* Warna teks tetap putih */
+    color: var(--marketColorThirty) !important;
+}
+
+.btn-custom:active {
+    /* Lebih gelap lagi saat ditekan */
+    background-color: #A61B1B !important;
+    /* Teks tetap putih */
+    color: var(--marketColorThirty);
+}
