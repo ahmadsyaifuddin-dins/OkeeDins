@@ -26,6 +26,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
+                                            <label for="slug" class="mb-2">Slug</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="slug" id="slug" class="form-control"
+                                                    value="{{ $kategori->slug }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
                                             <label for="nama_kategori" class="mb-2">Nama Kategori</label>
                                             <div class="input-group input-group-outline">
                                                 <input type="text" name="nama_kategori" id="nama_kategori"

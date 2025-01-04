@@ -25,6 +25,13 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input-group input-group-outline mb-4">
+                                            <label for="slug" class="form-label">Slug</label>
+                                            <input type="text" name="slug" id="slug" class="form-control"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="input-group input-group-outline mb-4">
                                             <label for="nama_kategori" class="form-label">Nama Kategori</label>
                                             <input type="text" name="nama_kategori" id="nama_kategori"
                                                 class="form-control" required>

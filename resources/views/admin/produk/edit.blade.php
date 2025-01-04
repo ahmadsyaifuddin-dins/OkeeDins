@@ -26,6 +26,15 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
+                                            <label for="slug" class="form-label">Slug</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="slug" id="slug" class="form-control"
+                                                    value="{{ $produk->slug }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
                                             <label for="nama_produk" class="mb-2">Nama Produk</label>
                                             <div class="input-group input-group-outline">
                                                 <input type="text" name="nama_produk" id="nama_produk"
@@ -33,6 +42,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label class="mb-2">Kategori</label>
@@ -41,7 +53,7 @@
                                                     <option value="" disabled>Pilih Kategori</option>
                                                     @foreach ($kategori as $kat)
                                                         <option value="{{ $kat->id }}"
-                                                            {{ $produk->id == $kat->id ? 'selected' : '' }}>
+                                                            {{ $produk->kategori_id == $kat->id ? 'selected' : '' }}>
                                                             {{ $kat->nama_kategori }}
                                                         </option>
                                                     @endforeach
@@ -50,17 +62,18 @@
                                         </div>
                                     </div>
 
-                                </div>
-                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label for="harga" class="mb-2">Harga</label>
-                                            <div class="input-group input-group-outline ">
+                                            <div class="input-group input-group-outline">
                                                 <input type="number" name="harga" id="harga" class="form-control"
                                                     value="{{ $produk->harga }}" required>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label for="stok" class="mb-2">Stok</label>
@@ -69,11 +82,18 @@
                                                     value="{{ $produk->stok }}" required>
                                             </div>
                                         </div>
-
                                     </div>
-                                </div>
 
-                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4">
+                                            <label for="diskon" class="mb-2">Diskon (%)</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="number" name="diskon" id="diskon" class="form-control"
+                                                    step="0.01" value="{{ $produk->diskon }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label for="deskripsi" class="mb-2">Deskripsi</label>
@@ -100,7 +120,9 @@
                                             @endif
                                         </div>
                                     </div>
+
                                 </div>
+
                                 <div class="row">
                                     <div class="col-12">
                                         <button type="submit" class="btn bg-gradient-dark">Update</button>

@@ -34,6 +34,9 @@
                                                 No</th>
                                             <th
                                                 class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
+                                                Slug</th>
+                                            <th
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                                 Nama Kategori</th>
                                             <th
                                                 class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
@@ -56,6 +59,11 @@
                                                             </h6>
                                                         </div>
                                                     </div>
+                                                </td>
+
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $kat->slug }}
+                                                    </p>
                                                 </td>
 
                                                 <td>

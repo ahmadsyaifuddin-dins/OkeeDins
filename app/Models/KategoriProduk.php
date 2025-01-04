@@ -13,6 +13,7 @@ class KategoriProduk extends Model
     protected $primaryKey = 'id'; // Primary key
 
     protected $fillable = [
+        'slug',
         'nama_kategori',
         'deskripsi',
     ];

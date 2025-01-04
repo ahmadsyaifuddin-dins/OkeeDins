@@ -49,6 +49,12 @@
                                                 Stok</th>
                                             <th
                                                 class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Diskon</th>
+                                            <th
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Harga Diskon</th>
+                                            <th
+                                                class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Kategori</th>
                                             <th
                                                 class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
@@ -88,13 +94,23 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="text-secondary text-xs font-weight-bold">
+                                                    <span class="text-secondary text-xs font-weight-bold">Rp.
                                                         {{ number_format($prod->harga, 0, ',', '.') }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="text-secondary text-xs font-weight-bold">
                                                         {{ $prod->stok }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-secondary text-xs font-weight-bold">
+                                                        {{ $prod->diskon }}%
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-secondary text-xs font-weight-bold">Rp.
+                                                        {{ number_format($prod->harga_diskon, 0, ',', '.') }}
                                                     </span>
                                                 </td>
                                                 <td>

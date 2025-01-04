@@ -25,11 +25,21 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
+                                            <label for="slug" class="form-label">Slug</label>
+                                            <input type="text" name="slug" id="slug" class="form-control"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
                                             <label for="nama_produk" class="form-label">Nama Produk</label>
                                             <input type="text" name="nama_produk" id="nama_produk"
                                                 class="form-control" required>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
                                             <label class="form-label">Kategori</label>
@@ -42,9 +52,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
                                             <label for="harga" class="form-label">Harga</label>
@@ -52,16 +59,23 @@
                                                 required>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
-                                            <label for="stok" class="form-label">stok</label>
+                                            <label for="stok" class="form-label">Stok</label>
                                             <input type="number" name="stok" id="stok" class="form-control"
                                                 required>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-outline mb-4">
+                                            <label for="diskon" class="form-label">Diskon (%)</label>
+                                            <input type="number" name="diskon" id="diskon" class="form-control"
+                                                step="0.01" min="0" max="100" required>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="input-group input-group-outline mb-4">
                                             <label for="deskripsi" class="form-label">Deskripsi</label>
@@ -70,10 +84,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-4">
-                                            <label for="gambar" class="mb-2">Gambar Produk</label>
                                             <div class="input-group input-group-outline">
-                                                <input type="file" name="gambar" id="gambar" class="form-control"
-                                                    required>
+                                                <input placeholder="Gambar Produk" type="file" name="gambar"
+                                                    id="gambar" class="form-control" required>
                                             </div>
                                         </div>
                                     </div>
