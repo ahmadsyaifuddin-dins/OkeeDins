@@ -15,4 +15,11 @@ class MarketController extends Controller
 
         return view('home.index', compact('kategori', 'recommendedProducts'));
     }
+
+    public function detailProduk($slug)
+    {
+        $product = Produk::where('slug', $slug)->firstOrFail();
+
+        return view('home.produk-detail', compact('product'));
+    }
 }
