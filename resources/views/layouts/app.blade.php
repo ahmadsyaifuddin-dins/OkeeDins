@@ -17,6 +17,8 @@
     @include('layouts.navbar')
     <div class="container mt-4">
         @yield('content')
+        @stack('scripts')
+
         @include('layouts.footer')
     </div>
     @include('layouts.bottom-nav')
