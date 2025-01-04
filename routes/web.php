@@ -46,8 +46,9 @@ Route::get('/', function () {
 // Route::get('/orders', [MarketController::class, 'orderHistory'])->name('market.orders');
 
 // Market routes
-Route::get('/produk/{id}', [MarketController::class, 'produkDetail'])->name('market.produk-detail');
-Route::get('/kategori/{id}', [MarketController::class, 'kategori'])->name('market.kategori');
+Route::get('/produk/{slug}', [MarketController::class, 'detailProduk'])->name('produk.detail');
+Route::get('/kategori/{slug}', [MarketController::class, 'index'])->name('market.kategori');
+
 
 
 //! Route untuk guest (belum login) untuk pelanggan
