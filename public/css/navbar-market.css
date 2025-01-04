@@ -7,6 +7,18 @@
     /* Warna teks */
 }
 
+/* Default untuk desktop biar gk ketutupan ama nav top nya detail produknya */
+body {
+    padding-top: 4.5rem;
+}
+
+/* Tinggi navbar di mobile */
+/* @media (max-width: 768px) {
+    body {
+        padding-top: 5.5rem;
+    }
+} */
+
 /* Posisi dropdown tetap di tengah */
 .dropdown-menu[data-bs-popper] {
     top: 100%;
