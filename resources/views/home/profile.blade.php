@@ -1,5 +1,4 @@
-@extends('layouts.styling_global')
-{{-- @extends('layouts.app') --}}
+@extends('layouts.app')
 @section('content')
     <section class="py-5">
         <div class="container">
@@ -36,7 +35,7 @@
                                 <br>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <!-- Tombol Kembali -->
-                                    <a href="{{ route('home.index') }}" class="btn btn-primary text-white">
+                                    <a href="{{ route('home.index') }}" class="btn btn-secondary text-white">
                                         <i class="fas fa-arrow-left me-1"></i> Kembali
                                     </a>
                                     <!-- Tombol Logout -->
@@ -240,8 +239,23 @@
 </section>
 @endsection
 
-{{-- @include('layouts.bottom-nav') --}}
-
-@section('scripts')
-<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
-@endsection
+<!-- Tambahkan konfigurasi toastr -->
+{{-- @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "400",
+            "hideDuration": "600",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    });
+</script>
+@endpush --}}

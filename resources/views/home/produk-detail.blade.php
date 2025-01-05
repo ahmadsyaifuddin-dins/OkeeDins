@@ -274,8 +274,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'Lihat Keranjang',
                         cancelButtonText: 'Lanjut Belanja',
-                        confirmButtonColor: '#0d6efd',
-                        cancelButtonColor: '#6c757d'
+                        confirmButtonColor: '#007bff',
+                        cancelButtonColor: '#C62828'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '{{ route('cart.index') }}';

@@ -1,8 +1,18 @@
 :root {
+    /* Warna utama */
     --marketColorPrimary: #D32F2F;
+    /* Warna utama II*/
+    --marketColorPrimaryII: #C62828;
+
+    /* Warna sekunder */
     --marketColorSecondary: #007bff;
+    /* Warna sekunder II*/
+    --marketColorSecondaryII: #0056b3;
+
+    /* Warna teks (putih) */
     --marketColorThirty: #fff;
 }
+
 
 
 * {
@@ -14,17 +24,22 @@
     color: var(--marketColorPrimary);
 }
 
-
 .btn-primary {
     background-color: var(--marketColorPrimary) !important;
     border-color: var(--marketColorPrimary) !important;
     color: var(--marketColorThirty) !important;
 }
 
+/* .btn-secondary {
+    background-color: var(--marketColorSecondary) !important;
+    border-color: var(--marketColorSecondary) !important;
+    color: var(--marketColorThirty) !important;
+} */
+
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-    background-color: var(--marketColorPrimary) !important;
+    background-color: var(--marketColorPrimaryII) !important;
     border-color: var(--marketColorThirty) !important;
     color: var(--marketColorThirty) !important;
 }
@@ -39,8 +54,8 @@
 .btn-outline-primary:hover,
 .btn-outline-primary:focus,
 .btn-outline-primary:active {
-    background-color: var(--marketColorPrimary) !important;
-    border-color: var(--marketColorPrimary) !important;
+    background-color: var(--marketColorPrimaryII) !important;
+    border-color: var(--marketColorPrimaryII) !important;
     color: var(--marketColorThirty) !important;
 }
 
@@ -145,7 +160,7 @@
 }
 
 .wishlist-btn:hover {
-    background-color: red;
+    background-color: var(--marketColorPrimary);
     color: var(--marketColorThirty);
 }
 

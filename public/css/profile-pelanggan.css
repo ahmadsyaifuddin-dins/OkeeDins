@@ -1,14 +1,41 @@
 :root {
-    --marketColorPrimary: #D32F2F;
     /* Warna utama */
-    --marketColorSecondary: #007bff;
+    --marketColorPrimary: #D32F2F;
+    /* Warna utama II*/
+    --marketColorPrimaryII: #C62828;
+
     /* Warna sekunder */
-    --marketColorThirty: #fff;
+    --marketColorSecondary: #007bff;
+    /* Warna sekunder II*/
+    --marketColorSecondaryII: #0056b3;
+
     /* Warna teks (putih) */
+    --marketColorThirty: #fff;
 }
 
 .bg-primary {
     background-color: var(--marketColorPrimary) !important;
+}
+
+.btn-secondary {
+    background-color: var(--marketColorSecondary) !important;
+    border-color: var(--marketColorSecondary) !important;
+    color: var(--marketColorThirty) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    /* Lebih gelap saat hover */
+    background-color: var(--marketColorSecondaryII) !important;
+    /* Warna teks tetap putih */
+    color: var(--marketColorThirty) !important;
+}
+
+.btn-secondary:active {
+    /* Lebih gelap lagi saat ditekan */
+    background-color: var(--marketColorSecondaryII) !important;
+    /* Teks tetap putih */
+    color: var(--marketColorThirty);
 }
 
 .btn-custom {

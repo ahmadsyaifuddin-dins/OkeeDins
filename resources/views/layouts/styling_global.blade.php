@@ -46,24 +46,6 @@
         @yield('content')
     </div>
     @include('layouts.bottom-nav')
-    <!-- Tambahkan konfigurasi toastr -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "showDuration": "400",
-                "hideDuration": "600",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
-        });
-    </script>
 
     <!-- Tempatkan untuk script tambahan -->
     @yield('scripts')

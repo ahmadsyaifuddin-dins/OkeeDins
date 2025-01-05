@@ -51,12 +51,17 @@
                                             </div>
                                         </div>
                                         <div class="col-auto">
-                                            <img src="{{ asset('storage/' . $item->product->gambar) }}"
-                                                class="rounded img-fluid" alt="{{ $item->product->nama_produk }}"
-                                                width="120">
+                                            <a href="{{ route('produk.detail', $item->product->slug) }}">
+                                                <img src="{{ asset('storage/' . $item->product->gambar) }}"
+                                                    class="rounded img-fluid" alt="{{ $item->product->nama_produk }}"
+                                                    width="120">
+                                            </a>
                                         </div>
                                         <div class="col">
-                                            <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
+                                            <a href="{{ route('produk.detail', $item->product->slug) }}"
+                                                class="text-decoration-none text-custom">
+                                                <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
+                                            </a>
                                             <div class="text-danger mt-1">
                                                 Rp{{ number_format($item->product->harga, 0, ',', '.') }}</div>
                                         </div>
@@ -94,8 +99,15 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="text-center py-4">
-                                    <p class="text-muted">Keranjang belanja kosong</p>
+                                <div class="container mt-4">
+                                    <div class="text-center py-5">
+                                        <i class="bi bi-cart-x display-1 text-muted"></i>
+                                        <h4 class="mt-3">Wah, keranjang belanjamu kosong</h4>
+                                        <p class="text-muted">Yuk, isi dengan barang-barang menarik</p>
+                                        <a href="{{ route('home.index') }}" class="btn btn-primary">
+                                            Mulai Belanja
+                                        </a>
+                                    </div>
                                 </div>
                             @endforelse
                         </div>
@@ -128,7 +140,7 @@
                         </div>
 
                         <button class="btn btn-primary w-100" id="btn-beli" disabled>
-                            Beli (0)
+                            Checkout (0)
                         </button>
                     </div>
                 </div>
@@ -261,12 +273,15 @@
                 // Update buy button
                 const buyButton = document.getElementById('btn-beli');
                 buyButton.disabled = selectedCount === 0;
-                buyButton.textContent = `Beli (${selectedCount})`;
+                buyButton.textContent = `Checkout (${selectedCount})`;
             }
 
             // Helper function for number formatting
             function numberFormat(number) {
-                return new Intl.NumberFormat('id-ID').format(number);
+                return new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(number);
             }
 
             // Event listeners for quantity buttons
@@ -380,7 +395,6 @@
         });
     </script>
 @endpush
-
 <style>
     /* Menghilangkan tombol spinner untuk input number */
     input[type="number"]::-webkit-inner-spin-button,
@@ -395,98 +409,38 @@
     }
 </style>
 
+
 @push('scripts')
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    <script>
+        document.getElementById('btn-beli').addEventListener('click', async function() {
+            const selectedItems = [];
+            const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
 
-            // Calculate and update summary
-            function calculateAndUpdateSummary() {
-                let totalPrice = 0;
-                let totalDiscount = 0;
-                let selectedCount = 0;
+            checkedBoxes.forEach(checkbox => {
+                const cartItem = checkbox.closest('.cart-item');
+                const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
+                const productId = cartItem.dataset.id;
+                const price = parseFloat(checkbox.dataset.price);
 
-                // Hitung total dari item yang tercentang
-                document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-                    const cartItem = checkbox.closest('.cart-item');
-                    const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
-                    const price = parseFloat(checkbox.dataset.price);
-                    const discount = parseFloat(checkbox.dataset.discount) || 0;
-
-                    // Hitung total harga dan diskon
-                    totalPrice += price * quantity;
-                    totalDiscount += discount * quantity;
-                    selectedCount += quantity;
-                });
-
-                // Update elemen total harga
-                const totalHargaElement = document.getElementById('total-harga');
-                totalHargaElement.innerHTML = `
-        <span>Total Harga (${selectedCount} barang)</span>
-        <span>Rp${numberFormat(totalPrice)}</span>
-    `;
-
-                // Update elemen total diskon
-                const totalDiskonElement = document.getElementById('total-diskon');
-                totalDiskonElement.innerHTML = `
-        <span>Total Diskon</span>
-        <span class="text-danger">-${numberFormat(totalDiscount)}%</span>
-    `;
-
-                // Update elemen total belanja
-                const grandTotal = totalPrice - totalDiscount;
-                const totalBelanjaElement = document.getElementById('total-belanja');
-                totalBelanjaElement.innerHTML = `
-        <strong>Total Belanja</strong>
-        <strong class="text-danger">Rp${numberFormat(grandTotal)}</strong>
-    `;
-
-                // Update tombol beli
-                const buyButton = document.getElementById('btn-beli');
-                if (selectedCount === 0) {
-                    buyButton.disabled = true;
-                    buyButton.textContent = 'Beli (0)';
-                } else {
-                    buyButton.disabled = false;
-                    buyButton.textContent = `Beli (${selectedCount})`;
-                }
-            }
-
-
-            // Helper function untuk format angka
-            function numberFormat(number) {
-                return new Intl.NumberFormat('id-ID').format(number);
-            }
-
-            // Event listener untuk checkbox "Pilih Semua"
-            if (selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', function() {
-                    itemCheckboxes.forEach(checkbox => {
-                        checkbox.checked = this.checked;
-                    });
-                    calculateAndUpdateSummary();
-                });
-            }
-
-            // Event listener untuk setiap checkbox item
-            itemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', calculateAndUpdateSummary);
-            });
-
-            // Event listener untuk perubahan quantity
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    // Pastikan nilai tidak kurang dari 1
-                    if (parseInt(this.value) < 1) {
-                        this.value = 1;
-                    }
-                    calculateAndUpdateSummary();
+                selectedItems.push({
+                    id: productId,
+                    quantity: quantity,
+                    price: price
                 });
             });
 
-            // Kalkulasi awal saat halaman dimuat
-            calculateAndUpdateSummary();
+            if (selectedItems.length === 0) {
+                alert('Pilih minimal satu produk untuk dibeli');
+                return;
+            }
+
+            // Store selected items in sessionStorage
+            sessionStorage.setItem('checkoutItems', JSON.stringify(selectedItems));
+            console.log(selectedItems);
+
+            // Redirect to checkout page
+            window.location.href = '{{ route('checkout') }}';
+            // Ganti dengan route checkout kamu
         });
-    </script> --}}
+    </script>
 @endpush

@@ -7,7 +7,7 @@
                     <script>
                         document.write(new Date().getFullYear())
                     </script>
-                    made with ⚡<i class="fa fa-heart"></i> by
+                    made with ⚡by
                     <a href="#" class="font-weight-bold text-decoration-none text-custom" target="_blank">Ahmad
                         Syaifuddin</a>
                     - Food Fusion
