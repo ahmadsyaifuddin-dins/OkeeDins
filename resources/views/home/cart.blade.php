@@ -408,39 +408,3 @@
         /* Firefox */
     }
 </style>
-
-
-@push('scripts')
-    <script>
-        document.getElementById('btn-beli').addEventListener('click', async function() {
-            const selectedItems = [];
-            const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
-
-            checkedBoxes.forEach(checkbox => {
-                const cartItem = checkbox.closest('.cart-item');
-                const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
-                const productId = cartItem.dataset.id;
-                const price = parseFloat(checkbox.dataset.price);
-
-                selectedItems.push({
-                    id: productId,
-                    quantity: quantity,
-                    price: price
-                });
-            });
-
-            if (selectedItems.length === 0) {
-                alert('Pilih minimal satu produk untuk dibeli');
-                return;
-            }
-
-            // Store selected items in sessionStorage
-            sessionStorage.setItem('checkoutItems', JSON.stringify(selectedItems));
-            console.log(selectedItems);
-
-            // Redirect to checkout page
-            window.location.href = '{{ route('checkout') }}';
-            // Ganti dengan route checkout kamu
-        });
-    </script>
-@endpush
