@@ -14,8 +14,13 @@
             <a class="btn" href="#">
                 <i class="bi bi-envelope"></i>
             </a>
-            <a class="btn" href="#">
+            <a class="btn position-relative" href="{{ route('cart.index') }}">
                 <i class="bi bi-cart"></i>
+                @auth
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $cartCount }}
+                    </span>
+                @endauth
             </a>
         </div>
 
@@ -45,19 +50,23 @@
                         <i class="bi bi-heart me-1"></i> Favorit
                     </a>
                 </li>
-                <li class="nav-item d-none d-lg-block">
-                    {{-- <a class="nav-link" href="{{ route('market.cart') }}"> --}}
-                    <a class="nav-link" href="#">
+                <li class="nav-item d-none d-lg-block position-relative">
+                    <a class="nav-link" href="{{ route('cart.index') }}">
+                        {{-- <a class="nav-link" href="#"> --}}
                         <i class="bi bi-cart me-1"></i> Keranjang
+                        @auth
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ $cartCount }}
+                            </span>
+                        @endauth
                     </a>
                 </li>
             </ul>
 
-            <!-- Rest of the navbar content remains unchanged -->
             <!-- Search Form -->
-            <form class="d-flex me-3">
+            <form class="d-flex align-items-center me-3">
                 <input class="form-control me-2" type="search" placeholder="Cari produk..." aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit">
+                <button class="btn btn-outline-primary d-flex align-items-center justify-content-center" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
@@ -121,7 +130,7 @@
                     </ul>
                 </div>
             @else
-                <div class="d-flex my-3">
+                <div class="d-flex align-items-center">
                     <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Masuk</a>
                     <a href="{{ route('register') }}" class="btn btn-primary">Daftar</a>
                 </div>

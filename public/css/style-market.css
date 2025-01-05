@@ -45,6 +45,10 @@
 }
 
 
+.bg-primary {
+    background-color: var(--marketColorPrimary) !important;
+}
+
 
 /* Custom Swiper Pagination Bullets */
 .swiper-pagination-bullet {
@@ -57,34 +61,6 @@
     background-color: var(--marketColorPrimary) !important;
     opacity: 1;
 }
-
-
-/* Style untuk navigasi bawah */
-.fixed-bottom {
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid var(--marketColorThirty);
-}
-
-.fixed-bottom a {
-    color: black;
-    transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-.fixed-bottom a:hover,
-.fixed-bottom a:focus {
-    color: var(--marketColorPrimary);
-
-}
-
-.fixed-bottom i {
-    transition: color 0.3s ease;
-}
-
-.fixed-bottom a:hover i,
-.fixed-bottom a:focus i {
-    color: var(--marketColorPrimary);
-}
-
 
 
 /* produk card & img konsisten */

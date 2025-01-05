@@ -1,5 +1,5 @@
 @extends('layouts.styling_global')
-
+{{-- @extends('layouts.app') --}}
 @section('content')
     <section class="py-5">
         <div class="container">
@@ -239,6 +239,8 @@
     </div>
 </section>
 @endsection
+
+{{-- @include('layouts.bottom-nav') --}}
 
 @section('scripts')
 <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>

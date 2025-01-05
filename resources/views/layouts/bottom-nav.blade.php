@@ -1,6 +1,6 @@
 <div class="d-block d-lg-none bg-light fixed-bottom">
     <div class="container d-flex justify-content-around py-2">
-        <a href="/home" class="text-center text-decoration-none">
+        <a href="{{ route('home.index') }}" class="text-center text-decoration-none">
             <i class="bi bi-house fs-4"></i>
             <div>Home</div>
         </a>

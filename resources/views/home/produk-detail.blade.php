@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-5">
+    <div class="container mt-4">
         <div class="row">
             <!-- Product Images Section -->
             <div class="col-md-5">
@@ -48,7 +48,7 @@
                         <button id="btn-minus" class="btn btn-outline-primary">
                             <i class="bi bi-dash"></i>
                         </button>
-                        <input type="number" id="quantity" class="form-control text-center mx-2"
+                        <input type="number" id="quantity" class="form-control text-center mx-2" value="1"
                             max="{{ $product->stok }}" style="width: 80px;">
                         <button id="btn-plus" class="btn btn-outline-primary">
                             <i class="bi bi-plus"></i>
@@ -67,9 +67,10 @@
                     </h3>
                 </div>
 
-                <!-- Action Buttons -->
+
+                <!-- Buttons Qty -->
                 <div class="d-flex gap-2 mb-3">
-                    <button class="btn btn-primary flex-grow-1">
+                    <button class="btn btn-primary flex-grow-1" onclick="addToCart()">
                         <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
                     </button>
                     <button class="btn btn-outline-primary">
@@ -101,10 +102,18 @@
 
                 <div class="tab-content p-4 border border-top-0" id="productTabsContent">
                     <div class="tab-pane fade show active" id="description">
+                        <!-- Add the description section first -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">Deskripsi Produk</h5>
+                            <div class="description-content">
+                                {{ $product->deskripsi }}
+                            </div>
+                        </div>
+                        <hr>
                         <div class="table-responsive">
                             <table class="table table-borderless">
                                 <tr>
-                                    <td style="width: 200px">Kategori</td>
+                                    <td style="width: 1rem">Kategori</td>
                                     <td>: {{ $product->kategori->nama_kategori }}</td>
                                 </tr>
                                 <tr>
@@ -212,3 +221,90 @@
         /* Firefox */
     }
 </style>
+
+@push('scripts')
+    <script>
+        function addToCart() {
+            // Ambil nilai quantity dan notes
+            const quantity = document.getElementById('quantity').value;
+
+            // Validasi quantity
+            if (quantity < 1) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Jumlah produk minimal 1',
+                    icon: 'warning'
+                });
+                return;
+            }
+
+            // Disable button selama proses
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menambahkan...';
+
+            // Kirim request AJAX
+            $.ajax({
+                url: '{{ route('cart.add') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    produk_id: {{ $product->id }},
+                    quantity: quantity,
+                    price: {{ $product->harga_diskon }},
+                    amount: {{ $product->harga_diskon }} * quantity
+                },
+                success: function(response) {
+                    // Reset button state
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-cart-plus"></i> Tambah ke Keranjang';
+
+                    // Update cart badge di navbar
+                    const cartBadges = document.querySelectorAll('.cart-badge');
+                    cartBadges.forEach(badge => {
+                        badge.textContent = response.cartCount;
+                        badge.classList.remove('d-none');
+                    });
+
+                    // Tampilkan notifikasi sukses
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Produk berhasil ditambahkan ke keranjang',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Lihat Keranjang',
+                        cancelButtonText: 'Lanjut Belanja',
+                        confirmButtonColor: '#0d6efd',
+                        cancelButtonColor: '#6c757d'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ route('cart.index') }}';
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    // Reset button state
+                    btn.disabled = false;
+
+                    // Tampilkan pesan error
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: xhr.responseJSON?.message ||
+                            'Terjadi kesalahan saat menambahkan ke keranjang',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    </script>
+@endpush
+
+@push('styles')
+    <style>
+        /* Animasi loading saat menambah ke keranjang */
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+@endpush

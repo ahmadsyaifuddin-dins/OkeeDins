@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProdukController;
@@ -49,8 +50,6 @@ Route::get('/', function () {
 Route::get('/produk/{slug}', [MarketController::class, 'detailProduk'])->name('produk.detail');
 Route::get('/kategori/{slug}', [MarketController::class, 'index'])->name('market.kategori');
 
-
-
 //! Route untuk guest (belum login) untuk pelanggan
 Route::middleware('guest')->group(function () {
     Route::get('/login', [PelangganController::class, 'showLoginForm'])->name('login');
@@ -63,6 +62,9 @@ Route::middleware('guest')->group(function () {
 //! Route untuk pelanggan yang sudah login
 Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middleware pelanggan
     Route::post('/logout', [PelangganController::class, 'logout'])->name('logout');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
 
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -70,6 +72,13 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     });
 });
 
+Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+// Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+// });
 
 //? Route Admin
 

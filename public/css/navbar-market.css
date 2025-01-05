@@ -19,6 +19,38 @@ body {
     }
 } */
 
+
+.navbar .navbar-collapse {
+    align-items: center;
+    /* Selaraskan semua item secara vertikal */
+}
+
+
+/* Selaraskan form pencarian */
+.navbar .d-flex.me-3 {
+    align-items: center;
+    height: 100%;
+}
+
+.navbar .d-flex.my-3 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    align-items: center;
+    height: 100%;
+}
+
+.navbar .btn,
+.navbar .form-control {
+    height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar form,
+.navbar .d-flex {
+    margin: 5px;
+}
+
 /* Posisi dropdown tetap di tengah */
 .dropdown-menu[data-bs-popper] {
     top: 100%;
