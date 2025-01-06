@@ -139,7 +139,7 @@
                             <strong class="text-danger">Rp0</strong>
                         </div>
 
-                        <button class="btn btn-primary w-100" id="btn-beli" disabled>
+                        <button class="btn btn-primary w-100" id="btn-checkout" disabled>
                             Checkout (0)
                         </button>
                     </div>
@@ -271,7 +271,7 @@
         `;
 
                 // Update buy button
-                const buyButton = document.getElementById('btn-beli');
+                const buyButton = document.getElementById('btn-checkout');
                 buyButton.disabled = selectedCount === 0;
                 buyButton.textContent = `Checkout (${selectedCount})`;
             }
@@ -408,3 +408,64 @@
         /* Firefox */
     }
 </style>
+
+
+@push('scripts')
+    <script>
+        document.getElementById('btn-checkout').addEventListener('click', async function() {
+            const selectedItems = [];
+            const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+
+            checkedBoxes.forEach(checkbox => {
+                const cartItem = checkbox.closest('.cart-item');
+                const productId = cartItem.dataset.id;
+                const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
+                const price = parseFloat(checkbox.dataset.price);
+                const discount = parseFloat(checkbox.dataset.discount) || 0;
+                const productName = cartItem.querySelector('h6').textContent;
+                const productImage = cartItem.querySelector('img').getAttribute('src');
+
+                selectedItems.push({
+                    id: productId,
+                    name: productName,
+                    quantity: quantity,
+                    price: price,
+                    discount: discount,
+                    image: productImage,
+                    subtotal: (price * quantity) - ((price * quantity * discount) / 100)
+                });
+            });
+
+            if (selectedItems.length === 0) {
+                alert('Pilih minimal satu produk untuk dibeli');
+                return;
+            }
+
+            try {
+                // Store selected items in session storage
+                sessionStorage.setItem('checkoutItems', JSON.stringify(selectedItems));
+
+                // Calculate totals
+                const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+                const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const totalDiscount = selectedItems.reduce((sum, item) => sum + ((item.price * item.quantity *
+                    item.discount) / 100), 0);
+                const grandTotal = totalPrice - totalDiscount;
+
+                // Store summary data
+                sessionStorage.setItem('checkoutSummary', JSON.stringify({
+                    totalQuantity,
+                    totalPrice,
+                    totalDiscount,
+                    grandTotal
+                }));
+
+                // Redirect to checkout page
+                window.location.href = '/checkout';
+            } catch (error) {
+                console.error('Error preparing checkout:', error);
+                alert('Terjadi kesalahan saat memproses checkout. Silakan coba lagi.');
+            }
+        });
+    </script>
+@endpush
