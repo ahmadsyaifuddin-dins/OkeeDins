@@ -24,31 +24,7 @@
                         <div id="checkout-items">
                             <div class="product-list">
                                 <!-- Template for product items -->
-                                <template id="product-template">
-                                    <div class="cart-item border-bottom py-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <img src="" alt="Product Image" class="product-image rounded"
-                                                    style="width: 80px; height: 80px; object-fit: cover;">
-                                            </div>
-                                            <div class="col">
-                                                <h6 class="product-name mb-1"></h6>
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <span class="text-danger product-price me-2"></span>
-                                                    <span
-                                                        class="text-decoration-line-through text-muted original-price"></span>
-                                                </div>
-                                                <div class="text-muted">Jumlah: <span class="product-quantity"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="text-end">
-                                                    <div class="text-danger product-subtotal"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
+
                             </div>
                         </div>
                     </div>
@@ -117,129 +93,137 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const productList = document.querySelector('.product-list');
-            const productTemplate = document.getElementById('product-template').content;
-            const totalItems = document.getElementById('total-items');
-            const totalPrice = document.getElementById('total-price');
-            const totalDiscount = document.getElementById('total-discount');
-            const grandTotal = document.getElementById('grand-total');
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Retrieve stored checkout items
+                const checkoutItems = JSON.parse(sessionStorage.getItem('checkoutItems') || '[]');
+                const checkoutSummary = JSON.parse(sessionStorage.getItem('checkoutSummary') || '{}');
 
-            // Fetch data produk dari server
-            fetch('{{ route('api.cart.items') }}')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let totalItemCount = 0;
-                        let totalItemPrice = 0;
-                        let totalItemDiscount = 0;
-
-                        data.items.forEach(item => {
-                            const productClone = productTemplate.cloneNode(true);
-
-                            const productImage = productClone.querySelector('.product-image');
-                            const productName = productClone.querySelector('.product-name');
-                            const productPrice = productClone.querySelector('.product-price');
-                            const originalPrice = productClone.querySelector('.original-price');
-                            const productQuantity = productClone.querySelector('.product-quantity');
-                            const productSubtotal = productClone.querySelector('.product-subtotal');
-
-                            productImage.src = item.image_url;
-                            productName.textContent = item.name;
-                            productPrice.textContent = `Rp${item.price.toLocaleString()}`;
-                            originalPrice.textContent = item.original_price ?
-                                `Rp${item.original_price.toLocaleString()}` :
-                                '';
-                            productQuantity.textContent = item.quantity;
-                            productSubtotal.textContent =
-                                `Rp${(item.price * item.quantity).toLocaleString()}`;
-
-                            productList.appendChild(productClone);
-
-                            totalItemCount += item.quantity;
-                            totalItemPrice += item.price * item.quantity;
-                            totalItemDiscount += item.original_price ?
-                                (item.original_price - item.price) * item.quantity :
-                                0;
-                        });
-
-                        // Update total summary
-                        totalItems.textContent = totalItemCount;
-                        totalPrice.textContent = `Rp${totalItemPrice.toLocaleString()}`;
-                        totalDiscount.textContent = `-Rp${totalItemDiscount.toLocaleString()}`;
-                        grandTotal.textContent = `Rp${(totalItemPrice - totalItemDiscount).toLocaleString()}`;
-                    } else {
-                        alert('Gagal memuat data produk. Silakan coba lagi.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching cart items:', error);
-                    alert('Terjadi kesalahan saat memuat data produk.');
-                });
-        });
-    </script>
-@endsection
-
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const paymentMethodInputs = document.querySelectorAll('input[name="payment_method"]');
-            const transferProofDiv = document.getElementById('transfer-proof');
-            const btnPay = document.getElementById('btn-pay');
-
-            // Toggle visibility of proof of payment upload
-            paymentMethodInputs.forEach(input => {
-                input.addEventListener('change', () => {
-                    if (input.value === 'transfer') {
-                        transferProofDiv.classList.remove('d-none');
-                    } else {
-                        transferProofDiv.classList.add('d-none');
-                    }
-                });
-            });
-
-            // Handle "Bayar Sekarang" button click
-            btnPay.addEventListener('click', () => {
-                const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-                const proof = document.getElementById('proof_of_payment').files[0];
-
-                if (paymentMethod === 'transfer' && !proof) {
-                    alert('Harap upload bukti transfer!');
+                if (checkoutItems.length === 0) {
+                    window.location.href = '/cart';
                     return;
                 }
 
-                // Gather data and send to server
-                const data = {
-                    paymentMethod,
-                    // Include other necessary data, e.g., cart items, total price, etc.
-                };
+                // Populate the checkout items
+                const checkoutItemsContainer = document.getElementById('checkout-items');
+                checkoutItems.forEach(item => {
+                    const itemHtml = `
+                <div class="checkout-item border-bottom py-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="${item.image}" alt="${item.name}" class="rounded" width="80">
+                        </div>
+                        <div class="col">
+                            <h6 class="mb-1">${item.name}</h6>
+                            <div class="text-muted small">
+                                ${item.quantity} x Rp${numberFormat(item.price)}
+                                ${item.discount > 0 ? `<span class="text-danger">(Diskon ${item.discount}%)</span>` : ''}
+                            </div>
+                            <div class="text-danger mt-1">
+                                Rp${numberFormat(item.subtotal)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                    checkoutItemsContainer.innerHTML += itemHtml;
+                });
 
-                if (paymentMethod === 'transfer') {
-                    const formData = new FormData();
-                    formData.append('proof', proof);
-                    formData.append('data', JSON.stringify(data));
+                // Update summary section
+                document.getElementById('total-items').textContent = checkoutSummary.totalQuantity;
+                document.getElementById('total-price').textContent =
+                    `Rp${numberFormat(checkoutSummary.totalPrice)}`;
+                document.getElementById('total-discount').textContent =
+                    `-Rp${numberFormat(checkoutSummary.totalDiscount)}`;
+                document.getElementById('grand-total').textContent =
+                    `Rp${numberFormat(checkoutSummary.grandTotal)}`;
 
-                    fetch('{{ route('checkout.process') }}', {
+                // Handle payment method selection
+                const transferProofDiv = document.getElementById('transfer-proof');
+                const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+                paymentMethods.forEach(method => {
+                    method.addEventListener('change', function() {
+                        transferProofDiv.classList.toggle('d-none', this.value !== 'transfer');
+                    });
+                });
+
+
+                // Handle checkout form submission
+                const btnPay = document.getElementById('btn-pay');
+                btnPay.addEventListener('click', async function(e) {
+                    e.preventDefault();
+
+                    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')
+                        .value;
+                    let formData = new FormData();
+
+                    // Pastikan setiap item memiliki ID yang benar
+                    const itemsToSend = checkoutItems.map(item => ({
+                        id: parseInt(item.id), // Pastikan ID dalam bentuk integer
+                        price: item.price,
+                        quantity: item.quantity,
+                        discount: item.discount
+                    }));
+
+                    // Add payment method and items to form data
+                    formData.append('payment_method', paymentMethod);
+                    formData.append('items', JSON.stringify(itemsToSend));
+                    // formData.append('items', JSON.stringify(checkoutItems));
+
+
+                    // If transfer method is selected, add proof of payment
+                    if (paymentMethod === 'transfer') {
+                        const proofFile = document.getElementById('proof_of_payment').files[0];
+                        if (!proofFile) {
+                            alert('Silakan upload bukti transfer terlebih dahulu');
+                            return;
+                        }
+                        formData.append('proof_of_payment', proofFile);
+                    }
+
+                    try {
+                        const response = await fetch('/checkout', {
                             method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content
+                            },
                             body: formData
-                        }).then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Pembayaran berhasil diproses');
-                                window.location.href = `{{ url('orders') }}/${data.order.id}/complete`;
-                            } else {
-                                alert('Terjadi kesalahan saat memproses pembayaran');
-                            }
-                        }).catch(error => {
-                            console.error('Error:', error);
-                            alert('Terjadi kesalahan saat menghubungi server.');
                         });
-                } else {
-                    // Handle COD
-                    alert('Pesanan COD berhasil dibuat');
-                    window.location.href = `{{ url('orders') }}/${data.order.id}/complete`;
-                }
-            });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            // Clear cart session storage
+                            sessionStorage.removeItem('checkoutItems');
+                            sessionStorage.removeItem('checkoutSummary');
+
+                            // Redirect to order success page or show success message
+                            alert('Pesanan berhasil dibuat!');
+                            window.location.href = '/order'; // Adjust the redirect URL as needed
+                        } else {
+                            throw new Error(result.message ||
+                                'Terjadi kesalahan saat memproses pesanan');
+                        }
+                    } catch (error) {
+                        console.error('Error processing checkout:', error);
+                        alert(error.message);
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error loading checkout data:', error);
+                alert('Terjadi kesalahan saat memuat data checkout');
+                window.location.href = '/cart';
+            }
         });
+
+        // Helper function for number formatting
+        function numberFormat(number) {
+            return new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
+        }
     </script>
 @endsection
