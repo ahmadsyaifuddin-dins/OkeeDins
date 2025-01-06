@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProdukController;
@@ -72,8 +73,17 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     });
 });
 
+
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+
 Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
 Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems'])
+    ->name('cart.get-selected-items');
+
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
