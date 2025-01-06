@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -77,6 +78,7 @@ class CartController extends Controller
         return view('home.cart', compact('cartItems', 'totalPrice', 'totalDiscount', 'grandTotal'));
     }
 
+
     private function getCartQuery()
     {
         return Cart::where('user_id', auth()->id())->where('status', 'new');
@@ -99,6 +101,45 @@ class CartController extends Controller
             'price' => $request->price,
             'amount' => $request->amount,
             'status' => 'new'
+        ]);
+    }
+
+    public function getSelectedItems()
+    {
+        $cartItems = Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $items = $cartItems->map(function ($item) {
+            return [
+                'id' => $item->produk_id,
+                'name' => $item->product->nama_produk,
+                'price' => $item->product->harga,
+                'quantity' => $item->quantity,
+                'discount' => $item->product->diskon,
+                'image' => asset('storage/' . $item->product->gambar)
+            ];
+        });
+
+        // Hitung summary
+        $summary = [
+            'totalQuantity' => $items->sum('quantity'),
+            'totalPrice' => $items->sum(function ($item) {
+                return $item['price'] * $item['quantity'];
+            }),
+            'totalDiscount' => $items->sum(function ($item) {
+                return ($item['price'] * $item['quantity'] * $item['discount']) / 100;
+            }),
+            'grandTotal' => $items->sum(function ($item) {
+                return ($item['price'] * $item['quantity']) -
+                    (($item['price'] * $item['quantity'] * $item['discount']) / 100);
+            })
+        ];
+
+        return response()->json([
+            'success' => true,
+            'items' => $items,
+            'summary' => $summary
         ]);
     }
 
