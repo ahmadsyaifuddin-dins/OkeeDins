@@ -18,12 +18,15 @@ class CheckoutController extends Controller
     }
 
     // Menampilkan halaman checkout
+    // CheckoutController.php modifications
+
+
     public function showCheckout()
     {
         // Mengambil cart items yang terseleksi dari database
         $cartItems = Cart::with('product')
             ->where('user_id', Auth::id())
-            ->whereHas('product') // Memastikan produk masih ada
+            ->whereHas('product')
             ->get();
 
         if ($cartItems->isEmpty()) {
@@ -31,44 +34,107 @@ class CheckoutController extends Controller
                 ->with('error', 'Tidak ada produk dalam keranjang');
         }
 
-        return view('home.checkout', compact('cartItems'));
+        // Calculate totals
+        $totalPrice = $cartItems->sum(function ($item) {
+            return $item->product->harga * $item->quantity;
+        });
+
+        $totalDiscount = $cartItems->sum(function ($item) {
+            return ($item->product->harga * $item->quantity * $item->product->diskon) / 100;
+        });
+
+        $grandTotal = $totalPrice - $totalDiscount;
+
+        return view('home.checkout', [
+            'cartItems' => $cartItems,
+            'totalPrice' => $totalPrice,
+            'totalDiscount' => $totalDiscount,
+            'grandTotal' => $grandTotal,
+            'isFromCart' => true
+        ]);
     }
+
+    public function payNow(Request $request)
+    {
+        $items = json_decode($request->query('items'), true);
+
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Data produk tidak valid');
+        }
+
+        $directItems = collect($items)->map(function ($item) {
+            $produk = Produk::findOrFail($item['id']);
+            return [
+                'produk_id' => $produk->id,
+                'product' => $produk,
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+                'discount' => $item['discount'],
+                'subtotal' => ($item['price'] * $item['quantity']) -
+                    (($item['price'] * $item['quantity'] * $item['discount']) / 100)
+            ];
+        });
+
+        // Calculate totals for direct purchase
+        $totalPrice = $directItems->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        $totalDiscount = $directItems->sum(function ($item) {
+            return ($item['price'] * $item['quantity'] * $item['discount']) / 100;
+        });
+
+        $grandTotal = $totalPrice - $totalDiscount;
+
+        return view('home.checkout', [
+            'cartItems' => $directItems,
+            'totalPrice' => $totalPrice,
+            'totalDiscount' => $totalDiscount,
+            'grandTotal' => $grandTotal,
+            'isFromCart' => false,
+            'checkoutItems' => $items
+        ]);
+    }
+
 
     // Memproses checkout
     public function processCheckout(Request $request)
     {
         try {
             return DB::transaction(function () use ($request) {
-                // Validasi request
                 $validated = $request->validate([
                     'payment_method' => 'required|in:cod,transfer',
                     'items' => 'required|json',
                     'proof_of_payment' => 'required_if:payment_method,transfer|file|image|max:2048'
                 ]);
 
-                // Decode items JSON
                 $items = json_decode($validated['items'], true);
 
                 if (empty($items)) {
                     throw new \Exception('Tidak ada item yang dipilih');
                 }
 
-                // Verifikasi keberadaan produk sebelum membuat order
+                // Verifikasi keberadaan produk dan stok
                 foreach ($items as $item) {
                     $produk = Produk::find($item['id']);
                     if (!$produk) {
                         throw new \Exception("Produk dengan ID {$item['id']} tidak ditemukan");
                     }
+
+                    // Validasi stok
+                    if ($produk->stok < $item['quantity']) {
+                        throw new \Exception("Stok produk {$produk->nama_produk} tidak mencukupi");
+                    }
                 }
 
-                // Hitung total amount
+                // Hitung total
                 $totalAmount = 0;
                 foreach ($items as $item) {
                     $totalAmount += ($item['price'] * $item['quantity']) -
                         (($item['price'] * $item['quantity'] * $item['discount']) / 100);
                 }
 
-                // Buat order baru
+                // Buat order
                 $order = Order::create([
                     'user_id' => Auth::id(),
                     'payment_method' => $validated['payment_method'],
@@ -78,30 +144,36 @@ class CheckoutController extends Controller
                     'order_date' => now(),
                 ]);
 
-                // Handle bukti pembayaran untuk metode transfer
+                // Handle bukti pembayaran
                 if ($validated['payment_method'] === 'transfer' && $request->hasFile('proof_of_payment')) {
                     $path = $request->file('proof_of_payment')
                         ->store('proof_of_payments/' . Auth::id(), 'public');
                     $order->update(['payment_proof' => $path]);
                 }
 
-                // Buat order items dengan nama kolom yang benar
+                // Buat order items
                 foreach ($items as $item) {
                     OrderItems::create([
                         'order_id' => $order->id,
-                        'produk_id' => $item['id'], // Ubah dari product_id menjadi produk_id
+                        'produk_id' => $item['id'],
                         'quantity' => $item['quantity'],
                         'price' => $item['price'],
                         'discount' => $item['discount'],
                         'subtotal' => ($item['price'] * $item['quantity']) -
                             (($item['price'] * $item['quantity'] * $item['discount']) / 100)
                     ]);
+
+                    // Kurangi stok
+                    $produk = Produk::find($item['id']);
+                    $produk->decrement('stok', $item['quantity']);
                 }
 
-                // Hapus item dari cart
-                Cart::where('user_id', Auth::id())
-                    ->whereIn('produk_id', array_column($items, 'id')) // Ubah dari product_id menjadi produk_id
-                    ->delete();
+                // Jika checkout dari cart, hapus item cart
+                if ($request->input('isFromCart', true)) {
+                    Cart::where('user_id', Auth::id())
+                        ->whereIn('produk_id', array_column($items, 'id'))
+                        ->delete();
+                }
 
                 return response()->json([
                     'success' => true,
@@ -111,7 +183,7 @@ class CheckoutController extends Controller
                 ]);
             });
         } catch (\Exception $e) {
-            \Log::error('Checkout Error: ' . $e->getMessage()); // Tambah logging
+            \Log::error('Checkout Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage()
@@ -119,7 +191,6 @@ class CheckoutController extends Controller
         }
     }
 
-    // Halaman konfirmasi order
     public function confirmation($orderId)
     {
         $order = Order::with(['items.product', 'user'])

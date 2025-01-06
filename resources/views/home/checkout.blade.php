@@ -17,15 +17,84 @@
                     </div>
                 </div>
 
-                <!-- Product List -->
-                <div class="card mb-4">
+                <!-- Purchase Details -->
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">Produk yang Dibeli</h5>
+                        <h5 class="card-title mb-4">Detail Pembelian</h5>
                         <div id="checkout-items">
-                            <div class="product-list">
-                                <!-- Template for product items -->
-
-                            </div>
+                            @if (isset($cartItems))
+                                @if ($isFromCart)
+                                    {{-- Cart checkout items --}}
+                                    @foreach ($cartItems as $item)
+                                        @php
+                                            $originalPrice = $item->product->harga * $item->quantity;
+                                            $discountAmount = ($originalPrice * $item->product->diskon) / 100;
+                                            $subtotal = $originalPrice - $discountAmount;
+                                        @endphp
+                                        <div class="checkout-item border-bottom py-3"
+                                            data-item-id="{{ $item->product->id }}" data-price="{{ $item->product->harga }}"
+                                            data-quantity="{{ $item->quantity }}"
+                                            data-discount="{{ $item->product->diskon }}">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <img src="{{ asset('storage/' . $item->product->gambar) }}"
+                                                        alt="{{ $item->product->nama_produk }}" class="rounded"
+                                                        width="80">
+                                                </div>
+                                                <div class="col">
+                                                    <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
+                                                    <div class="text-muted small">
+                                                        {{ $item->quantity }} x
+                                                        Rp{{ number_format($item->product->harga, 0, ',', '.') }}
+                                                        @if ($item->product->diskon > 0)
+                                                            <span class="text-danger">(Diskon
+                                                                {{ $item->product->diskon }}%)</span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="text-danger mt-1">
+                                                        Rp{{ number_format($subtotal, 0, ',', '.') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    {{-- Direct purchase items --}}
+                                    @foreach ($cartItems as $item)
+                                        @php
+                                            $originalPrice = $item['price'] * $item['quantity'];
+                                            $discountAmount = ($originalPrice * $item['discount']) / 100;
+                                            $subtotal = $originalPrice - $discountAmount;
+                                        @endphp
+                                        <div class="checkout-item border-bottom py-3"
+                                            data-item-id="{{ $item['product']->id }}" data-price="{{ $item['price'] }}"
+                                            data-quantity="{{ $item['quantity'] }}"
+                                            data-discount="{{ $item['discount'] }}">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <img src="{{ asset('storage/' . $item['product']->gambar) }}"
+                                                        alt="{{ $item['product']->nama_produk }}" class="rounded"
+                                                        width="80">
+                                                </div>
+                                                <div class="col">
+                                                    <h6 class="mb-1">{{ $item['product']->nama_produk }}</h6>
+                                                    <div class="text-muted small">
+                                                        {{ $item['quantity'] }} x
+                                                        Rp{{ number_format($item['price'], 0, ',', '.') }}
+                                                        @if ($item['discount'] > 0)
+                                                            <span class="text-danger">(Diskon
+                                                                {{ $item['discount'] }}%)</span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="text-danger mt-1">
+                                                        Rp{{ number_format($subtotal, 0, ',', '.') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -49,7 +118,6 @@
                             </label>
                         </div>
 
-                        <!-- Transfer proof upload (initially hidden) -->
                         <div id="transfer-proof" class="mt-3 d-none">
                             <label class="form-label">Upload Bukti Transfer</label>
                             <input type="file" class="form-control" id="proof_of_payment" accept="image/*">
@@ -58,32 +126,40 @@
                 </div>
             </div>
 
-            <!-- Order Summary -->
+            <!-- Order Summary Section -->
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Ringkasan Pesanan</h5>
 
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Total Harga (<span id="total-items">0</span> barang)</span>
-                            <span id="total-price">Rp0</span>
+                            <span>Total Harga (@if ($isFromCart)
+                                    {{ $cartItems->count() }}
+                                @else
+                                    1
+                                @endif barang)</span>
+                            <span id="total-price">Rp{{ number_format($totalPrice, 0, ',', '.') }}</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2 text-success">
                             <span>Total Diskon</span>
-                            <span id="total-discount">-Rp0</span>
+                            <span id="total-discount">-Rp{{ number_format($totalDiscount, 0, ',', '.') }}</span>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
                             <strong>Total Tagihan</strong>
-                            <strong class="text-danger" id="grand-total">Rp0</strong>
+                            <strong class="text-danger" id="grand-total">
+                                Rp{{ number_format($grandTotal, 0, ',', '.') }}
+                            </strong>
                         </div>
 
                         <button class="btn btn-primary w-100" id="btn-pay">
                             Bayar Sekarang
                         </button>
+
+                        <input type="hidden" id="is-from-cart" value="{{ $isFromCart ? 'true' : 'false' }}">
                     </div>
                 </div>
             </div>
@@ -94,136 +170,78 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Retrieve stored checkout items
-                const checkoutItems = JSON.parse(sessionStorage.getItem('checkoutItems') || '[]');
-                const checkoutSummary = JSON.parse(sessionStorage.getItem('checkoutSummary') || '{}');
-
-                if (checkoutItems.length === 0) {
-                    window.location.href = '/cart';
-                    return;
-                }
-
-                // Populate the checkout items
-                const checkoutItemsContainer = document.getElementById('checkout-items');
-                checkoutItems.forEach(item => {
-                    const itemHtml = `
-                <div class="checkout-item border-bottom py-3">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <img src="${item.image}" alt="${item.name}" class="rounded" width="80">
-                        </div>
-                        <div class="col">
-                            <h6 class="mb-1">${item.name}</h6>
-                            <div class="text-muted small">
-                                ${item.quantity} x Rp${numberFormat(item.price)}
-                                ${item.discount > 0 ? `<span class="text-danger">(Diskon ${item.discount}%)</span>` : ''}
-                            </div>
-                            <div class="text-danger mt-1">
-                                Rp${numberFormat(item.subtotal)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-                    checkoutItemsContainer.innerHTML += itemHtml;
+            // Handle payment method selection
+            const transferProofDiv = document.getElementById('transfer-proof');
+            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function() {
+                    transferProofDiv.classList.toggle('d-none', this.value !== 'transfer');
                 });
+            });
 
-                // Update summary section
-                document.getElementById('total-items').textContent = checkoutSummary.totalQuantity;
-                document.getElementById('total-price').textContent =
-                    `Rp${numberFormat(checkoutSummary.totalPrice)}`;
-                document.getElementById('total-discount').textContent =
-                    `-Rp${numberFormat(checkoutSummary.totalDiscount)}`;
-                document.getElementById('grand-total').textContent =
-                    `Rp${numberFormat(checkoutSummary.grandTotal)}`;
+            // Handle checkout form submission
+            const btnPay = document.getElementById('btn-pay');
+            btnPay.addEventListener('click', async function(e) {
+                e.preventDefault();
 
-                // Handle payment method selection
-                const transferProofDiv = document.getElementById('transfer-proof');
-                const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
-                paymentMethods.forEach(method => {
-                    method.addEventListener('change', function() {
-                        transferProofDiv.classList.toggle('d-none', this.value !== 'transfer');
+                const paymentMethod = document.querySelector('input[name="payment_method"]:checked')
+                    .value;
+                let formData = new FormData();
+
+                // Collect items data from the DOM
+                const items = [];
+                document.querySelectorAll('.checkout-item').forEach(item => {
+                    items.push({
+                        id: parseInt(item.dataset.itemId),
+                        price: parseFloat(item.dataset.price),
+                        quantity: parseInt(item.dataset.quantity),
+                        discount: parseFloat(item.dataset.discount)
                     });
                 });
 
+                // Add payment method and items to form data
+                formData.append('payment_method', paymentMethod);
+                formData.append('items', JSON.stringify(items));
 
-                // Handle checkout form submission
-                const btnPay = document.getElementById('btn-pay');
-                btnPay.addEventListener('click', async function(e) {
-                    e.preventDefault();
-
-                    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')
-                        .value;
-                    let formData = new FormData();
-
-                    // Pastikan setiap item memiliki ID yang benar
-                    const itemsToSend = checkoutItems.map(item => ({
-                        id: parseInt(item.id), // Pastikan ID dalam bentuk integer
-                        price: item.price,
-                        quantity: item.quantity,
-                        discount: item.discount
-                    }));
-
-                    // Add payment method and items to form data
-                    formData.append('payment_method', paymentMethod);
-                    formData.append('items', JSON.stringify(itemsToSend));
-                    // formData.append('items', JSON.stringify(checkoutItems));
-
-
-                    // If transfer method is selected, add proof of payment
-                    if (paymentMethod === 'transfer') {
-                        const proofFile = document.getElementById('proof_of_payment').files[0];
-                        if (!proofFile) {
-                            alert('Silakan upload bukti transfer terlebih dahulu');
-                            return;
-                        }
-                        formData.append('proof_of_payment', proofFile);
+                // If transfer method is selected, add proof of payment
+                if (paymentMethod === 'transfer') {
+                    const proofFile = document.getElementById('proof_of_payment').files[0];
+                    if (!proofFile) {
+                        alert('Silakan upload bukti transfer terlebih dahulu');
+                        return;
                     }
+                    formData.append('proof_of_payment', proofFile);
+                }
 
-                    try {
-                        const response = await fetch('/checkout', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').content
-                            },
-                            body: formData
-                        });
+                try {
+                    const response = await fetch('/checkout', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        },
+                        body: formData
+                    });
 
-                        const result = await response.json();
+                    const result = await response.json();
 
-                        if (response.ok) {
-                            // Clear cart session storage
+                    if (response.ok) {
+                        // Clear cart session storage if it exists
+                        if (sessionStorage.getItem('checkoutItems')) {
                             sessionStorage.removeItem('checkoutItems');
                             sessionStorage.removeItem('checkoutSummary');
-
-                            // Redirect to order success page or show success message
-                            alert('Pesanan berhasil dibuat!');
-                            window.location.href = '/order'; // Adjust the redirect URL as needed
-                        } else {
-                            throw new Error(result.message ||
-                                'Terjadi kesalahan saat memproses pesanan');
                         }
-                    } catch (error) {
-                        console.error('Error processing checkout:', error);
-                        alert(error.message);
+
+                        alert('Pesanan berhasil dibuat!');
+                        window.location.href = '/order';
+                    } else {
+                        throw new Error(result.message || 'Terjadi kesalahan saat memproses pesanan');
                     }
-                });
-
-            } catch (error) {
-                console.error('Error loading checkout data:', error);
-                alert('Terjadi kesalahan saat memuat data checkout');
-                window.location.href = '/cart';
-            }
+                } catch (error) {
+                    console.error('Error processing checkout:', error);
+                    alert(error.message);
+                }
+            });
         });
-
-        // Helper function for number formatting
-        function numberFormat(number) {
-            return new Intl.NumberFormat('id-ID', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(number);
-        }
     </script>
 @endsection

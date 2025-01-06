@@ -78,9 +78,14 @@
                     </button>
                 </div>
 
-                <button class="btn btn-outline-primary w-100">
-                    <i class="bi bi-cash"></i> Beli Sekarang
-                </button>
+                <form action="{{ route('checkout.pay-now') }}" method="POST" id="payNowForm">
+                    @csrf
+                    <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" id="payNowQuantity">
+                    <button type="submit" class="btn btn-outline-primary w-100" id="btn-payNow">
+                        <i class="bi bi-cash"></i> Beli Sekarang
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -307,4 +312,40 @@
             cursor: not-allowed;
         }
     </style>
+@endpush
+
+<!-- Tombol Beli Sekarang -->
+@push('scripts')
+    <script>
+        // Tambahkan event listener untuk tombol Beli Sekarang
+        document.getElementById('btn-payNow').addEventListener('click', function(e) {
+            e.preventDefault();
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            // Validasi quantity
+            if (quantity < 1 || quantity > {{ $product->stok }}) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Jumlah produk tidak valid',
+                    icon: 'warning'
+                });
+                return;
+            }
+
+            // Siapkan data item untuk checkout
+            const checkoutItems = [{
+                id: {{ $product->id }},
+                name: "{{ $product->nama_produk }}",
+                price: {{ $product->harga }},
+                discount: {{ $product->diskon }},
+                quantity: quantity,
+                image: "{{ asset('storage/' . $product->gambar) }}",
+                subtotal: {{ $product->harga_diskon }} * quantity
+            }];
+
+            // Redirect ke checkout dengan data produk
+            const queryString = encodeURIComponent(JSON.stringify(checkoutItems));
+            window.location.href = `{{ route('checkout.pay-now') }}?items=${queryString}`;
+        });
+    </script>
 @endpush
