@@ -34,7 +34,7 @@ class Cart extends Model
     // Relationship dengan Order
     public function order()
     {
-        // return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class);
     }
 
     // Scope untuk mengambil cart yang statusnya masih 'new'
