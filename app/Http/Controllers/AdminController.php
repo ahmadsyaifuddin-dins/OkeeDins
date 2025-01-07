@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\KategoriProduk;
+use App\Models\Orders;
 use App\Models\Produk;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
@@ -373,6 +374,31 @@ class AdminController extends Controller
     }
     // End CRUD Produk
 
+
+    public function indexPesanan()
+    {
+        // Ambil semua pesanan dari database, tambahkan pagination jika diperlukan
+        $pesanan = Orders::with('user')->latest()->paginate(10);
+
+        // Kirim data ke view
+        return view('admin.pesanan.index', compact('pesanan'));
+    }
+
+    public function showPesanan($order_number)
+    {
+        $pesanan = Orders::with(['user', 'orderItems.produk'])->where('order_number', $order_number)->firstOrFail();
+
+        return view('admin.pesanan.detail', compact('pesanan'));
+    }
+
+    public function destroyPesanan($id)
+    {
+        $pesanan = Orders::findOrFail($id);
+
+        $pesanan->delete();
+
+        return redirect()->route('admin.pesanan.index')->with('success', 'Pesanan berhasil dihapus.');
+    }
 
 
     public function login()

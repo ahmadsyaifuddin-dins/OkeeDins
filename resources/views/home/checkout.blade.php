@@ -105,14 +105,14 @@
                         <h5 class="card-title mb-3">Metode Pembayaran</h5>
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="payment_method" id="cod"
-                                value="cod" checked>
+                                value="Cash on Delivery" checked>
                             <label class="form-check-label" for="cod">
                                 COD (Cash on Delivery)
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="payment_method" id="transfer"
-                                value="transfer">
+                                value="Transfer">
                             <label class="form-check-label" for="transfer">
                                 Transfer Bank
                             </label>
@@ -175,7 +175,7 @@
             const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
             paymentMethods.forEach(method => {
                 method.addEventListener('change', function() {
-                    transferProofDiv.classList.toggle('d-none', this.value !== 'transfer');
+                    transferProofDiv.classList.toggle('d-none', this.value !== 'Transfer');
                 });
             });
 
@@ -204,7 +204,7 @@
                 formData.append('items', JSON.stringify(items));
 
                 // If transfer method is selected, add proof of payment
-                if (paymentMethod === 'transfer') {
+                if (paymentMethod === 'Transfer') {
                     const proofFile = document.getElementById('proof_of_payment').files[0];
                     if (!proofFile) {
                         alert('Silakan upload bukti transfer terlebih dahulu');
@@ -223,6 +223,13 @@
                         body: formData
                     });
 
+                    if (!response.ok) {
+                        const errorResult = await response
+                            .text(); // Jika respons bukan JSON, ambil sebagai teks
+                        console.error('Error response:', errorResult);
+                        throw new Error('Terjadi kesalahan saat memproses pesanan');
+                    }
+
                     const result = await response.json();
 
                     if (response.ok) {
@@ -233,7 +240,7 @@
                         }
 
                         alert('Pesanan berhasil dibuat!');
-                        window.location.href = '/order';
+                        window.location.href = result.redirect_url;
                     } else {
                         throw new Error(result.message || 'Terjadi kesalahan saat memproses pesanan');
                     }

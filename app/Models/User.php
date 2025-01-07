@@ -37,7 +37,7 @@ class User extends Authenticatable  implements MustVerifyEmail
         'name',
         'email',
         'password',
-        // 'alamat',
+        'alamat',
         'tgl_lahir',
         'jenis_kelamin',
         'telepon',
@@ -69,4 +69,9 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $attributes = [
         'remember_token' => '',
     ];
+
+    public function pesanan()
+    {
+        return $this->hasMany(Pesanan::class);
+    }
 }

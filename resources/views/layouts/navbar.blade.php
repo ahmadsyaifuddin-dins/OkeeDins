@@ -76,7 +76,7 @@
                 <div class="dropdown d-none d-lg-block">
                     <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button"
                         id="userDropdown" data-bs-toggle="dropdown">
-                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/default-profile.png') }}"
+                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
                             alt="Foto Profil" class="rounded-circle me-2 img-fluid"
                             style="width: 40px; height: 40px; object-fit: cover; min-width: 40px;">
                         <span>{{ Auth::user()->name }}</span>

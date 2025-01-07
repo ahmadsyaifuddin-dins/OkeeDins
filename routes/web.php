@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MarketController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
@@ -77,8 +78,12 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('checkout.pay-now');
 
-
 Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
+Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
 
 Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
@@ -116,6 +121,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/pengguna', [AdminController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
             Route::get('/kategori', [AdminController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
             Route::get('/produk', [AdminController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
+            Route::get('/pesanan', [AdminController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
+
+            Route::get('/pesanan/{order_number}', [AdminController::class, 'showPesanan'])->name('pesanan.show');
 
             Route::get('/pengguna/create', [AdminController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
             Route::get('/kategori/create', [AdminController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
@@ -136,6 +144,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/pengguna/{id}', [AdminController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
             Route::delete('/kategori/{id}', [AdminController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
             Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
+            Route::delete('/pesanan/{id}', [AdminController::class, 'destroyPesanan'])->name('pesanan.destroy');
+
+            // web.php
+            Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
+
 
             Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
         });

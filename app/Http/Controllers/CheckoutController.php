@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Order;
 use App\Models\OrderItems;
+use App\Models\Orders;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,9 +103,9 @@ class CheckoutController extends Controller
         try {
             return DB::transaction(function () use ($request) {
                 $validated = $request->validate([
-                    'payment_method' => 'required|in:cod,transfer',
+                    'payment_method' => 'required|in:Cash on Delivery, Transfer',
                     'items' => 'required|json',
-                    'proof_of_payment' => 'required_if:payment_method,transfer|file|image|max:2048'
+                    'proof_of_payment' => 'required_if:payment_method,Transfer|file|image|max:2048'
                 ]);
 
                 $items = json_decode($validated['items'], true);
@@ -135,17 +135,17 @@ class CheckoutController extends Controller
                 }
 
                 // Buat order
-                $order = Order::create([
+                $order = Orders::create([
                     'user_id' => Auth::id(),
                     'payment_method' => $validated['payment_method'],
-                    'status' => $validated['payment_method'] === 'cod' ? 'pending' : 'awaiting_payment',
+                    'status' => $validated['payment_method'] === 'Cash on Delivery' ? 'pending' : 'awaiting_payment',
                     'total_amount' => $totalAmount,
                     'qty' => array_sum(array_column($items, 'quantity')),
                     'order_date' => now(),
                 ]);
 
                 // Handle bukti pembayaran
-                if ($validated['payment_method'] === 'transfer' && $request->hasFile('proof_of_payment')) {
+                if ($validated['payment_method'] === 'Transfer' && $request->hasFile('proof_of_payment')) {
                     $path = $request->file('proof_of_payment')
                         ->store('proof_of_payments/' . Auth::id(), 'public');
                     $order->update(['payment_proof' => $path]);
@@ -179,7 +179,7 @@ class CheckoutController extends Controller
                     'success' => true,
                     'message' => 'Pesanan berhasil dibuat',
                     'order_id' => $order->id,
-                    'redirect_url' => route('checkout.process', ['order' => $order->id])
+                    'redirect_url' => route('orders.confirmation', ['order' => $order->id])
                 ]);
             });
         } catch (\Exception $e) {
@@ -193,7 +193,7 @@ class CheckoutController extends Controller
 
     public function confirmation($orderId)
     {
-        $order = Order::with(['items.product', 'user'])
+        $order = Orders::with(['items', 'items.product', 'user'])
             ->where('user_id', Auth::id())
             ->findOrFail($orderId);
 
