@@ -13,7 +13,7 @@
                         <img src="/images/empty-order.svg" alt="Empty Orders" class="mb-3" style="width: 150px">
                         <h5>Belum ada pesanan</h5>
                         <p class="text-muted">Anda belum memiliki pesanan apapun</p>
-                        <a href="{{ route('home') }}" class="btn btn-primary">
+                        <a href="{{ route('home') }}" class="btn btn-custom">
                             Mulai Belanja
                         </a>
                     </div>
@@ -104,7 +104,7 @@
                                                 onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <button type="submit" class="btn btn-outline-custom btn-sm">
                                                     Batalkan
                                                 </button>
                                             </form>

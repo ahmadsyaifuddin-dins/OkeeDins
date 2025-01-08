@@ -155,7 +155,7 @@
                             </strong>
                         </div>
 
-                        <button class="btn btn-primary w-100" id="btn-pay">
+                        <button class="btn btn-custom w-100" id="btn-pay">
                             <i class="bi bi-shield-lock"></i> Bayar Sekarang
                         </button>
 

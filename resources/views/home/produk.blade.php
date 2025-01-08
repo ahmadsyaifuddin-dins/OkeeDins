@@ -7,8 +7,8 @@
             <p class="card-text fw-bold text-custom">Rp{{ number_format($prod->harga, 0, ',', '.') }}</p>
             <div class="d-flex justify-content-between">
                 {{-- <a href="{{ route('market.product-detail', $prod->id) }}" --}}
-                <a href="#" class="btn btn-sm btn-outline-primary">Lihat</a>
-                <button class="btn btn-sm btn-primary">Keranjang</button>
+                <a href="#" class="btn btn-sm btn-outline-custom">Lihat</a>
+                <button class="btn btn-sm btn-custom">Keranjang</button>
             </div>
         </div>
     </div>

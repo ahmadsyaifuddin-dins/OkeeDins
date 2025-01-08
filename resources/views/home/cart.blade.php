@@ -31,7 +31,7 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-shop me-2"></i>
                                     <h6 class="mb-0">Food Fusion</h6>
-                                    <span class="badge bg-primary ms-2">Official Store</span>
+                                    <span class="badge bg-custom ms-2">Official Store</span>
                                 </div>
                             </div>
                         </div>
@@ -67,14 +67,14 @@
                                         </div>
                                         <div class="col-auto">
                                             <div class="d-flex align-items-center">
-                                                <button class="btn btn-outline-primary btn-sm quantity-btn"
+                                                <button class="btn btn-outline-custom btn-sm quantity-btn"
                                                     data-action="decrease">
                                                     <i class="bi bi-dash"></i>
                                                 </button>
                                                 <input type="number"
                                                     class="form-control form-control-sm mx-2 my-3 text-center quantity-input"
                                                     value="{{ $item->quantity }}" style="width: 50px;">
-                                                <button class="btn btn-outline-primary btn-sm quantity-btn"
+                                                <button class="btn btn-outline-custom btn-sm quantity-btn"
                                                     data-action="increase">
                                                     <i class="bi bi-plus"></i>
                                                 </button>
@@ -104,7 +104,7 @@
                                         <i class="bi bi-cart-x display-1 text-muted"></i>
                                         <h4 class="mt-3">Wah, keranjang belanjamu kosong</h4>
                                         <p class="text-muted">Yuk, isi dengan barang-barang menarik</p>
-                                        <a href="{{ route('home.index') }}" class="btn btn-primary">
+                                        <a href="{{ route('home.index') }}" class="btn btn-custom">
                                             Mulai Belanja
                                         </a>
                                     </div>
@@ -139,7 +139,7 @@
                             <strong class="text-danger">Rp0</strong>
                         </div>
 
-                        <button class="btn btn-primary w-100" id="btn-checkout" disabled>
+                        <button class="btn btn-custom w-100" id="btn-checkout" disabled>
                             Checkout (0)
                         </button>
                     </div>
@@ -154,7 +154,7 @@
             <i class="bi bi-cart-x display-1 text-muted"></i>
             <h4 class="mt-3">Wah, keranjang belanjamu kosong</h4>
             <p class="text-muted">Yuk, isi dengan barang-barang menarik</p>
-            <a href="{{ route('home.index') }}" class="btn btn-primary">
+            <a href="{{ route('home.index') }}" class="btn btn-custom">
                 Mulai Belanja
             </a>
         </div>

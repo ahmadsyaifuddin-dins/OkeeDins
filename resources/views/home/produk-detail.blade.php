@@ -45,12 +45,12 @@
                 <!-- Quantity Section -->
                 <div class="mb-4">
                     <div class="d-flex align-items-center">
-                        <button id="btn-minus" class="btn btn-outline-primary">
+                        <button id="btn-minus" class="btn btn-outline-custom">
                             <i class="bi bi-dash"></i>
                         </button>
                         <input type="number" id="quantity" class="form-control text-center mx-2" value="1"
                             max="{{ $product->stok }}" style="width: 80px;">
-                        <button id="btn-plus" class="btn btn-outline-primary">
+                        <button id="btn-plus" class="btn btn-outline-custom">
                             <i class="bi bi-plus"></i>
                         </button>
                         <span class="ms-3 text-muted">Stok: Sisa {{ $product->stok }}</span>
@@ -70,10 +70,10 @@
 
                 <!-- Buttons Qty -->
                 <div class="d-flex gap-2 mb-3">
-                    <button class="btn btn-primary flex-grow-1" onclick="addToCart()">
+                    <button class="btn btn-custom flex-grow-1" onclick="addToCart()">
                         <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
                     </button>
-                    <button class="btn btn-outline-primary">
+                    <button class="btn btn-outline-custom">
                         <i class="bi bi-heart"></i>
                     </button>
                 </div>
@@ -82,7 +82,7 @@
                     @csrf
                     <input type="hidden" name="produk_id" value="{{ $product->id }}">
                     <input type="hidden" name="quantity" id="payNowQuantity">
-                    <button type="submit" class="btn btn-outline-primary w-100" id="btn-payNow">
+                    <button type="submit" class="btn btn-outline-custom w-100" id="btn-payNow">
                         <i class="bi bi-cash"></i> Beli Sekarang
                     </button>
                 </form>

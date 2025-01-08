@@ -24,7 +24,12 @@
     color: var(--marketColorPrimary);
 }
 
-.btn-primary {
+/* Warna Background Badges or Background suatu objek*/
+.bg-custom {
+    background-color: var(--marketColorPrimary) !important;
+}
+
+.btn-custom {
     background-color: var(--marketColorPrimary) !important;
     border-color: var(--marketColorPrimary) !important;
     color: var(--marketColorThirty) !important;
@@ -36,9 +41,9 @@
     color: var(--marketColorThirty) !important;
 } */
 
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active {
+.btn-custom:hover,
+.btn-custom:focus,
+.btn-custom:active {
     background-color: var(--marketColorPrimaryII) !important;
     border-color: var(--marketColorThirty) !important;
     color: var(--marketColorThirty) !important;
@@ -46,14 +51,14 @@
 
 
 /* Untuk tombol btn-outline-primary */
-.btn-outline-primary {
+.btn-outline-custom {
     color: var(--marketColorPrimary) !important;
     border-color: var(--marketColorPrimary) !important;
 }
 
-.btn-outline-primary:hover,
-.btn-outline-primary:focus,
-.btn-outline-primary:active {
+.btn-outline-custom:hover,
+.btn-outline-custom:focus,
+.btn-outline-custom:active {
     background-color: var(--marketColorPrimaryII) !important;
     border-color: var(--marketColorPrimaryII) !important;
     color: var(--marketColorThirty) !important;

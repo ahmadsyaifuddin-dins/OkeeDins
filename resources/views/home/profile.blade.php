@@ -23,7 +23,7 @@
                             <p class="text-muted mb-3">Pelanggan</p>
                             <div class="list-group">
                                 <a href="{{ route('pelanggan.profile') }}"
-                                    class="list-group-item list-group-item-action text-white bg-primary ">
+                                    class="list-group-item list-group-item-action bg-custom ">
                                     <i class="fas fa-user me-2"></i> Profile
                                 </a>
                                 <a href="{{ route('orders.index') }}" class="list-group-item list-group-item-action">
@@ -56,7 +56,7 @@
                 <!-- Profile Content -->
                 <div class="col-lg-9">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
+                        <div class="card-header bg-custom text-white">
                             <h5 class="card-title mb-0">Informasi Profil Saya
                             </h5>
                         </div>

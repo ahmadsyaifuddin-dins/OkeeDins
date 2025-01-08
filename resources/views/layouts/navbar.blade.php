@@ -33,7 +33,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <!-- Desktop Icons -->
                 <li class="nav-item d-none d-lg-block">
-                    {{-- <a class="btn btn-outline-primary me-2" href="{{ route('market.notifications') }}"> --}}
+                    {{-- <a class="btn btn-outline-custom me-2" href="{{ route('market.notifications') }}"> --}}
                     <a class="nav-link" href="#">
                         <i class="bi bi-bell me-1"></i> Notifikasi
                     </a>
@@ -66,7 +66,7 @@
             <!-- Search Form -->
             <form class="d-flex align-items-center me-3">
                 <input class="form-control me-2" type="search" placeholder="Cari produk..." aria-label="Search">
-                <button class="btn btn-outline-primary d-flex align-items-center justify-content-center" type="submit">
+                <button class="btn btn-outline-custom d-flex align-items-center justify-content-center" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
@@ -74,7 +74,7 @@
             @auth
                 <!-- User Menu for Desktop -->
                 <div class="dropdown d-none d-lg-block">
-                    <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button"
+                    <button class="btn btn-outline-custom dropdown-toggle d-flex align-items-center" type="button"
                         id="userDropdown" data-bs-toggle="dropdown">
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
                             alt="Foto Profil" class="rounded-circle me-2 img-fluid"
@@ -104,7 +104,7 @@
 
                 <!-- User Menu for Mobile -->
                 <div class="dropdown d-lg-none py-3 d-flex justify-content-center">
-                    <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button"
+                    <button class="btn btn-outline-custom dropdown-toggle d-flex align-items-center" type="button"
                         id="userDropdownMobile" data-bs-toggle="dropdown">
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/default-profile.png') }}"
                             alt="Foto Profil" class="rounded-circle me-2 img-fluid"
@@ -133,8 +133,8 @@
                 </div>
             @else
                 <div class="d-flex align-items-center">
-                    <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Masuk</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Daftar</a>
+                    <a href="{{ route('login') }}" class="btn btn-outline-custom me-2">Masuk</a>
+                    <a href="{{ route('register') }}" class="btn btn-custom">Daftar</a>
                 </div>
             @endauth
         </div>

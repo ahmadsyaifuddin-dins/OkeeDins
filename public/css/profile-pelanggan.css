@@ -13,7 +13,6 @@
     --marketColorThirty: #fff;
 }
 
-
 .btn-secondary {
     background-color: var(--marketColorSecondary) !important;
     border-color: var(--marketColorSecondary) !important;
