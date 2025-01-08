@@ -33,19 +33,24 @@
                                     </div>
                                     <div class="col text-end">
                                         @switch($order->status)
-                                            @case('confirmed')
-                                                <span class="badge bg-info">Di Konfirmasi</span>
-                                            @break
-
                                             @case('pending')
                                                 <span class="badge bg-warning">Menunggu Konfirmasi</span>
                                             @break
 
-                                            {{-- @case('awaiting_payment')
-                                                <span class="badge bg-info">Menunggu Konfirmasi</span>
-                                            @break --}}
+                                            @case('confirmed')
+                                                <span class="badge bg-info">Di Konfirmasi</span>
+                                            @break
+
+                                            @case('awaiting_payment')
+                                                <span class="badge bg-info">Menunggu Konfirmasi Pembayaran</span>
+                                            @break
+
                                             @case('processing')
-                                                <span class="badge bg-primary">Diproses</span>
+                                                <span class="badge bg-primary">Sedang Dikemas</span>
+                                            @break
+
+                                            @case('delivered')
+                                                <span class="badge bg-primary">Dalam Pengiriman</span>
                                             @break
 
                                             @case('completed')

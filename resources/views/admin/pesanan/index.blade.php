@@ -41,7 +41,7 @@
                                                     class="btn btn-primary btn-sm">Detail</a>
 
                                                 @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'pending')
-                                                    <form action="{{ route('admin.admin.pesanan.confirm', $order->id) }}"
+                                                    <form action="{{ route('admin.pesanan.confirm', $order->id) }}"
                                                         method="POST" style="display:inline-block;">
                                                         @csrf
                                                         <button type="submit" class="btn btn-success btn-sm"
@@ -50,11 +50,21 @@
                                                 @endif
 
                                                 @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'confirmed')
-                                                    <form action="{{ route('admin.admin.pesanan.process', $order->id) }}"
+                                                    <form action="{{ route('admin.pesanan.process', $order->id) }}"
                                                         method="POST" style="display:inline-block;">
                                                         @csrf
                                                         <button type="submit" class="btn btn-info btn-sm"
                                                             onclick="return confirm('Apakah Anda yakin ingin memproses pesanan ini?')">Proses</button>
+                                                    </form>
+                                                @endif
+
+                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'processing')
+                                                    <form action="{{ route('admin.pesanan.delivery', $order->id) }}"
+                                                        method="POST" style="display:inline-block;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-info btn-sm"
+                                                            onclick="return confirm('Proses Pengiriman Pesanan ini?')">Kirim
+                                                            Pesanan</button>
                                                     </form>
                                                 @endif
 

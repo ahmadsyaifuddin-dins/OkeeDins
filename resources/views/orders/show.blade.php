@@ -29,16 +29,16 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>Status Pesanan</span>
                                 @switch(strtolower($order->status))
-                                    @case('confirmed')
-                                        <span class="badge bg-info">Dikonfirmasi</span>
-                                    @break
-
                                     @case('pending')
                                         <span class="badge bg-warning">Menunggu Konfirmasi</span>
                                     @break
 
+                                    @case('confirmed')
+                                        <span class="badge bg-info">Dikonfirmasi</span>
+                                    @break
+
                                     @case('processing')
-                                        <span class="badge bg-primary">Diproses</span>
+                                        <span class="badge bg-primary">Sedang Dikemas</span>
                                     @break
 
                                     @case('delivered')
@@ -74,7 +74,9 @@
                                                 <span class="text-danger">Dibatalkan</span>
                                             @elseif ($order->status === 'completed')
                                                 <span class="text-success">Sudah Dibayar</span>
-                                            @elseif (in_array($order->status, ['processing', 'delivered']))
+                                            @elseif ($order->status === 'processing')
+                                                <span class="text-primary">Menunggu Pengiriman</span>
+                                            @elseif ($order->status === 'delivered')
                                                 <span class="text-warning">Bayar Saat Terima</span>
                                             @elseif (in_array($order->status, ['pending']))
                                                 <span class="text-warning">Menunggu Konfirmasi Penjual</span>

@@ -88,6 +88,24 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Pesanan berhasil Diproses.');
     }
 
+    /**
+     * Set status pesanan menjadi 'delivered' setelah diproses.
+     */
+    public function delivery($id)
+    {
+        $order = Orders::findOrFail($id);
+
+        // Pastikan hanya pesanan COD dan status processing yang dapat dikirim
+        if ($order->payment_method !== 'Cash on Delivery' || $order->status !== 'processing') {
+            return redirect()->back()->with('error', 'Pesanan tidak valid untuk dikirimkan.');
+        }
+
+        $order->status = 'delivered';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Pesanan berhasil Dikirimkan.');
+    }
+
     public function show(Orders $order)
     {
         // Memastikan user hanya bisa melihat pesanannya sendiri

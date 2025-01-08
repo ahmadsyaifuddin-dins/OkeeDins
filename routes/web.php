@@ -147,8 +147,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/pesanan/{id}', [AdminController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
 
-            Route::post('/admin/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('admin.pesanan.confirm');
-            Route::post('/admin/pesanan/{id}/process', [OrderController::class, 'processing'])->name('admin.pesanan.process');
+            Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
+            Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
+            Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
             Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
 
 
