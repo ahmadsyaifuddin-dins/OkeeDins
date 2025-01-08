@@ -98,10 +98,10 @@
 
                         <!-- Action Buttons -->
                         <div class="text-center mt-4">
-                            <a href="{{ route('home.index') }}" class="btn btn-primary me-2">
+                            <a href="{{ route('home.index') }}" class="btn btn-outline-custom me-2">
                                 Kembali ke Beranda
                             </a>
-                            <a href="{{ route('orders.index') }}" class="btn btn-outline-primary">
+                            <a href="{{ route('orders.index') }}" class="btn btn-custom">
                                 Lihat Pesanan Saya
                             </a>
                         </div>
