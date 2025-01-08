@@ -156,7 +156,7 @@
                         </div>
 
                         <button class="btn btn-primary w-100" id="btn-pay">
-                            Bayar Sekarang
+                            <i class="bi bi-shield-lock"></i> Bayar Sekarang
                         </button>
 
                         <input type="hidden" id="is-from-cart" value="{{ $isFromCart ? 'true' : 'false' }}">
