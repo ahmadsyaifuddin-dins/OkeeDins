@@ -26,7 +26,7 @@
                                     class="list-group-item list-group-item-action text-white bg-primary ">
                                     <i class="fas fa-user me-2"></i> Profile
                                 </a>
-                                <a href="#" class="list-group-item list-group-item-action">
+                                <a href="{{ route('orders.index') }}" class="list-group-item list-group-item-action">
                                     <i class="fas fa-shopping-bag me-2"></i> My Orders
                                 </a>
                                 <a href="#" class="list-group-item list-group-item-action">

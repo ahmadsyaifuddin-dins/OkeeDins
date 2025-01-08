@@ -60,9 +60,9 @@
 }
 
 
-.bg-primary {
+/* .bg-primary {
     background-color: var(--marketColorPrimary) !important;
-}
+} */
 
 
 /* Custom Swiper Pagination Bullets */
@@ -85,20 +85,22 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-
     border: 1px solid var(--marketColorThirty);
     /* Border tipis dengan warna abu-abu */
     border-radius: 8px;
     /* Sudut membulat */
     transition: all 0.3s ease;
     /* Transisi halus saat hover */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.295) !important;
+    /* Menambahkan bayangan pada border */
 }
 
 .product-card:hover {
-    border-color: var(--marketColorPrimary);
     /* Warna border berubah saat hover */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Efek bayangan halus saat hover */
+    border-color: var(--marketColorThirty);
+
+    /* Efek bayangan lebih sedikit jelas saat hover */
+    box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
 .product-card .card-body {

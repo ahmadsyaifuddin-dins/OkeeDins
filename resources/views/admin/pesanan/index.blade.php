@@ -39,6 +39,25 @@
                                             <td>
                                                 <a href="{{ route('admin.pesanan.show', $order->order_number) }}"
                                                     class="btn btn-primary btn-sm">Detail</a>
+
+                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'pending')
+                                                    <form action="{{ route('admin.admin.pesanan.confirm', $order->id) }}"
+                                                        method="POST" style="display:inline-block;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            onclick="return confirm('Apakah Anda yakin ingin mengonfirmasi pesanan ini?')">Konfirmasi</button>
+                                                    </form>
+                                                @endif
+
+                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'confirmed')
+                                                    <form action="{{ route('admin.admin.pesanan.process', $order->id) }}"
+                                                        method="POST" style="display:inline-block;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-info btn-sm"
+                                                            onclick="return confirm('Apakah Anda yakin ingin memproses pesanan ini?')">Proses</button>
+                                                    </form>
+                                                @endif
+
                                                 <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
                                                     method="POST" style="display:inline-block;">
                                                     @csrf
@@ -47,6 +66,7 @@
                                                         onclick="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">Hapus</button>
                                                 </form>
                                             </td>
+
                                         </tr>
                                     @empty
                                         <tr>

@@ -58,6 +58,36 @@ class OrderController extends Controller
         return view('orders.confirmation', compact('order'));
     }
 
+    public function confirm($id)
+    {
+        $order = Orders::findOrFail($id);
+
+        // Pastikan hanya pesanan COD dan status pending yang dapat dikonfirmasi
+        if ($order->payment_method !== 'Cash on Delivery' || $order->status !== 'pending') {
+            return redirect()->back()->with('error', 'Pesanan tidak valid untuk konfirmasi.');
+        }
+
+        $order->status = 'confirmed';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi.');
+    }
+
+    public function processing($id)
+    {
+        $order = Orders::findOrFail($id);
+
+        // Pastikan hanya pesanan COD dan status confirmed yang dapat diproses
+        if ($order->payment_method !== 'Cash on Delivery' || $order->status !== 'confirmed') {
+            return redirect()->back()->with('error', 'Pesanan tidak valid untuk diproses.');
+        }
+
+        $order->status = 'processing';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Pesanan berhasil Diproses.');
+    }
+
     public function show(Orders $order)
     {
         // Memastikan user hanya bisa melihat pesanannya sendiri
@@ -80,11 +110,11 @@ class OrderController extends Controller
             return back()->with('error', 'Pesanan tidak dapat dibatalkan');
         }
 
-        $order->update(['status' => 'Cancelled']);
+        $order->update(['status' => 'cancelled']);
 
         // Kembalikan stok produk
         foreach ($order->orderItems as $item) {
-            $item->product->increment('stok', $item->quantity);
+            $item->produk->increment('stok', $item->quantity);
         }
 
         return back()->with('success', 'Pesanan berhasil dibatalkan');

@@ -30,9 +30,10 @@ class Orders extends Model
     {
         return [
             'pending' => 'Menunggu Pembayaran',
+            'confirmed' => 'Pesanan Dikonfirmasi',
             'processing' => 'Diproses',
             'completed' => 'Selesai',
-            'Cancelled' => 'Dibatalkan'
+            'cancelled' => 'Dibatalkan'
         ][$this->status] ?? ucfirst($this->status);
     }
 
@@ -47,11 +48,12 @@ class Orders extends Model
     ];
 
     // Define status constants for better code readability
-    const STATUS_Pending = 'pending';
+    const STATUS_PENDING = 'pending';
+    const STATUS_CONFIRMED = 'confirmed';
     const STATUS_AWAITING_PAYMENT = 'awaiting_payment';
-    const STATUS_PROCESS = 'processing';
+    const STATUS_PROCESSING = 'processing';
     const STATUS_DELIVERED = 'delivered';
-    const STATUS_CANCELLED = 'Cancelled';
+    const STATUS_CANCELLED = 'cancelled';
 
     const PAYMENT_PAID = 'paid';
     const PAYMENT_UNPAID = 'unpaid';
@@ -96,8 +98,9 @@ class Orders extends Model
     public function getStatusBadgeAttribute()
     {
         return match ($this->status) {
-            self::STATUS_Pending => 'bg-warning',
-            self::STATUS_PROCESS => 'bg-info',
+            self::STATUS_PENDING => 'bg-warning',
+            self::STATUS_CONFIRMED => 'bg-info',
+            self::STATUS_PROCESSING => 'bg-info',
             self::STATUS_DELIVERED => 'bg-success',
             self::STATUS_CANCELLED => 'bg-danger',
             default => 'bg-secondary'
@@ -112,12 +115,12 @@ class Orders extends Model
     // Scopes
     public function scopePending($query)
     {
-        return $query->where('status', self::STATUS_Pending);
+        return $query->where('status', self::STATUS_PENDING);
     }
 
     public function scopeProcess($query)
     {
-        return $query->where('status', self::STATUS_PROCESS);
+        return $query->where('status', self::STATUS_PROCESSING);
     }
 
     public function scopeDelivered($query)
@@ -153,12 +156,12 @@ class Orders extends Model
 
     public function isPending()
     {
-        return $this->status === self::STATUS_Pending;
+        return $this->status === self::STATUS_PENDING;
     }
 
     public function isProcessing()
     {
-        return $this->status === self::STATUS_PROCESS;
+        return $this->status === self::STATUS_PROCESSING;
     }
 
     public function isDelivered()
@@ -173,18 +176,18 @@ class Orders extends Model
 
     public function canBeCancelled()
     {
-        return $this->status === self::STATUS_Pending;
+        return $this->status === self::STATUS_PENDING;
     }
 
     public function canBeProcessed()
     {
-        return $this->status === self::STATUS_Pending && $this->isPaid();
+        return $this->status === self::STATUS_PENDING && $this->isPaid();
     }
 
     // Method to update order status
     public function updateStatus($status)
     {
-        if (in_array($status, [self::STATUS_Pending, self::STATUS_PROCESS, self::STATUS_DELIVERED, self::STATUS_CANCELLED])) {
+        if (in_array($status, [self::STATUS_PENDING, self::STATUS_PROCESSING, self::STATUS_DELIVERED, self::STATUS_CANCELLED])) {
             $this->update(['status' => $status]);
             return true;
         }

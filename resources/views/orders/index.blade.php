@@ -33,14 +33,17 @@
                                     </div>
                                     <div class="col text-end">
                                         @switch($order->status)
-                                            @case('Pending')
-                                                <span class="badge bg-warning">Menunggu Pembayaran</span>
+                                            @case('confirmed')
+                                                <span class="badge bg-info">Di Konfirmasi</span>
                                             @break
 
-                                            @case('awaiting_payment')
+                                            @case('pending')
+                                                <span class="badge bg-warning">Menunggu Konfirmasi</span>
+                                            @break
+
+                                            {{-- @case('awaiting_payment')
                                                 <span class="badge bg-info">Menunggu Konfirmasi</span>
-                                            @break
-
+                                            @break --}}
                                             @case('processing')
                                                 <span class="badge bg-primary">Diproses</span>
                                             @break
@@ -49,7 +52,7 @@
                                                 <span class="badge bg-success">Selesai</span>
                                             @break
 
-                                            @case('Cancelled')
+                                            @case('cancelled')
                                                 <span class="badge bg-danger">Dibatalkan</span>
                                             @break
 
@@ -60,25 +63,27 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @foreach ($order->orderItems->take(2) as $item)
-                                    <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ asset('storage/' . $item->produk->gambar) }}"
-                                            alt="{{ $item->produk->nama_produk }}" class="rounded" width="50"
-                                            height="50" style="object-fit: cover;">
-                                        <div class="ms-3">
-                                            <h6 class="mb-1">{{ $item->produk->nama_produk }}</h6>
-                                            <div class="text-muted small">
-                                                {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
+                                <div class="overflow-auto" style="max-height: 150px;">
+                                    @foreach ($order->orderItems as $item)
+                                        <div class="d-flex align-items-center mb-2">
+                                            <img src="{{ asset('storage/' . $item->produk->gambar) }}"
+                                                alt="{{ $item->produk->nama_produk }}" class="rounded" width="50"
+                                                height="50" style="object-fit: cover;">
+                                            <div class="ms-3">
+                                                <h6 class="mb-1">{{ $item->produk->nama_produk }}</h6>
+                                                <div class="text-muted small">
+                                                    {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
 
-                                @if ($order->orderItems->count() > 2)
+                                {{-- @if ($order->orderItems->count() > 2)
                                     <div class="text-muted small">
                                         dan {{ $order->orderItems->count() - 2 }} produk lainnya
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
                             <div class="card-footer bg-white">
                                 <div class="row align-items-center">
@@ -90,8 +95,7 @@
                                         </span>
                                     </div>
                                     <div class="col text-end">
-                                        <a href="{{ route('orders.show', $order) }}"
-                                            class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-danger btn-sm">
                                             Detail Pesanan
                                         </a>
                                         @if ($order->status === 'pending')
@@ -100,7 +104,7 @@
                                                 onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">
                                                     Batalkan
                                                 </button>
                                             </form>

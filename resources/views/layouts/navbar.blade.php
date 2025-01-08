@@ -84,7 +84,8 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        {{-- <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i --}}
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
+                                Pesanan Saya</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
                         <li>
@@ -113,7 +114,8 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdownMobile">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        {{-- <li><a class="dropdown-item" href="{{ route('market.orders') }}"><i --}}
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
+                                Pesanan Saya</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
                         <li>
