@@ -27,19 +27,7 @@ use PHPUnit\Framework\Attributes\Group;
 //TODO: php artisan route:clear
 
 //! Route untuk halaman utama (market)
-Route::get('/', function () {
-    if (
-        auth()->check() &&
-        auth()->user()->role === 'Administrator' &&
-        !request()->has('preview')
-    ) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    $kategori = KategoriProduk::all(); // Ambil semua kategori
-    $recommendedProducts = Produk::orderBy('recommended', 'desc')->take(9)->get();
-    return view('home.index', compact('kategori', 'recommendedProducts'));
-})->name('home.index');
+Route::get('/', [MarketController::class, 'index'])->middleware('cegah.admin.akses.pelanggan')->name('home.index');
 
 
 // Route::get('/', [MarketController::class, 'index'])->name('home.index');

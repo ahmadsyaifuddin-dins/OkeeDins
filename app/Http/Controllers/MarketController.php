@@ -11,7 +11,7 @@ class MarketController extends Controller
     public function index()
     {
         $kategori = KategoriProduk::all();
-        $recommendedProducts = Produk::orderBy('recommended', 'desc')->take(9)->get();
+        $recommendedProducts = Produk::orderBy('recommended', 'desc')->take(15)->get();
 
         return view('home.index', compact('kategori', 'recommendedProducts'));
     }
