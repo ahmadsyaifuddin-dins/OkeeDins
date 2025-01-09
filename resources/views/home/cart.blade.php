@@ -41,7 +41,7 @@
                             @forelse($cartItems as $item)
                                 <!-- Single Cart Item -->
                                 <div class="cart-item border-top pt-3" data-id="{{ $item->id }}">
-                                    <div class="row align-items-center">
+                                    <div class="row g-3">
                                         <div class="col-auto">
                                             <div class="form-check">
                                                 <input class="form-check-input item-checkbox" type="checkbox"
@@ -50,52 +50,54 @@
                                                     id="item-{{ $item->id }}">
                                             </div>
                                         </div>
+
                                         <div class="col-auto">
                                             <a href="{{ route('produk.detail', $item->product->slug) }}">
                                                 <img src="{{ asset('storage/' . $item->product->gambar) }}"
                                                     class="rounded img-fluid" alt="{{ $item->product->nama_produk }}"
-                                                    width="120">
+                                                    width="100">
                                             </a>
                                         </div>
+
+                                        <!-- Product Info & Quantity -->
                                         <div class="col">
-                                            <a href="{{ route('produk.detail', $item->product->slug) }}"
-                                                class="text-decoration-none text-custom">
-                                                <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
-                                            </a>
-                                            <div class="text-danger mt-1">
-                                                Rp{{ number_format($item->product->harga, 0, ',', '.') }}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="d-flex align-items-center">
-                                                <button class="btn btn-outline-custom btn-sm quantity-btn"
-                                                    data-action="decrease">
-                                                    <i class="bi bi-dash"></i>
-                                                </button>
-                                                <input type="number"
-                                                    class="form-control form-control-sm mx-2 my-3 text-center quantity-input"
-                                                    value="{{ $item->quantity }}" style="width: 50px;">
-                                                <button class="btn btn-outline-custom btn-sm quantity-btn"
-                                                    data-action="increase">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                            <div class="d-flex flex-column h-100">
+                                                <!-- Product Name & Price -->
+                                                <div class="mb-2">
+                                                    <a href="{{ route('produk.detail', $item->product->slug) }}"
+                                                        class="text-decoration-none text-custom">
+                                                        <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
+                                                    </a>
+                                                    <div class="text-danger mt-1">
+                                                        Rp{{ number_format($item->product->harga, 0, ',', '.') }}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quantity Controls & Delete Button -->
+                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                    <div class="quantity-controls d-flex align-items-center">
+                                                        <button class="btn btn-outline-custom btn-sm quantity-btn"
+                                                            data-action="decrease">
+                                                            <i class="bi bi-dash"></i>
+                                                        </button>
+                                                        <input type="number"
+                                                            class="form-control form-control-sm mx-2 my-3 text-center quantity-input"
+                                                            value="{{ $item->quantity }}" style="width: 45px;">
+                                                        <button class="btn btn-outline-custom btn-sm quantity-btn"
+                                                            data-action="increase">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Item Actions btn Hapus-->
+                                                    <button
+                                                        class="btn btn-link text-danger text-decoration-none btn-sm delete-item"
+                                                        data-id="{{ $item->id }}">
+                                                        <i class="bi bi-trash "></i> Hapus
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <!-- Catatan untuk Penjual -->
-                                    {{-- <div class="mb-4">
-                                        <label for="notes" class="form-label">Catatan untuk Penjual (Opsional)</label>
-                                        <textarea id="notes" name="notes" class="form-control" rows="1"
-                                            placeholder="Contoh: Warna navy, ukuran M, dll" maxlength="255"></textarea>
-                                        <small class="text-muted">Maksimal 255 karakter</small>
-                                    </div> --}}
-
-                                    <!-- Item Actions -->
-                                    <div class="d-flex justify-content-end mt-1 mb-3">
-                                        <button class="btn btn-link text-danger text-decoration-none btn-sm delete-item"
-                                            data-id="{{ $item->id }}">
-                                            <i class="bi bi-trash "></i> Hapus
-                                        </button>
                                     </div>
                                 </div>
                             @empty
@@ -115,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- Shopping Summary -->
             <!-- Shopping Summary -->
             <div class="col-lg-4">
                 <div class="card">
@@ -174,10 +175,48 @@
             -moz-appearance: textfield;
         }
 
+        .cart-item {
+            padding: 1rem 0;
+        }
+
         .cart-item:last-child {
             border-bottom: none;
             padding-bottom: 0;
             margin-bottom: 0;
+        }
+
+        .quantity-controls {
+            min-width: 120px;
+        }
+
+        .quantity-controls .btn {
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+        }
+
+        .quantity-input {
+            height: 28px;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 576px) {
+            .cart-item .row {
+                --bs-gutter-x: 0.5rem;
+            }
+
+            .quantity-controls {
+                min-width: 110px;
+            }
+
+            .quantity-input {
+                width: 40px !important;
+                padding: 0.25rem;
+            }
+
+            .delete-item {
+                padding: 0;
+                font-size: 0.75rem;
+            }
         }
     </style>
 @endpush
