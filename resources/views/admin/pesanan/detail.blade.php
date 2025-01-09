@@ -62,9 +62,15 @@
                 <td>{{ $pesanan->payment_method ?? 'Metode pembayaran tidak tersedia' }}</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>Status Pesanan</th>
                 <td>
                     <span class="badge {{ $pesanan->status_badge }}">{{ ucfirst($pesanan->status) }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Status Pembayaran</th>
+                <td>
+                    <span class="badge {{ $pesanan->payment_status_badge }}">{{ ucfirst($pesanan->payment_status) }}</span>
                 </td>
             </tr>
             <tr>

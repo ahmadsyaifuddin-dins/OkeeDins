@@ -103,7 +103,7 @@ class Orders extends Model
             self::STATUS_PENDING => 'bg-warning',
             self::STATUS_CONFIRMED => 'bg-info',
             self::STATUS_PROCESSING => 'bg-info',
-            self::STATUS_DELIVERED => 'bg-success',
+            self::STATUS_DELIVERED => 'bg-primary',
             self::STATUS_COMPLETED => 'bg-success',
             self::STATUS_CANCELLED => 'bg-danger',
             default => 'bg-secondary'
