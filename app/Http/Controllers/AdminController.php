@@ -277,11 +277,12 @@ class AdminController extends Controller
             'recommended' => 'nullable',
         ]);
 
+        // Hilangkan titik pada harga untuk menyimpan angka murni
+        $harga = str_replace('.', '', $request->harga);
+
         $gambarPath = $request->file('gambar')
             ? $request->file('gambar')->store('uploads_gambar_produk', 'public')
             : null;
-
-
 
         // Hitung harga setelah diskon
         $desimalDiskon = $request->diskon / 100; // Konversi ke float
@@ -292,7 +293,7 @@ class AdminController extends Controller
             'gambar' => $gambarPath,
             'nama_produk' => $request->nama_produk,
             'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
+            'harga' => $harga,
             'stok' => $request->stok,
             'diskon' => $request->diskon, // Konversi eksplisit ke float
             'harga_diskon' => $hargaSetelahDiskon,

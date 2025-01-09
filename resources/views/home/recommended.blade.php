@@ -23,7 +23,7 @@
 
                     <!-- Product Content -->
                     <div class="card-body">
-                        <h5 class="card-title h6 text-truncate text-dark">{{ $recom->nama_produk }}</h5>
+                        <h5 class="card-title h6 text-dark">{{ $recom->nama_produk }}</h5>
 
                         <!-- Price Section -->
                         <div class="price-section mt-1 mb-1">

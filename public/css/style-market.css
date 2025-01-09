@@ -160,14 +160,34 @@
     }
 }
 
-
-
+/* Base card title styles */
 .product-card .card-title {
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
 }
 
+/* Mobile styles (under 768px) */
+@media (max-width: 767.98px) {
+    .product-card .card-title {
+        -webkit-line-clamp: 1;
+        /* Shows only 1 line with ... */
+        max-height: 1.5em;
+        /* Approximately one line of text */
+    }
+}
+
+/* Desktop styles (768px and above) */
+@media (min-width: 768px) {
+    .product-card .card-title {
+        -webkit-line-clamp: 2;
+        /* Shows 2 lines with ... */
+        max-height: 3em;
+        /* Approximately two lines of text */
+        line-height: 1.5;
+    }
+}
 
 /* Tombol Wishlist */
 .wishlist-btn {

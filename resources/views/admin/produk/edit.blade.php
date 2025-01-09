@@ -58,7 +58,7 @@
                                     <div class="mb-4">
                                         <label for="harga" class="mb-2">Harga</label>
                                         <div class="input-group input-group-outline">
-                                            <input type="number" name="harga" id="harga" class="form-control"
+                                            <input type="text" name="harga" id="harga" class="form-control"
                                                 value="{{ $produk->harga }}" required>
                                         </div>
                                     </div>

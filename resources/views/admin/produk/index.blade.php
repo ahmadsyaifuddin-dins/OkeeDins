@@ -67,11 +67,14 @@
                                                 </p>
                                             </td>
 
-                                            <td class=" text-wrap">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    {{ $prod->deskripsi }}
+                                            <td>
+                                                <span class="text-secondary text-xs font-weight-bold"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="{{ $prod->deskripsi }}">
+                                                    {{ \Illuminate\Support\Str::limit($prod->deskripsi, 50, '...') }}
                                                 </span>
                                             </td>
+
                                             <td>
                                                 <span class="text-secondary text-xs font-weight-bold">Rp.
                                                     {{ number_format($prod->harga, 0, ',', '.') }}
