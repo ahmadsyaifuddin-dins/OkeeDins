@@ -68,6 +68,16 @@
                                                     </form>
                                                 @endif
 
+                                                {{-- @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'completed')
+                                                    <form action="{{ route('admin.pesanan.complete', $order->id) }}"
+                                                        method="POST" style="display:inline-block;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-info btn-sm"
+                                                            onclick="return confirm('Konfirmasi Pembayaran?')">Konfirmasi
+                                                            Pembayaran</button>
+                                                    </form>
+                                                @endif --}}
+
                                                 <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
                                                     method="POST" style="display:inline-block;">
                                                     @csrf
