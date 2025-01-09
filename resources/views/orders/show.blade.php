@@ -42,7 +42,7 @@
                                     @break
 
                                     @case('delivered')
-                                        <span class="badge bg-info">Dalam Pengiriman</span>
+                                        <span class="badge bg-info">Dalam Pengiriman <i class="bi bi-truck"></i></span>
                                     @break
 
                                     @case('completed')
@@ -145,6 +145,21 @@
                             </form>
                         </div>
                     @endif
+
+                    <!-- Konfirmasi Penerimaan untuk COD -->
+                    @if ($order->payment_method === 'Cash on Delivery' && strtolower($order->status) === 'delivered')
+                        <div class="mt-4 text-center">
+                            <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Apakah Anda sudah menerima pesanan dan melakukan pembayaran?')">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle me-2"></i>Konfirmasi Barang Diterima
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                    
                 </div>
             </div>
         </div>
