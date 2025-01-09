@@ -76,7 +76,7 @@
                                             </td>
 
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">Rp.
+                                                <span class="text-secondary text-xs font-weight-bold">Rp
                                                     {{ number_format($prod->harga, 0, ',', '.') }}
                                                 </span>
                                             </td>
