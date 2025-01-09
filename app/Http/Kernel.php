@@ -68,7 +68,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'pelanggan' => \App\Http\Middleware\PelangganMiddleware::class,
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'adminOnly' => \App\Http\Middleware\RedirectIfNotAdmin::class,
         'cegah.admin.akses.pelanggan' => \App\Http\Middleware\CheckAdminRole::class,
     ];

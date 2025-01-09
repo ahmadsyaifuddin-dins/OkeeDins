@@ -16,6 +16,7 @@ class RedirectIfNotAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && auth()->user()->role !== 'Administrator') {
+            session()->flash('error', 'Maaf Pelanggan, anda Pelanggan bukan Admin :)');
             return redirect()->route('home.index');
         }
         return $next($request);
