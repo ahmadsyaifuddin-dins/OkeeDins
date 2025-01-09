@@ -103,7 +103,22 @@ class OrderController extends Controller
         $order->status = 'delivered';
         $order->save();
 
-        return redirect()->back()->with('success', 'Pesanan berhasil Dikirimkan.');
+        return redirect()->back()->with('success', 'Pesanan dalam pengiriman!');
+    }
+
+    public function confirmReceipt($id)
+    {
+        $order = Orders::findOrFail($id);
+
+        // Pastikan hanya pesanan COD dan status delivered yang dapat dikonfirmasi
+        if ($order->payment_method !== 'Cash on Delivery' || strtolower($order->status) !== 'delivered') {
+            return redirect()->back()->with('error', 'Pesanan tidak valid untuk dikonfirmasi.');
+        }
+
+        $order->status = 'completed';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Terima kasih telah mengkonfirmasi penerimaan pesanan.');
     }
 
     public function show(Orders $order)
