@@ -92,7 +92,7 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <div class="row align-items-center">
-                                    <div class="col">
+                                    <div class="col align-self-center">
                                         <span class="text-muted">Total Pembayaran</span>
                                         <br>
                                         <span class="text-danger fw-bold">
