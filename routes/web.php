@@ -83,6 +83,7 @@ Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+Route::patch('/order/{order}/confirm-receipt', [OrderController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
 Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
 
@@ -150,6 +151,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
             Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
             Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
+            Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
             Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
 
 
