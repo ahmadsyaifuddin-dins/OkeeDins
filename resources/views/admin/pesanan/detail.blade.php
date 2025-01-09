@@ -33,7 +33,7 @@
                         @endforeach
                     </ol>
                 </td>
-
+            </tr>
             <tr>
                 <th>Total</th>
                 @php
@@ -46,6 +46,16 @@
                     }
                 @endphp
                 <td>Rp{{ number_format($total, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <th>Catatan dari Pembeli</th>
+                <td>
+                    @if ($pesanan->notes)
+                        <div class="text-wrap">{{ $pesanan->notes }}</div>
+                    @else
+                        <span class="text-muted">Tidak ada catatan</span>
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Metode Pembayaran</th>

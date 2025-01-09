@@ -18,7 +18,7 @@
                 </div>
 
                 <!-- Purchase Details -->
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Detail Pembelian</h5>
                         <div id="checkout-items">
@@ -96,6 +96,15 @@
                                 @endif
                             @endif
                         </div>
+                    </div>
+                </div>
+
+                <!-- Notes Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Catatan untuk Penjual</h5>
+                        <textarea class="form-control" id="seller_notes" name="notes" rows="2"
+                            placeholder="Tambahkan catatan untuk penjual (opsional)"></textarea>
                     </div>
                 </div>
 
@@ -186,6 +195,7 @@
 
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked')
                     .value;
+                const sellerNotes = document.getElementById('seller_notes').value;
                 let formData = new FormData();
 
                 // Collect items data from the DOM
@@ -199,8 +209,9 @@
                     });
                 });
 
-                // Add payment method and items to form data
+                // Add payment method, notes, and items to form data
                 formData.append('payment_method', paymentMethod);
+                formData.append('seller_notes', sellerNotes);
                 formData.append('items', JSON.stringify(items));
 
                 // If transfer method is selected, add proof of payment
@@ -224,8 +235,7 @@
                     });
 
                     if (!response.ok) {
-                        const errorResult = await response
-                            .text(); // Jika respons bukan JSON, ambil sebagai teks
+                        const errorResult = await response.text();
                         console.error('Error response:', errorResult);
                         throw new Error('Terjadi kesalahan saat memproses pesanan');
                     }

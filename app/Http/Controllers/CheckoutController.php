@@ -105,7 +105,8 @@ class CheckoutController extends Controller
                 $validated = $request->validate([
                     'payment_method' => 'required|in:Cash on Delivery, Transfer',
                     'items' => 'required|json',
-                    'proof_of_payment' => 'required_if:payment_method,Transfer|file|image|max:2048'
+                    'proof_of_payment' => 'required_if:payment_method,Transfer|file|image|max:2048',
+                    'seller_notes' => 'nullable|string|max:1000' // Add validation for notes
                 ]);
 
                 $items = json_decode($validated['items'], true);
@@ -142,6 +143,7 @@ class CheckoutController extends Controller
                     'total_amount' => $totalAmount,
                     'qty' => array_sum(array_column($items, 'quantity')),
                     'order_date' => now(),
+                    'notes' => $validated['seller_notes'] ?? null // Add notes to order
                 ]);
 
                 // Handle bukti pembayaran

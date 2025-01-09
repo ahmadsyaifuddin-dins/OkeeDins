@@ -17,6 +17,7 @@ class Orders extends Model
         'shipping_id',
         'coupon',
         'total_amount',
+        'notes',
         'qty',
         'payment_method',
         'payment_status',
