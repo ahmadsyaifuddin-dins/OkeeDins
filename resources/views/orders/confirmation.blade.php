@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
+                    <div class="card-body p-3">
                         <!-- Status Banner -->
                         <div class="text-center mb-4">
                             <div class="bg-success bg-opacity-10 text-success rounded-pill py-2 px-4 d-inline-block mb-3">
@@ -97,11 +97,11 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="text-center mt-4">
-                            <a href="{{ route('home.index') }}" class="btn btn-outline-custom me-2">
+                        <div class="text-center mt-4 me-3 mb-3 d-flex flex-column flex-md-row">
+                            <a href="{{ route('home.index') }}" class="btn btn-outline-custom w-100 mb-2 mb-md-0 me-md-2">
                                 Kembali ke Beranda
                             </a>
-                            <a href="{{ route('orders.index') }}" class="btn btn-custom">
+                            <a href="{{ route('orders.index') }}" class="btn btn-custom w-100">
                                 Lihat Pesanan Saya
                             </a>
                         </div>

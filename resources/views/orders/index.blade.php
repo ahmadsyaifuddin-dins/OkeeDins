@@ -100,20 +100,23 @@
                                         </span>
                                     </div>
                                     <div class="col text-end">
-                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-danger btn-sm">
-                                            Detail Pesanan
-                                        </a>
-                                        @if ($order->status === 'pending')
-                                            <form action="{{ route('orders.cancel', $order) }}" method="POST"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-outline-custom btn-sm">
-                                                    Batalkan
-                                                </button>
-                                            </form>
-                                        @endif
+                                        <div class="d-flex flex-column flex-sm-row justify-content-end">
+                                            <a href="{{ route('orders.show', $order) }}"
+                                                class="btn btn-danger btn-sm mb-2 mb-sm-0 me-sm-2">
+                                                Detail Pesanan
+                                            </a>
+                                            @if ($order->status === 'pending')
+                                                <form action="{{ route('orders.cancel', $order) }}" method="POST"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-outline-custom btn-sm">
+                                                        Batalkan
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
