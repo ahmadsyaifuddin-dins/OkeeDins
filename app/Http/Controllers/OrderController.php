@@ -116,6 +116,7 @@ class OrderController extends Controller
         }
 
         $order->status = 'completed';
+        $order->payment_status = 'paid';
         $order->save();
 
         return redirect()->back()->with('success', 'Terima kasih telah mengkonfirmasi penerimaan pesanan.');

@@ -42,7 +42,7 @@
                                     @break
 
                                     @case('delivered')
-                                        <span class="badge bg-info">Dalam Pengiriman <i class="bi bi-truck"></i></span>
+                                        <span class="badge bg-primary">Dalam Pengiriman <i class="bi bi-truck"></i></span>
                                     @break
 
                                     @case('completed')
@@ -159,7 +159,7 @@
                             </form>
                         </div>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
