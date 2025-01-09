@@ -95,14 +95,61 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            <div>
-                                {{ $pesanan->links() }}
+                            <!-- Pagination yang diperbaiki -->
+                            <div class="card-footer py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Info showing results -->
+                                    <div class="text-sm text-gray-700">
+                                        Showing
+                                        <span class="font-medium">{{ $pesanan->firstItem() }}</span>
+                                        to
+                                        <span class="font-medium">{{ $pesanan->lastItem() }}</span>
+                                        of
+                                        <span class="font-medium">{{ $pesanan->total() }}</span>
+                                        results
+                                    </div>
+
+                                    <!-- Pagination links -->
+                                    <div>
+                                        {{ $pesanan->links('pagination::bootstrap-4') }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+<style>
+    /* Tambahkan CSS berikut ke file CSS Anda */
+    .pagination {
+        margin-bottom: 0;
+    }
+
+    .page-link {
+        padding: 0.5rem 0.75rem;
+        margin-left: -1px;
+        color: #344767;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+    }
+
+    .page-item.active .page-link {
+        color: #fff;
+        background-color: #344767;
+        border-color: #344767;
+    }
+
+    .page-link:hover {
+        color: #344767;
+        background-color: #e9ecef;
+    }
+
+    .card-footer {
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+    }
+</style>
