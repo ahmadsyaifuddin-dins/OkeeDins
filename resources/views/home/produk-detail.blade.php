@@ -21,10 +21,10 @@
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-half text-warning"></i>
-                        <span class="ms-1">4.5</span>
+                        <span class="ms-1">4.8</span>
                     </div>
                     <div class="vr mx-2"></div>
-                    <span class="text-muted">100+ Terjual</span>
+                    <span class="text-muted">1rb+ terjual</span>
                 </div>
 
                 <!-- Price Section -->
@@ -230,76 +230,94 @@
 @push('scripts')
     <script>
         function addToCart() {
-            // Ambil nilai quantity dan notes
-            const quantity = document.getElementById('quantity').value;
-
-            // Validasi quantity
-            if (quantity < 1) {
-                Swal.fire({
-                    title: 'Peringatan',
-                    text: 'Jumlah produk minimal 1',
-                    icon: 'warning'
-                });
-                return;
-            }
-
-            // Disable button selama proses
-            const btn = event.target;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menambahkan...';
-
-            // Kirim request AJAX
-            $.ajax({
-                url: '{{ route('cart.add') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    produk_id: {{ $product->id }},
-                    quantity: quantity,
-                    price: {{ $product->harga_diskon }},
-                    amount: {{ $product->harga_diskon }} * quantity
-                },
-                success: function(response) {
-                    // Reset button state
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="bi bi-cart-plus"></i> Tambah ke Keranjang';
-
-                    // Update cart badge di navbar
-                    const cartBadges = document.querySelectorAll('.cart-badge');
-                    cartBadges.forEach(badge => {
-                        badge.textContent = response.cartCount;
-                        badge.classList.remove('d-none');
-                    });
-
-                    // Tampilkan notifikasi sukses
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Produk berhasil ditambahkan ke keranjang',
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonText: 'Lihat Keranjang',
-                        cancelButtonText: 'Lanjut Belanja',
-                        confirmButtonColor: '#007bff',
-                        cancelButtonColor: '#C62828'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '{{ route('cart.index') }}';
-                        }
-                    });
-                },
-                error: function(xhr) {
-                    // Reset button state
-                    btn.disabled = false;
-
-                    // Tampilkan pesan error
-                    Swal.fire({
-                        title: 'Gagal!',
-                        text: xhr.responseJSON?.message ||
-                            'Terjadi kesalahan saat menambahkan ke keranjang',
-                        icon: 'error'
-                    });
+            @guest
+            Swal.fire({
+                title: 'Login Diperlukan',
+                text: 'Silakan login terlebih dahulu untuk menambahkan produk ke keranjang',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Login Sekarang',
+                cancelButtonText: 'Nanti Saja',
+                confirmButtonColor: '#007bff',
+                cancelButtonColor: '#C62828'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{{ route('login') }}';
                 }
             });
+            return;
+        @endguest
+
+        // Ambil nilai quantity dan notes
+        const quantity = document.getElementById('quantity').value;
+
+        // Validasi quantity
+        if (quantity < 1) {
+            Swal.fire({
+                title: 'Peringatan',
+                text: 'Jumlah produk minimal 1',
+                icon: 'warning'
+            });
+            return;
+        }
+
+        // Disable button selama proses
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menambahkan...';
+
+        // Kirim request AJAX
+        $.ajax({
+            url: '{{ route('cart.add') }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                produk_id: {{ $product->id }},
+                quantity: quantity,
+                price: {{ $product->harga_diskon }},
+                amount: {{ $product->harga_diskon }} * quantity
+            },
+            success: function(response) {
+                // Reset button state
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-cart-plus"></i> Tambah ke Keranjang';
+
+                // Update cart badge di navbar
+                const cartBadges = document.querySelectorAll('.cart-badge');
+                cartBadges.forEach(badge => {
+                    badge.textContent = response.cartCount;
+                    badge.classList.remove('d-none');
+                });
+
+                // Tampilkan notifikasi sukses
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Produk berhasil ditambahkan ke keranjang',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'Lihat Keranjang',
+                    cancelButtonText: 'Lanjut Belanja',
+                    confirmButtonColor: '#007bff',
+                    cancelButtonColor: '#C62828'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route('cart.index') }}';
+                    }
+                });
+            },
+            error: function(xhr) {
+                // Reset button state
+                btn.disabled = false;
+
+                // Tampilkan pesan error
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: xhr.responseJSON?.message ||
+                        'Terjadi kesalahan saat menambahkan ke keranjang',
+                    icon: 'error'
+                });
+            }
+        });
         }
     </script>
 @endpush
@@ -320,32 +338,52 @@
         // Tambahkan event listener untuk tombol Beli Sekarang
         document.getElementById('btn-payNow').addEventListener('click', function(e) {
             e.preventDefault();
-            const quantity = parseInt(document.getElementById('quantity').value);
 
-            // Validasi quantity
-            if (quantity < 1 || quantity > {{ $product->stok }}) {
-                Swal.fire({
-                    title: 'Peringatan',
-                    text: 'Jumlah produk tidak valid',
-                    icon: 'warning'
-                });
-                return;
-            }
+            // Check if user is guest
+            @guest
+            Swal.fire({
+                title: 'Login Diperlukan',
+                text: 'Silakan login terlebih dahulu untuk melakukan pembelian',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Login Sekarang',
+                cancelButtonText: 'Nanti Saja',
+                confirmButtonColor: '#007bff',
+                cancelButtonColor: '#C62828'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{{ route('login') }}';
+                }
+            });
+            return;
+        @endguest
 
-            // Siapkan data item untuk checkout
-            const checkoutItems = [{
-                id: {{ $product->id }},
-                name: "{{ $product->nama_produk }}",
-                price: {{ $product->harga }},
-                discount: {{ $product->diskon }},
-                quantity: quantity,
-                image: "{{ asset('storage/' . $product->gambar) }}",
-                subtotal: {{ $product->harga_diskon }} * quantity
-            }];
+        const quantity = parseInt(document.getElementById('quantity').value);
 
-            // Redirect ke checkout dengan data produk
-            const queryString = encodeURIComponent(JSON.stringify(checkoutItems));
-            window.location.href = `{{ route('checkout.pay-now') }}?items=${queryString}`;
+        // Validasi quantity
+        if (quantity < 1 || quantity > {{ $product->stok }}) {
+            Swal.fire({
+                title: 'Peringatan',
+                text: 'Jumlah produk tidak valid',
+                icon: 'warning'
+            });
+            return;
+        }
+
+        // Siapkan data item untuk checkout
+        const checkoutItems = [{
+            id: {{ $product->id }},
+            name: "{{ $product->nama_produk }}",
+            price: {{ $product->harga }},
+            discount: {{ $product->diskon }},
+            quantity: quantity,
+            image: "{{ asset('storage/' . $product->gambar) }}",
+            subtotal: {{ $product->harga_diskon }} * quantity
+        }];
+
+        // Redirect ke checkout dengan data produk
+        const queryString = encodeURIComponent(JSON.stringify(checkoutItems)); window.location.href =
+        `{{ route('checkout.pay-now') }}?items=${queryString}`;
         });
     </script>
 @endpush

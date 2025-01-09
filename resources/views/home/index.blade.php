@@ -26,11 +26,11 @@
 
                 <!-- Produk Rekomendasi -->
                 <h3 class="fw-bold mb-4">Produk Rekomendasi</h3>
-                <div class="row">
+                {{-- <div class="row">
                     @foreach ($recommendedProducts as $prod)
                         @include('home.produk', ['produk' => $prod]) <!-- Pastikan produk dikirim dengan benar -->
                     @endforeach
-                </div>
+                </div> --}}
             </div>
 
         </div>

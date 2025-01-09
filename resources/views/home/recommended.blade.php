@@ -27,28 +27,27 @@
 
                         <!-- Price Section -->
                         <div class="price-section mt-1 mb-1">
-                            <p class="card-text fw-bold text-custom mb-0">
-                                Rp{{ number_format($recom->harga_diskon, 0, ',', '.') }}
-                            </p>
-
-                            @if ($recom->diskon > 0)
-                                <p class="card-text text-muted mb-1"
-                                    style="text-decoration: line-through; font-size: 0.9rem;">
-                                    Rp{{ number_format($recom->harga, 0, ',', '.') }}
+                            <div class="d-flex flex-wrap align-items-center">
+                                <p class="card-text fw-bold text-custom mb-0 me-2" style="font-size: 0.95rem;">
+                                    Rp{{ number_format($recom->harga_diskon, 0, ',', '.') }}
                                 </p>
-                            @endif
+
+                                @if ($recom->diskon > 0)
+                                    <p class="card-text text-muted mb-0"
+                                        style="font-size: 0.75rem; text-decoration: line-through; white-space: nowrap;">
+                                        Rp{{ number_format($recom->harga, 0, ',', '.') }}
+                                    </p>
+                                @endif
+                            </div>
                         </div>
 
                         <!-- Rating and Sales -->
                         <div class="d-flex align-items-center">
                             <div class="rating me-1">
                                 <i class="bi bi-star-fill text-warning" style="font-size: 0.8rem;"></i>
-                                <i class="bi bi-star-fill text-warning" style="font-size: 0.8rem;"></i>
-                                <i class="bi bi-star-fill text-warning" style="font-size: 0.8rem;"></i>
-                                <i class="bi bi-star-fill text-warning" style="font-size: 0.8rem;"></i>
-                                <i class="bi bi-star-half text-warning" style="font-size: 0.8rem;"></i>
+                                <span class="ms-1" style="font-size: 0.75rem;">4.8</span>
+                                <span class="text-muted" style="font-size: 0.75rem;">• 1rb+ terjual</span>
                             </div>
-                            <span class="text-muted" style="font-size: 0.75rem;">| 100+ terjual</span>
                         </div>
                     </div>
                 </div>

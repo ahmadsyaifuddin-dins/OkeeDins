@@ -85,6 +85,8 @@
 
 /* produk card & img konsisten */
 .product-card {
+    height: auto;
+    min-height: 280px;
     margin-bottom: 10px;
     /* Memberikan jarak antar card */
     display: flex;
@@ -98,6 +100,21 @@
     /* Transisi halus saat hover */
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.295) !important;
     /* Menambahkan bayangan pada border */
+}
+
+.product-card .card-body {
+    padding: 0.50rem;
+    /* Mengurangi padding di mobile */
+}
+
+@media (max-width: 576px) {
+    .product-card .card-text.text-custom {
+        font-size: 0.9rem;
+    }
+
+    .product-card .card-text.text-muted {
+        font-size: 0.7rem;
+    }
 }
 
 .product-card:hover {
