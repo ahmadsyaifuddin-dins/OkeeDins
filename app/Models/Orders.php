@@ -53,6 +53,7 @@ class Orders extends Model
     const STATUS_AWAITING_PAYMENT = 'awaiting_payment';
     const STATUS_PROCESSING = 'processing';
     const STATUS_DELIVERED = 'delivered';
+    const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
 
     const PAYMENT_PAID = 'paid';
@@ -102,6 +103,7 @@ class Orders extends Model
             self::STATUS_CONFIRMED => 'bg-info',
             self::STATUS_PROCESSING => 'bg-info',
             self::STATUS_DELIVERED => 'bg-success',
+            self::STATUS_COMPLETED => 'bg-success',
             self::STATUS_CANCELLED => 'bg-danger',
             default => 'bg-secondary'
         };
