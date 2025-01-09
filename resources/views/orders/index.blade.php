@@ -13,7 +13,7 @@
                         <img src="/images/empty-order.svg" alt="Empty Orders" class="mb-3" style="width: 150px">
                         <h5>Belum ada pesanan</h5>
                         <p class="text-muted">Anda belum memiliki pesanan apapun</p>
-                        <a href="{{ route('home') }}" class="btn btn-custom">
+                        <a href="{{ route('home.index') }}" class="btn btn-custom">
                             Mulai Belanja
                         </a>
                     </div>
