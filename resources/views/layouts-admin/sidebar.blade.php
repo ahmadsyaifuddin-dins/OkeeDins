@@ -37,14 +37,14 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('admin.produk.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}"
                     href="{{ route('admin.produk.index') }} ">
-                    <i class="material-symbols-rounded opacity-5">trolley</i>
+                    <i class="material-symbols-rounded opacity-5">inventory</i>
                     <span class="nav-link-text ms-1">Produk</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('admin.pesanan.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}"
                     href="{{ route('admin.pesanan.index') }} ">
-                    <i class="material-symbols-rounded opacity-5">orders</i>
+                    <i class="material-symbols-rounded opacity-5">shopping_cart</i>
                     <span class="nav-link-text ms-1">Pesanan</span>
                 </a>
             </li>
@@ -60,11 +60,27 @@
                     <span class="nav-link-text ms-1">Laporan</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="../pages/billing.html">
+                    <i class="material-symbols-rounded opacity-5">rate_review</i>
+                    <span class="nav-link-text ms-1">Ulasan Produk</span>
+                </a>
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link text-dark" href="../pages/notifications.html">
                     <i class="material-symbols-rounded opacity-5">notifications</i>
                     <span class="nav-link-text ms-1">Notifications</span>
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Pengaturan Umum
+                </h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="../pages/notifications.html">
+                    <i class="material-symbols-rounded opacity-5">local_offer</i>
+                    <span class="nav-link-text ms-1">Coupons</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
