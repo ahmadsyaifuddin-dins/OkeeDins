@@ -26,7 +26,7 @@ class MarketController extends Controller
 
         // Get recommended products with category filter if applied
         $recommendedProducts = $query->orderBy('recommended', 'desc')
-            ->take(15)
+            ->take(20)
             ->get();
 
         return view('home.index', compact('kategori', 'recommendedProducts', 'selectedKategoriSlug'));

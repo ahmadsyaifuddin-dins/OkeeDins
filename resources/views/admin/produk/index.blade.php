@@ -91,7 +91,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">Rp.
+                                                <span class="text-secondary text-xs font-weight-bold">Rp
                                                     {{ number_format($prod->harga_diskon, 0, ',', '.') }}
                                                 </span>
                                             </td>

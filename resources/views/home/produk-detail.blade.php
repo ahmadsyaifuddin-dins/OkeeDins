@@ -107,11 +107,11 @@
 
                 <div class="tab-content p-4 border border-top-0" id="productTabsContent">
                     <div class="tab-pane fade show active" id="description">
-                        <!-- Add the description section first -->
+                        <!-- Modified description section -->
                         <div class="mb-4">
                             <h5 class="mb-3">Deskripsi Produk</h5>
                             <div class="description-content">
-                                {{ $product->deskripsi }}
+                                {!! $product->deskripsi !!}
                             </div>
                         </div>
                         <hr>
@@ -320,6 +320,64 @@
         });
         }
     </script>
+@endpush
+
+
+@push('styles')
+    <style>
+        /* Styling untuk konten deskripsi dari TinyMCE */
+        .description-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .description-content ul,
+        .description-content ol {
+            padding-left: 20px;
+            margin-bottom: 1rem;
+        }
+
+        .description-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .description-content p {
+            margin-bottom: 1rem;
+        }
+
+        .description-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 1rem 0;
+        }
+
+        .description-content table {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+        }
+
+        .description-content table td,
+        .description-content table th {
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Menambahkan spacing yang lebih baik untuk lists */
+        .description-content ul li,
+        .description-content ol li {
+            padding: 0.25rem 0;
+        }
+
+        /* Style untuk blockquote jika ada */
+        .description-content blockquote {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-left: 4px solid #007bff;
+            background-color: #f8f9fa;
+        }
+    </style>
 @endpush
 
 @push('styles')
