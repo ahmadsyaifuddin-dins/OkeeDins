@@ -35,6 +35,7 @@
 
 </head>
 
+
 <body class="g-sidenav-show bg-gray-100">
     <!-- start sidebar -->
     @include('layouts-admin.sidebar')
@@ -54,15 +55,43 @@
         </div>
 
         @include('layouts-admin.function')
+
     </main>
     <!-- end main -->
     @yield('scripts')
-
 
     <!-- Add jQuery and Toastr JS (add before closing head tag) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4/dist/autoNumeric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
+
+    {{-- Script TinyMCE --}}
+    <script>
+        tinymce.init({
+            selector: '#deskripsi',
+            height: 300,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
+            menubar: true,
+            branding: false,
+            promotion: false,
+            language: 'id',
+            setup: function(editor) {
+                editor.on('change', function() {
+                    editor.save(); // Ensure content is saved to textarea
+                });
+            }
+        });
+    </script>
 
     {{-- Script AutoNumeric --}}
     <script>

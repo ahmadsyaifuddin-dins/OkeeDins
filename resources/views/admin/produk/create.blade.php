@@ -94,8 +94,13 @@
     </div>
 @endsection
 
+{{-- @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
+@endpush --}}
+
+
 {{-- Script AutoNumeric --}}
-@push('scripts')
+{{-- @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Inisialisasi AutoNumeric dengan konfigurasi untuk format Indonesia
@@ -131,7 +136,8 @@
             }
         });
     </script>
-@endpush
+@endpush --}}
+
 
 
 {{-- <script>
