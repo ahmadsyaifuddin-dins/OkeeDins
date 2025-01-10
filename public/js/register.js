@@ -314,23 +314,23 @@ $(document).ready(function () {
         switch (strength) {
             case 1:
                 strengthClass = "very-weak";
-                strengthText = "Sangat Lemah";
+                strengthText = "Sangat Lemah 😭";
                 break;
             case 2:
                 strengthClass = "weak";
-                strengthText = "Lemah";
+                strengthText = "Lemah 😐";
                 break;
             case 3:
                 strengthClass = "medium";
-                strengthText = "Sedang";
+                strengthText = "Sedang 🙂";
                 break;
             case 4:
                 strengthClass = "strong";
-                strengthText = "Kuat";
+                strengthText = "Kuat 😎";
                 break;
             case 5:
                 strengthClass = "very-strong";
-                strengthText = "Sangat Kuat";
+                strengthText = "Sangat Kuat 🌟";
                 break;
             default:
                 strengthClass = "";
@@ -380,7 +380,7 @@ $(document).ready(function () {
 
     //!End Untuk Inputan Password
 
-    //!Start Untuk Inputan Telepon
+    //!Start Untuk Inputan Telepon Indonesia dan Seluruh Dunia
     // Modifikasi fungsi validasi
     const input = document.querySelector("#telepon");
     const errorMsg = document.querySelector("#error-msg");

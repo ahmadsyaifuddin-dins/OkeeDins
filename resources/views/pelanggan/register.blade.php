@@ -64,9 +64,9 @@
                             <div class="telepon-wrapper">
                                 <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
                                     value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*"
-                                    placeholder="081234567890" />
+                                    placeholder="08xxxxxxxx" />
                             </div>
-                            <small class="telepon-hint">Contoh: 081234567890</small>
+                            <small class="telepon-hint">Contoh awalan: 08xxxxxxx</small>
                             <span id="valid-msg" class="hide">✓ Valid</span>
                             <span id="error-msg" class="hide"></span>
                         </div>
