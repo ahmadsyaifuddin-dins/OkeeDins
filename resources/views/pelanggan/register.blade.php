@@ -63,9 +63,10 @@
                             <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp </label>
                             <div class="telepon-wrapper">
                                 <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
-                                    value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*" />
+                                    value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="081234567890" />
                             </div>
-                            <small class="telepon-hint">Contoh: 812345678901</small>
+                            <small class="telepon-hint">Contoh: 081234567890</small>
                             <span id="valid-msg" class="hide">✓ Valid</span>
                             <span id="error-msg" class="hide"></span>
                         </div>
