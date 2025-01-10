@@ -455,8 +455,20 @@
             const selectedItems = [];
             const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
 
+            // Log untuk memastikan jumlah item yang tercentang
+            console.log('Jumlah item tercentang:', checkedBoxes.length);
+
+            // Iterasi untuk checkbox yang tercentang
             checkedBoxes.forEach(checkbox => {
                 const cartItem = checkbox.closest('.cart-item');
+
+                if (!cartItem) {
+                    console.log('Cart item tidak ditemukan');
+                    return;
+                }
+
+                console.log('Memproses item ID:', cartItem.dataset.id);
+
                 const productId = cartItem.dataset.id;
                 const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
                 const price = parseFloat(checkbox.dataset.price);
@@ -466,43 +478,80 @@
 
                 selectedItems.push({
                     id: productId,
-                    name: productName,
-                    quantity: quantity,
-                    price: price,
-                    discount: discount,
-                    image: productImage,
+                    nama_produk: productName,
+                    jumlah: quantity,
+                    harga: price,
+                    diskon: discount,
+                    gambar: productImage,
                     subtotal: (price * quantity) - ((price * quantity * discount) / 100)
                 });
             });
 
+            console.log('Item yang akan dicheckout:', selectedItems);
+
             if (selectedItems.length === 0) {
-                alert('Pilih minimal satu produk untuk dibeli');
+                alert('Silakan pilih minimal satu produk untuk dibeli');
                 return;
             }
 
             try {
-                // Store selected items in session storage
+                // Simpan ke session storage seperti sebelumnya
                 sessionStorage.setItem('checkoutItems', JSON.stringify(selectedItems));
 
-                // Calculate totals
-                const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
-                const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const totalDiscount = selectedItems.reduce((sum, item) => sum + ((item.price * item.quantity *
-                    item.discount) / 100), 0);
-                const grandTotal = totalPrice - totalDiscount;
+                // Hitung total
+                const totalJumlah = selectedItems.reduce((sum, item) => sum + item.jumlah, 0);
+                const totalHarga = selectedItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+                const totalDiskon = selectedItems.reduce((sum, item) =>
+                    sum + ((item.harga * item.jumlah * item.diskon) / 100), 0);
+                const totalBelanja = totalHarga - totalDiskon;
 
-                // Store summary data
                 sessionStorage.setItem('checkoutSummary', JSON.stringify({
-                    totalQuantity,
-                    totalPrice,
-                    totalDiscount,
-                    grandTotal
+                    totalJumlah,
+                    totalHarga,
+                    totalDiskon,
+                    totalBelanja
                 }));
 
-                // Redirect to checkout page
-                window.location.href = '/checkout';
+                // Buat form untuk mengirim data
+                const form = document.createElement('form');
+                form.method = 'GET';
+                form.action = '/checkout';
+
+                // Tambah input untuk selected items
+                const inputItems = document.createElement('input');
+                inputItems.type = 'hidden';
+                inputItems.name = 'selected_items';
+                inputItems.value = JSON.stringify(selectedItems);
+                form.appendChild(inputItems);
+
+                // Tambah input untuk summary
+                const inputSummary = document.createElement('input');
+                inputSummary.type = 'hidden';
+                inputSummary.name = 'summary';
+                inputSummary.value = JSON.stringify({
+                    totalJumlah,
+                    totalHarga,
+                    totalDiskon,
+                    totalBelanja
+                });
+                form.appendChild(inputSummary);
+
+                // Tambah CSRF token jika diperlukan
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    const inputCsrf = document.createElement('input');
+                    inputCsrf.type = 'hidden';
+                    inputCsrf.name = '_token';
+                    inputCsrf.value = csrfToken.content;
+                    form.appendChild(inputCsrf);
+                }
+
+                // Tambah form ke document dan submit
+                document.body.appendChild(form);
+                form.submit();
+
             } catch (error) {
-                console.error('Error preparing checkout:', error);
+                console.error('Error saat memproses checkout:', error);
                 alert('Terjadi kesalahan saat memproses checkout. Silakan coba lagi.');
             }
         });

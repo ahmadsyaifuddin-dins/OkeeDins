@@ -21,27 +21,41 @@ class CheckoutController extends Controller
     // CheckoutController.php modifications
 
 
-    public function showCheckout()
+
+    public function showCheckout(Request $request)
     {
-        // Mengambil cart items yang terseleksi dari database
+        // Ambil data checkout dari session storage yang disimpan di cart
+        $selectedItems = json_decode($request->input('selected_items', '[]'), true);
+
+        // Jika tidak ada items yang dipilih, cek session storage
+        if (empty($selectedItems)) {
+            // Redirect ke cart dengan pesan error
+            return redirect()->route('cart.index')
+                ->with('error', 'Silakan pilih produk yang akan dicheckout');
+        }
+
+        // Ambil data cart items berdasarkan ID yang dipilih
         $cartItems = Cart::with('product')
             ->where('user_id', Auth::id())
-            ->whereHas('product')
+            ->whereIn('id', array_column($selectedItems, 'id'))
             ->get();
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')
-                ->with('error', 'Tidak ada produk dalam keranjang');
+                ->with('error', 'Produk yang dipilih tidak ditemukan');
         }
 
-        // Calculate totals
-        $totalPrice = $cartItems->sum(function ($item) {
-            return $item->product->harga * $item->quantity;
-        });
+        // Hitung total
+        $totalPrice = 0;
+        $totalDiscount = 0;
 
-        $totalDiscount = $cartItems->sum(function ($item) {
-            return ($item->product->harga * $item->quantity * $item->product->diskon) / 100;
-        });
+        foreach ($cartItems as $item) {
+            $price = $item->product->harga * $item->quantity;
+            $discount = ($price * $item->product->diskon) / 100;
+
+            $totalPrice += $price;
+            $totalDiscount += $discount;
+        }
 
         $grandTotal = $totalPrice - $totalDiscount;
 

@@ -64,9 +64,9 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
 
 
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('checkout.pay-now');
 
-Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
