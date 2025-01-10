@@ -94,52 +94,6 @@
     </div>
 @endsection
 
-{{-- @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
-@endpush --}}
-
-
-{{-- Script AutoNumeric --}}
-{{-- @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi AutoNumeric dengan konfigurasi untuk format Indonesia
-            const hargaInput = document.querySelector('#harga');
-            if (hargaInput) {
-                new AutoNumeric(hargaInput, {
-                    digitGroupSeparator: '.',
-                    decimalCharacter: ',',
-                    decimalPlaces: 0,
-                    currencySymbol: 'Rp ',
-                    currencySymbolPlacement: 'p',
-                    unformatOnSubmit: true,
-                    minimumValue: '0',
-                    maximumValue: '999999999999',
-                    modifyValueOnWheel: false,
-                    watchExternalChanges: true,
-                    formulaMode: false
-                });
-            }
-
-            // Tambahkan validasi form
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    const numericInstance = AutoNumeric.getAutoNumericElement(hargaInput);
-                    if (numericInstance) {
-                        // Dapatkan nilai tanpa format
-                        const unformattedValue = numericInstance.getNumericString();
-                        // Update nilai input sebelum submit
-                        hargaInput.value = unformattedValue;
-                    }
-                });
-            }
-        });
-    </script>
-@endpush --}}
-
-
-
 {{-- <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
