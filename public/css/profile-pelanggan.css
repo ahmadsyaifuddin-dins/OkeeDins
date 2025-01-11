@@ -4,6 +4,8 @@
     /* Warna utama II*/
     --marketColorPrimaryII: #C62828;
 
+    --custom-primary-dark: #B71C1C;
+
     /* Warna sekunder */
     --marketColorSecondary: #007bff;
     /* Warna sekunder II*/
@@ -57,4 +59,57 @@
     background-color: #A61B1B !important;
     /* Teks tetap putih */
     color: var(--marketColorThirty);
+}
+
+
+
+.bg-custom {
+    background-color: var(--marketColorPrimary) !important;
+}
+
+.text-custom {
+    color: var(--marketColorPrimary) !important;
+}
+
+.btn-custom {
+    background-color: var(--marketColorPrimary);
+    border-color: var(--marketColorPrimary);
+    color: var(--marketColorThirty);
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+}
+
+.btn-custom:hover {
+    background-color: var(--custom-primary-dark);
+    border-color: var(--custom-primary-dark);
+    color: white !important;
+}
+
+.list-group-item.active {
+    background-color: var(--marketColorPrimary);
+    border-color: var(--marketColorPrimary);
+}
+
+.list-group-item.active:hover {
+    background-color: var(--custom-primary-dark);
+    border-color: var(--custom-primary-dark);
+    color: white;
+}
+
+.text-primary {
+    color: var(--marketColorPrimary) !important;
+}
+
+.border-primary {
+    border-color: var(--marketColorPrimary) !important;
+}
+
+.card-header {
+    border-bottom: none;
+}
+
+/* Custom focus style untuk form inputs */
+.form-control:focus {
+    border-color: var(--marketColorPrimary);
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
 }
