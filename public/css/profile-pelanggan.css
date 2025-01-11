@@ -1,14 +1,13 @@
 :root {
     /* Warna utama */
     --marketColorPrimary: #D32F2F;
-    /* Warna utama II*/
+    /* Warna utama II */
     --marketColorPrimaryII: #C62828;
-
     --custom-primary-dark: #B71C1C;
 
     /* Warna sekunder */
     --marketColorSecondary: #007bff;
-    /* Warna sekunder II*/
+    /* Warna sekunder II */
     --marketColorSecondaryII: #0056b3;
 
     /* Warna teks (putih) */
@@ -23,45 +22,32 @@
 
 .btn-secondary:hover,
 .btn-secondary:focus {
-    /* Lebih gelap saat hover */
     background-color: var(--marketColorSecondaryII) !important;
-    /* Warna teks tetap putih */
     color: var(--marketColorThirty) !important;
 }
 
 .btn-secondary:active {
-    /* Lebih gelap lagi saat ditekan */
     background-color: var(--marketColorSecondaryII) !important;
-    /* Teks tetap putih */
     color: var(--marketColorThirty);
 }
 
 .btn-custom {
     background-color: var(--marketColorPrimary);
-    /* Pastikan teks berwarna putih */
     color: var(--marketColorThirty);
-    /* Hapus border jika tidak diperlukan */
     border: none;
-    /* Animasi lembut */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
 .btn-custom:hover,
 .btn-custom:focus {
-    /* Lebih gelap saat hover */
-    background-color: #B71C1C !important;
-    /* Warna teks tetap putih */
+    background-color: var(--custom-primary-dark) !important;
     color: var(--marketColorThirty) !important;
 }
 
 .btn-custom:active {
-    /* Lebih gelap lagi saat ditekan */
     background-color: #A61B1B !important;
-    /* Teks tetap putih */
     color: var(--marketColorThirty);
 }
-
-
 
 .bg-custom {
     background-color: var(--marketColorPrimary) !important;
@@ -69,20 +55,6 @@
 
 .text-custom {
     color: var(--marketColorPrimary) !important;
-}
-
-.btn-custom {
-    background-color: var(--marketColorPrimary);
-    border-color: var(--marketColorPrimary);
-    color: var(--marketColorThirty);
-    transition: background-color 0.3s ease, color 0.3s ease;
-
-}
-
-.btn-custom:hover {
-    background-color: var(--custom-primary-dark);
-    border-color: var(--custom-primary-dark);
-    color: white !important;
 }
 
 .list-group-item.active {
