@@ -152,6 +152,8 @@ class CheckoutController extends Controller
                 // Buat order
                 $order = Orders::create([
                     'user_id' => Auth::id(),
+                    'produk_id' => $items[0]['id'],
+                    'payment_proof' => $validated['payment_proof'] ?? null,
                     'payment_method' => $validated['payment_method'],
                     'status' => $validated['payment_method'] === 'Cash on Delivery' ? 'pending' : 'awaiting_payment',
                     'total_amount' => $totalAmount,

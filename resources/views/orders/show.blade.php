@@ -147,50 +147,125 @@
                     @endif
 
                     <!-- Konfirmasi Penerimaan untuk COD -->
+                    <!-- Add this right after the confirm receipt form -->
                     @if ($order->payment_method === 'Cash on Delivery' && strtolower($order->status) === 'delivered')
                         <div class="mt-4 text-center">
-                            <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST" class="d-inline"
-                                onsubmit="return confirm('Apakah Anda sudah menerima pesanan dan melakukan pembayaran?')">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-check-circle me-2"></i>Konfirmasi Barang Diterima
-                                </button>
-                            </form>
+                            <!-- Ganti dengan button biasa untuk trigger modal -->
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#ratingModal">
+                                <i class="bi bi-check-circle me-2"></i>Konfirmasi Barang Diterima
+                            </button>
                         </div>
                     @endif
+                    <!-- Modal Rating -->
+                    <div class="modal fade" id="ratingModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Beri Rating dan Ulasan</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <!-- Ubah form untuk menggabungkan konfirmasi penerimaan dan rating -->
+                                <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="modal-body">
+                                        <!-- Star Rating -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Rating Produk</label>
+                                            <div class="star-rating">
+                                                <div class="stars">
+                                                    @for ($i = 5; $i >= 1; $i--)
+                                                        <input type="radio" id="star{{ $i }}" name="rating"
+                                                            value="{{ $i }}" required>
+                                                        <label for="star{{ $i }}"><i
+                                                                class="bi bi-star-fill"></i></label>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </div>
 
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
+                                        <!-- Review Text -->
+                                        <div class="mb-3">
+                                            <label for="ulasan" class="form-label">Ulasan Anda</label>
+                                            <textarea class="form-control" id="ulasan" name="ulasan" rows="3" required
+                                                placeholder="Bagikan pengalaman Anda menggunakan produk ini..."></textarea>
+                                        </div>
+                                    </div>
 
-    <!-- Modal Upload Bukti Transfer -->
-    @if ($order->payment_method === 'transfer' && strtolower($order->status) === 'pending')
-        <div class="modal fade" id="uploadBuktiModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Upload Bukti Transfer</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="{{ route('orders.upload-proof', $order) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PATCH')
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Bukti Transfer</label>
-                                <input type="file" class="form-control" name="payment_proof" accept="image/*" required>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Konfirmasi & Kirim Ulasan</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Upload</button>
-                        </div>
-                    </form>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    @endif
-@endsection
+
+
+            <!-- Modal Upload Bukti Transfer -->
+            @if ($order->payment_method === 'transfer' && strtolower($order->status) === 'pending')
+                <div class="modal fade" id="uploadBuktiModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Upload Bukti Transfer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form action="{{ route('orders.upload-proof', $order) }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @method('PATCH')
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Bukti Transfer</label>
+                                        <input type="file" class="form-control" name="payment_proof" accept="image/*"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endsection
+
+        <!-- Add this CSS to your stylesheet or in a style tag -->
+        <style>
+            .star-rating {
+                display: flex;
+                justify-content: center;
+                direction: rtl;
+            }
+
+            .stars {
+                display: inline-block;
+            }
+
+            .stars input[type="radio"] {
+                display: none;
+            }
+
+            .stars label {
+                float: right;
+                padding: 0 2px;
+                font-size: 24px;
+                color: #ddd;
+                cursor: pointer;
+            }
+
+            .stars label:hover,
+            .stars label:hover~label,
+            .stars input[type="radio"]:checked~label {
+                color: #ffd700;
+            }
+        </style>

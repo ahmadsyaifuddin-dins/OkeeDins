@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
+use App\Models\Ulasan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,21 +107,39 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Pesanan dalam pengiriman!');
     }
 
-    public function confirmReceipt($id)
+    public function confirmReceipt(Request $request, $id)
     {
         $order = Orders::findOrFail($id);
+
+        // Validasi input rating dan ulasan
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'ulasan' => 'required|string|max:1000',
+        ]);
 
         // Pastikan hanya pesanan COD dan status delivered yang dapat dikonfirmasi
         if ($order->payment_method !== 'Cash on Delivery' || strtolower($order->status) !== 'delivered') {
             return redirect()->back()->with('error', 'Pesanan tidak valid untuk dikonfirmasi.');
         }
 
+        // Update status pesanan
         $order->status = 'completed';
         $order->payment_status = 'paid';
         $order->save();
 
-        return redirect()->back()->with('success', 'Terima kasih telah mengkonfirmasi penerimaan pesanan.');
+        // Simpan ulasan
+        Ulasan::create([
+            'user_id' => $order->user_id,
+            'produk_id' => $order->produk_id,
+            'rating' => $request->rating,
+            'ulasan' => $request->ulasan,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->back()->with('success', 'Terima kasih telah mengkonfirmasi penerimaan pesanan dan memberikan ulasan.');
     }
+
 
     public function show(Orders $order)
     {

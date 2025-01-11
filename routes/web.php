@@ -10,6 +10,7 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UlasanController;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use PHPUnit\Framework\Attributes\Group;
@@ -71,7 +72,8 @@ Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('ch
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::patch('/order/{order}/confirm-receipt', [OrderController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
+Route::patch('/order/{id}/confirm-receipt', [OrderController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
+Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
 Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
 

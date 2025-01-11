@@ -13,16 +13,17 @@ class Orders extends Model
     protected $fillable = [
         'order_number',
         'user_id',
-        'sub_total',
+        'produk_id',
         'shipping_id',
-        'coupon',
+        'sub_total',
         'total_amount',
-        'notes',
         'qty',
+        'coupon',
+        'notes',
         'payment_method',
         'payment_status',
         'status',
-        'address1',
+        'address',
         'payment_proof'
     ];
 
@@ -70,6 +71,10 @@ class Orders extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class);
+    }
 
     // public function shipping()
     // {
