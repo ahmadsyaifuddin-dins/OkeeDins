@@ -9,6 +9,7 @@ use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -201,7 +202,7 @@ class CheckoutController extends Controller
                 ]);
             });
         } catch (\Exception $e) {
-            \Log::error('Checkout Error: ' . $e->getMessage());
+            Log::error('Checkout Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage()
