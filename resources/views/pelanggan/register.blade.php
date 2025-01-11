@@ -109,7 +109,7 @@
                     <div>
                         <label for="address" class="formbold-form-label">Alamat Lengkap </label>
                         <input type="text" name="alamat" id="address"
-                            placeholder="Jl. Kaca Piring No. 8 Banjarmasin (Isi lah Alamat Lengkap untuk pengiriman paket!)"
+                            placeholder="Isilah Alamat Lengkap untuk pengiriman paket anda📦!"
                             class="formbold-form-input" required value="{{ old('alamat') }}" />
                     </div>
                 </div>
