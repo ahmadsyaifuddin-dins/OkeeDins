@@ -21,7 +21,7 @@
 
 <body>
     @include('layouts.navbar')
-    <div class="container mt-4">
+    <div class="px-5 mt-4">
         @yield('content')
         @stack('scripts')
 
