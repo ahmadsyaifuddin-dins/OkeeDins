@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PelangganController extends Controller
 {
     public function __construct()
     {
-        // Middleware auth untuk mencegah halaman login dan register diakses setelah login
         $this->middleware('guest')->except('logout');
     }
 
     public function showLoginForm()
     {
         if (Auth::check()) {
-            // Jika user sudah login, arahkan sesuai role
             if (Auth::user()->role === 'Pelanggan') {
                 return redirect()->route('home.index');
             } elseif (Auth::user()->role === 'Administrator') {
@@ -35,37 +33,40 @@ class PelangganController extends Controller
             'password' => 'required',
         ]);
 
-        // Cek apakah email ada di database
-        $user = DB::table('users')
-            ->select('id', 'email', 'password', 'role')
-            ->where('email', $request->email)
-            ->first();
+        // Gunakan model User daripada DB facade
+        $user = User::where('email', $request->email)->first();
 
-        if ($user) {
-            // Jika user ditemukan, cek password dan role
-            if ($request->password === $user->password) { // Sesuaikan hashing password jika menggunakan bcrypt
-                if ($user->role === 'Pelanggan') {
-                    // Login dengan Remember Me
-                    Auth::loginUsingId($user->id, $request->boolean('remember'));
-                    return redirect()->route('home.index')->with('success', 'Login berhasil! Selamat datang di Market');
-                } elseif ($user->role === 'Administrator') {
-                    return back()->withErrors([
-                        'email' => 'Bukan Email untuk Pelanggan!',
-                    ])->withInput();
-                }
-            }
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email tidak ditemukan!',
+            ])->onlyInput('email');
+        }
 
+        // Cek role terlebih dahulu
+        if ($user->role === 'Administrator') {
+            return back()->withErrors([
+                'email' => 'Bukan Email untuk Pelanggan!',
+            ])->withInput();
+        }
+
+        // Verifikasi password
+        if ($request->password !== $user->password) { // Sesuaikan dengan bcrypt jika menggunakan hashing
             return back()->withErrors([
                 'password' => 'Password salah!',
             ])->withInput();
         }
 
-        // Jika user tidak ditemukan
-        return back()->withErrors([
-            'email' => 'Email tidak ditemukan!',
-        ])->onlyInput('email');
-    }
+        // Simpan IP address
+        $user->last_login_ip = $request->ip();
+        $user->save();
 
+        // Login dengan Remember Me
+        Auth::loginUsingId($user->id, $request->boolean('remember'));
+
+        return redirect()
+            ->route('home.index')
+            ->with('success', 'Login berhasil! Selamat datang di Market');
+    }
 
     public function logout(Request $request)
     {
