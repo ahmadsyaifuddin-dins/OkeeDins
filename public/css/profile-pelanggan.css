@@ -68,10 +68,6 @@
     color: white;
 }
 
-.text-primary {
-    color: var(--marketColorPrimary) !important;
-}
-
 .border-primary {
     border-color: var(--marketColorPrimary) !important;
 }
