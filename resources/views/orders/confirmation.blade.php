@@ -30,7 +30,7 @@
                                         <div class="text-muted small">
                                             {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
                                             @if ($item->discount > 0)
-                                                <span class="text-danger">(Diskon {{ $item->discount }}%)</span>
+                                                <span class="text-danger">(Diskon {{ intval($item->discount) }}%)</span>
                                             @endif
                                         </div>
                                     </div>
