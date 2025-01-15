@@ -25,6 +25,7 @@ class Produk extends Model
     protected $primaryKey = 'id'; // Primary key
 
     protected $fillable = [
+        'id',
         'slug',
         'gambar',
         'nama_produk',
@@ -43,8 +44,8 @@ class Produk extends Model
         return $this->belongsTo(KategoriProduk::class, 'kategori_id', 'id');
     }
 
-    public function carts()
+    public function cart()
     {
-        return $this->hasMany(Cart::class, 'produk_id');
+        return $this->hasMany(Cart::class, 'produk_id', 'id');
     }
 }

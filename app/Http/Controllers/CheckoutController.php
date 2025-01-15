@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\OrderItems;
 use App\Models\Orders;
@@ -18,13 +20,28 @@ class CheckoutController extends Controller
         $this->middleware('auth');
     }
 
-    // Menampilkan halaman checkout
-    // CheckoutController.php modifications
-
-
-
     public function showCheckout(Request $request)
     {
+        $user = auth()->user();
+
+        // Get user's addresses
+        $addresses = Address::where('user_id', $user->id)
+            ->orderBy('is_primary', 'desc')
+            ->get();
+
+        // If no addresses exist, create default one
+        if ($addresses->isEmpty()) {
+            $defaultAddress = Address::create([
+                'user_id' => $user->id,
+                'label' => 'Alamat Utama',
+                'receiver_name' => $user->name,
+                'phone_number' => $user->telepon,
+                'full_address' => $user->alamat,
+                'is_primary' => true
+            ]);
+            $addresses = collect([$defaultAddress]);
+        }
+
         // Ambil data checkout dari session storage yang disimpan di cart
         $selectedItems = json_decode($request->input('selected_items', '[]'), true);
 
@@ -65,60 +82,103 @@ class CheckoutController extends Controller
             'totalPrice' => $totalPrice,
             'totalDiscount' => $totalDiscount,
             'grandTotal' => $grandTotal,
-            'isFromCart' => true
+            'isFromCart' => true,
+            'addresses' => $addresses
         ]);
     }
 
     public function payNow(Request $request)
     {
+        $user = auth()->user();
         $items = json_decode($request->query('items'), true);
 
-        if (empty($items)) {
+        // Validasi items tidak kosong
+        if (!$items || !is_array($items)) {
             return redirect()->back()->with('error', 'Data produk tidak valid');
         }
 
-        $directItems = collect($items)->map(function ($item) {
-            $produk = Produk::findOrFail($item['id']);
-            return [
-                'produk_id' => $produk->id,
-                'product' => $produk,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-                'discount' => $item['discount'],
-                'subtotal' => ($item['price'] * $item['quantity']) -
-                    (($item['price'] * $item['quantity'] * $item['discount']) / 100)
-            ];
-        });
+        // Get user's addresses
+        $addresses = Address::where('user_id', $user->id)
+            ->orderBy('is_primary', 'desc')
+            ->get();
 
-        // Calculate totals for direct purchase
-        $totalPrice = $directItems->sum(function ($item) {
-            return $item['price'] * $item['quantity'];
-        });
 
-        $totalDiscount = $directItems->sum(function ($item) {
-            return ($item['price'] * $item['quantity'] * $item['discount']) / 100;
-        });
+        // Create default address if none exists
+        if ($addresses->isEmpty()) {
+            $defaultAddress = Address::create([
+                'user_id' => $user->id, // Hubungkan dengan ID user
+                'label' => 'Alamat Utama',
+                'receiver_name' => $user->name ?? '',
+                'phone_number' => $user->telepon ?? '',
+                'full_address' => $user->alamat ?? '',
+                'is_primary' => true
+            ]);
 
-        $grandTotal = $totalPrice - $totalDiscount;
+            // Konversi ke collection agar tetap konsisten dengan alur sebelumnya
+            $addresses = collect([$defaultAddress]);
+        }
 
-        return view('home.checkout', [
-            'cartItems' => $directItems,
-            'totalPrice' => $totalPrice,
-            'totalDiscount' => $totalDiscount,
-            'grandTotal' => $grandTotal,
-            'isFromCart' => false,
-            'checkoutItems' => $items
-        ]);
+        try {
+            $directItems = collect($items)->map(function ($item) {
+                if (!isset($item['id']) || !isset($item['quantity'])) {
+                    throw new \Exception('Data produk tidak lengkap');
+                }
+
+                $produk = Produk::findOrFail($item['id']);
+                return [
+                    'produk_id' => $produk->id,
+                    'product' => $produk,
+                    'quantity' => $item['quantity'] ?? 1,
+                    'price' => $produk->harga ?? 0,
+                    'discount' => $produk->diskon ?? 0,
+                    'subtotal' => ($produk->harga * ($item['quantity'] ?? 1)) -
+                        (($produk->harga * ($item['quantity'] ?? 1) * ($produk->diskon ?? 0)) / 100)
+                ];
+            });
+
+            // Calculate totals
+            $totalPrice = $directItems->sum(function ($item) {
+                return $item['price'] * $item['quantity'];
+            });
+
+            $totalDiscount = $directItems->sum(function ($item) {
+                return ($item['price'] * $item['quantity'] * $item['discount']) / 100;
+            });
+
+            $grandTotal = $totalPrice - $totalDiscount;
+
+            return view('home.checkout', [
+                'cartItems' => $directItems,
+                'totalPrice' => $totalPrice,
+                'totalDiscount' => $totalDiscount,
+                'grandTotal' => $grandTotal,
+                'isFromCart' => false,
+                'checkoutItems' => $items,
+                'addresses' => $addresses
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
 
     // Memproses checkout
     public function processCheckout(Request $request)
     {
+        $request->validate([
+            'payment_method' => 'required|in:Cash on Delivery,Transfer',
+            'address_id' => 'required|exists:addresses,id',
+            'seller_notes' => 'nullable|string',
+            'proof_of_payment' => 'required_if:payment_method,Transfer|file|image|max:2048',
+        ]);
+
+        $user = auth()->user();
+        $address = Address::find($request->address_id);
+
         try {
-            return DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request, $address) {
                 $validated = $request->validate([
-                    'payment_method' => 'required|in:Cash on Delivery, Transfer',
+                    'payment_method' => 'required|in:Cash on Delivery,Transfer',
                     'items' => 'required|json',
                     'proof_of_payment' => 'required_if:payment_method,Transfer|file|image|max:2048',
                     'seller_notes' => 'nullable|string|max:1000' // Add validation for notes
@@ -153,14 +213,15 @@ class CheckoutController extends Controller
                 // Buat order
                 $order = Orders::create([
                     'user_id' => Auth::id(),
-                    'produk_id' => $items[0]['id'],
+                    // 'produk_id' => $items[0]['id'],
                     'payment_proof' => $validated['payment_proof'] ?? null,
                     'payment_method' => $validated['payment_method'],
                     'status' => $validated['payment_method'] === 'Cash on Delivery' ? 'pending' : 'awaiting_payment',
                     'total_amount' => $totalAmount,
                     'qty' => array_sum(array_column($items, 'quantity')),
                     'order_date' => now(),
-                    'notes' => $validated['seller_notes'] ?? null // Add notes to order
+                    'notes' => $validated['seller_notes'] ?? null, // Add notes to order
+                    'address_id' => $address->id
                 ]);
 
                 // Handle bukti pembayaran

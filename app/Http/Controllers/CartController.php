@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -23,7 +24,7 @@ class CartController extends Controller
         ]);
 
         try {
-            \Log::info('Request Data:', $request->all());
+            Log::info('Request Data:', $request->all());
 
             $existingCart = $this->getCartQuery()
                 ->where('produk_id', $request->produk_id)
@@ -48,8 +49,8 @@ class CartController extends Controller
                 'cartCount' => $this->getCartCount()
             ]);
         } catch (\Exception $e) {
-            \Log::error('Cart Error: ' . $e->getMessage());
-            \Log::error('Error Stack Trace: ' . $e->getTraceAsString());
+            Log::error('Cart Error: ' . $e->getMessage());
+            Log::error('Error Stack Trace: ' . $e->getTraceAsString());
 
             return response()->json([
                 'success' => false,

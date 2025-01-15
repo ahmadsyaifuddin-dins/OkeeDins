@@ -167,7 +167,7 @@
                                             data-discount="{{ $item->product->diskon }}">
                                             <div class="row align-items-center">
                                                 <div class="col-auto">
-                                                    <img src="{{ asset('storage/' . $item->product->gambar) }}"
+                                                    <img src="{{ asset($item->product->gambar) }}"
                                                         alt="{{ $item->product->nama_produk }}" class="rounded"
                                                         width="80">
                                                 </div>
@@ -458,12 +458,12 @@
                 document.querySelectorAll('.checkout-item').forEach(item => {
                     items.push({
                         id: item.dataset.itemId,
-                        nama_produk: item.querySelector('h6').textContent.trim(),
-                        price: parseFloat(item.dataset.price || item.dataset.harga),
+                        price: parseFloat(item.dataset.price || item.dataset
+                            .harga), // tambah fallback ke harga
                         quantity: parseInt(item.dataset.quantity || item.dataset
-                            .jumlah),
+                            .jumlah), // tambah fallback ke jumlah
                         discount: parseFloat(item.dataset.discount || item.dataset
-                            .diskon || 0)
+                            .diskon || 0) // tambah fallback ke diskon
                     });
                 });
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\AddressController; // Add this line
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use PHPUnit\Framework\Attributes\Group;
@@ -63,6 +64,13 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     });
 });
 
+// Address Management Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/addresses', [AddressController::class, 'store']);
+    Route::get('/addresses/{address}', [AddressController::class, 'show']);
+    Route::put('/addresses/{address}', [AddressController::class, 'update']);
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy']);
+});
 
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
@@ -86,7 +94,7 @@ Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-// Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 // });
 
 //? Route Admin

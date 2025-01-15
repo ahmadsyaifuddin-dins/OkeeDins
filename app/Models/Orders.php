@@ -13,7 +13,7 @@ class Orders extends Model
     protected $fillable = [
         'order_number',
         'user_id',
-        'produk_id',
+        'address_id',
         'shipping_id',
         'sub_total',
         'total_amount',
@@ -23,7 +23,7 @@ class Orders extends Model
         'payment_method',
         'payment_status',
         'status',
-        'address',
+        // 'address',
         'payment_proof'
     ];
 
@@ -80,6 +80,11 @@ class Orders extends Model
     // {
     //     return $this->belongsTo(Shipping::class);
     // }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class, 'address_id');
+    }
 
     public function orderItems()
     {

@@ -8,6 +8,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Address;
+use App\Models\Cart;
+// use App\Models\Pesanan;
 
 class User extends Authenticatable  implements MustVerifyEmail
 {
@@ -45,7 +48,7 @@ class User extends Authenticatable  implements MustVerifyEmail
         'photo',
         'role',
         'type_char',
-        'last_login_ip',
+        'last_login_ip'
     ];
 
     /**
@@ -54,7 +57,7 @@ class User extends Authenticatable  implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $hidden = [
-        // 'password',
+        'password',
         'remember_token',
     ];
 
@@ -71,8 +74,18 @@ class User extends Authenticatable  implements MustVerifyEmail
         'remember_token' => '',
     ];
 
-    public function pesanan()
+    public function cart()
     {
-        return $this->hasMany(Pesanan::class);
+        return $this->hasMany(Cart::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Orders::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 }

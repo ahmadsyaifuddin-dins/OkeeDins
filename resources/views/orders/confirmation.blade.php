@@ -92,7 +92,7 @@
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted">Alamat</span>
-                                <span class="text-end" style="max-width: 60%">{{ $order->user->alamat }}</span>
+                                <span class="text-end" style="max-width: 60%">{{ $order->address->full_address }}</span>
                             </div>
                         </div>
 
