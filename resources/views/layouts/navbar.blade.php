@@ -1,5 +1,6 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container">
+
         <a class="text-decoration-none h5 fw-bold text-custom" href="{{ route('home.index') }}">
             Food <span class="text-primary">Fusion</span>
         </a>
@@ -14,7 +15,7 @@
             <a class="btn" href="#">
                 <i class="bi bi-envelope"></i>
             </a>
-            <a class="btn position-relative" href="{{ route('cart.index') }}">
+            <a class="btn position-relative" id="cartBadgeMobile" href="{{ route('cart.index') }}">
                 <i class="bi bi-cart"></i>
                 @auth
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -51,8 +52,7 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block position-relative">
-                    <a class="nav-link" href="{{ route('cart.index') }}">
-                        {{-- <a class="nav-link" href="#"> --}}
+                    <a class="nav-link" id="cartBadge" href="{{ route('cart.index') }}">
                         <i class="bi bi-cart me-1"></i> Keranjang
                         @auth
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

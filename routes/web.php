@@ -54,8 +54,6 @@ Route::middleware('guest')->group(function () {
 //! Route untuk pelanggan yang sudah login
 Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middleware pelanggan
     Route::post('/logout', [PelangganController::class, 'logout'])->name('logout');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
     Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
@@ -68,6 +66,8 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
