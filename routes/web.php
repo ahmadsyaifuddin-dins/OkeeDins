@@ -57,6 +57,19 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
+    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('checkout.pay-now');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/order/{id}/confirm-receipt', [OrderController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
+    Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+    Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -64,29 +77,14 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     });
 });
 
-// Address Management Routes
 Route::middleware('auth')->group(function () {
+
+    // Address Management Routes
     Route::post('/addresses', [AddressController::class, 'store']);
     Route::get('/addresses/{address}', [AddressController::class, 'show']);
     Route::put('/addresses/{address}', [AddressController::class, 'update']);
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy']);
 });
-
-Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
-Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
-Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('checkout.pay-now');
-
-
-Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::patch('/order/{id}/confirm-receipt', [OrderController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
-Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
-Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-
-
-Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
-Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems'])
     ->name('cart.get-selected-items');
@@ -94,7 +92,6 @@ Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 // });
 
 //? Route Admin

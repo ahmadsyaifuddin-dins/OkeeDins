@@ -222,7 +222,7 @@
                                 </div>
 
                                 <!-- Submit Button -->
-                                <div class="text-end">
+                                <div class="text-start">
                                     <button type="submit" class="btn btn-custom">
                                         <i class="fas fa-save me-2"></i>Simpan Perubahan
                                     </button>
