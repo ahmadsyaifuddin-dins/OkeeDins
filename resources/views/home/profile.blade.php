@@ -157,7 +157,30 @@
                                             <label class="form-label">
                                                 <i class="fas fa-map-marker-alt me-2 text-custom"></i>Alamat
                                             </label>
-                                            <textarea name="alamat" rows="3" class="form-control">{{ old('alamat', Auth::user()->alamat) }}</textarea>
+                                            @if ($userAddresses = Auth::user()->addresses)
+                                                <div class="mb-3">
+                                                    <select name="selected_address" class="form-control mb-2"
+                                                        id="addressSelector">
+                                                        <option value="">-- Pilih Alamat Tersimpan --</option>
+                                                        @foreach ($userAddresses->unique('full_address') as $address)
+                                                            <option value="{{ $address->id }}"
+                                                                data-address="{{ $address->full_address }}"
+                                                                data-receiver="{{ $address->receiver_name }}"
+                                                                data-phone="{{ $address->phone_number }}"
+                                                                {{ $address->is_primary ? 'selected' : '' }}>
+                                                                {{ $address->label }}
+                                                                {{ $address->is_primary ? '(Utama)' : '' }} -
+                                                                {{ $address->receiver_name }}
+                                                                ({{ $address->phone_number }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
+
+                                            <textarea name="alamat" id="alamatTextarea" rows="3" class="form-control"
+                                                placeholder="Masukkan alamat lengkap"
+                                                {{ $userAddresses->where('is_primary', true)->count() > 0 ? 'readonly' : '' }}>{{ old('alamat', $userAddresses->where('is_primary', true)->first()?->full_address ?? Auth::user()->alamat) }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -228,12 +251,50 @@
                                     </button>
                                 </div>
                             </form>
+
+                            <!-- Alamat Baru yg tersimpan -->
+                            <div id="newAddressForm" class="border rounded p-3 mb-3" style="display: none;">
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const addressSelector = document.getElementById('addressSelector');
+                const alamatTextarea = document.getElementById('alamatTextarea');
+
+                if (addressSelector) {
+                    // Set initial value based on primary address
+                    const primaryOption = Array.from(addressSelector.options)
+                        .find(option => option.text.includes('(Utama)'));
+                    if (primaryOption) {
+                        addressSelector.value = primaryOption.value;
+                        alamatTextarea.value = primaryOption.dataset.address;
+                        alamatTextarea.setAttribute('readonly', true);
+                    }
+
+                    addressSelector.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+
+                        if (this.value === '') {
+                            alamatTextarea.value = '';
+                            alamatTextarea.removeAttribute('readonly');
+                        } else {
+                            alamatTextarea.value = selectedOption.dataset.address;
+                            alamatTextarea.setAttribute('readonly', true);
+                        }
+                    });
+                }
+            });
+        </script>
+    @endpush
 
     @push('scripts')
         <script>

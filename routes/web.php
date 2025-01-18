@@ -72,7 +72,9 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
+
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+        Route::patch('/profile/address/{address}/primary', [ProfileController::class, 'setPrimaryAddress'])->name('profile.address.primary');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });
@@ -90,11 +92,8 @@ Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems
     ->name('cart.get-selected-items');
 
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-// });
 
-//? Route Admin
+//! Route Admin
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes
