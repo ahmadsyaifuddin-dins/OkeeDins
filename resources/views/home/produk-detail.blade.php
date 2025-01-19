@@ -187,7 +187,7 @@
         }
 
         function updateSubtotal(qty) {
-            const total = hargaProduk * qty;
+            const total = Math.round(hargaProduk * qty);
             subtotalElement.textContent = `Rp${total.toLocaleString('id-ID')}`;
         }
 
