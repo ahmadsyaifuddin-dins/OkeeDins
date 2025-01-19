@@ -74,7 +74,6 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-        Route::patch('/profile/address/{address}/primary', [ProfileController::class, 'setPrimaryAddress'])->name('profile.address.primary');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });

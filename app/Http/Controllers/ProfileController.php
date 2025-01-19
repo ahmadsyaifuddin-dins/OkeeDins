@@ -112,22 +112,4 @@ class ProfileController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat menyimpan profile.');
         }
     }
-
-    // Method untuk mengubah alamat menjadi primary
-    public function setPrimaryAddress(Request $request, Address $address)
-    {
-        if ($address->user_id !== Auth::id()) {
-            return back()->with('error', 'Anda tidak memiliki akses ke alamat ini.');
-        }
-
-        // Update semua alamat user menjadi non-primary
-        Address::where('user_id', Auth::id())
-            ->update(['is_primary' => false]);
-
-        // Set alamat yang dipilih menjadi primary
-        $address->is_primary = true;
-        $address->save();
-
-        return back()->with('success', 'Alamat utama berhasil diubah!');
-    }
 }

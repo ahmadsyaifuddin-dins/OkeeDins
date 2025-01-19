@@ -33,7 +33,7 @@ class CheckoutController extends Controller
         if ($addresses->isEmpty()) {
             $defaultAddress = Address::create([
                 'user_id' => $user->id,
-                'label' => 'Alamat Utama',
+                'label' => 'Alamat',
                 'receiver_name' => $user->name,
                 'phone_number' => $user->telepon,
                 'full_address' => $user->alamat,
@@ -107,7 +107,7 @@ class CheckoutController extends Controller
         if ($addresses->isEmpty()) {
             $defaultAddress = Address::create([
                 'user_id' => $user->id, // Hubungkan dengan ID user
-                'label' => 'Alamat Utama',
+                'label' => 'Alamat',
                 'receiver_name' => $user->name ?? '',
                 'phone_number' => $user->telepon ?? '',
                 'full_address' => $user->alamat ?? '',
