@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ulasan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id'); // Pastikan tipe data sesuai
-            $table->unsignedBigInteger('produk_id'); // Pastikan tipe data sesuai
-            $table->string('ulasan');
-            $table->tinyInteger('rating', 5);
+            $table->id(); // Primary key dengan auto_increment
+            $table->unsignedInteger('user_id'); // Foreign key ke tabel users
+            $table->unsignedBigInteger('produk_id'); // Foreign key ke tabel produk
+            $table->string('ulasan'); // Kolom ulasan
+            $table->tinyInteger('rating'); // Kolom rating tanpa parameter panjang
+            $table->timestamps(); // Kolom created_at dan updated_at
+
+            // Definisi foreign key
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
@@ -25,7 +28,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('produk')
                 ->onDelete('cascade'); // Cascade delete
-            $table->timestamps();
         });
     }
 
