@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+    <div class="mt-4">
+        <div class="row ">
+            <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <a href="{{ route('orders.index') }}" class="text-decoration-none me-3">
                         <i class="bi bi-arrow-left"></i>
                     </a>
-                    <h4 class="mb-0">Detail Pesanan</h4>
+                    <h4 class="mb-0">Detail</h4>
                 </div>
 
                 <div class="card border-0 shadow-sm mb-4">

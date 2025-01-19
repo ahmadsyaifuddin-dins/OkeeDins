@@ -1,22 +1,12 @@
 @extends('layouts.app')
 
-
 @section('content')
-
-    <div class="container mt-4">
-
+    <div class="mt-4">
         <h4 class="mb-4">Keranjang Belanja</h4>
-
-
-
         <div class="row g-4">
-
             <!-- Main Cart Content -->
-
             <div class="col-lg-8">
-
                 <!-- Select All Section -->
-
                 <div class="card mb-3">
 
                     <div class="card-body">
@@ -36,8 +26,6 @@
                     </div>
 
                 </div>
-
-
 
                 <!-- Cart Items Group by Store -->
 
@@ -71,14 +59,11 @@
 
                         </div>
 
-
-
                         <!-- Cart Items -->
 
                         <div class="cart-items">
 
                             @forelse($cartItems as $item)
-
                                 <!-- Single Cart Item -->
 
                                 <div class="cart-item border-top pt-3" data-id="{{ $item->id }}">
@@ -90,11 +75,8 @@
                                             <div class="form-check">
 
                                                 <input class="form-check-input item-checkbox" type="checkbox"
-
                                                     data-price="{{ $item->product->harga }}"
-
                                                     data-discount="{{ $item->product->diskon ?? 0 }}"
-
                                                     id="item-{{ $item->id }}">
 
                                             </div>
@@ -108,9 +90,7 @@
                                             <a href="{{ route('produk.detail', $item->product->slug) }}">
 
                                                 <img src="{{ asset('storage/' . $item->product->gambar) }}"
-
                                                     class="rounded img-fluid" alt="{{ $item->product->nama_produk }}"
-
                                                     width="100">
 
                                             </a>
@@ -130,7 +110,6 @@
                                                 <div class="mb-2">
 
                                                     <a href="{{ route('produk.detail', $item->product->slug) }}"
-
                                                         class="text-decoration-none text-custom">
 
                                                         <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
@@ -154,7 +133,6 @@
                                                     <div class="quantity-controls d-flex align-items-center">
 
                                                         <button class="btn btn-outline-custom btn-sm quantity-btn"
-
                                                             data-action="decrease">
 
                                                             <i class="bi bi-dash"></i>
@@ -162,13 +140,10 @@
                                                         </button>
 
                                                         <input type="number"
-
                                                             class="form-control form-control-sm mx-2 my-3 text-center quantity-input"
-
                                                             value="{{ $item->quantity }}" style="width: 45px;">
 
                                                         <button class="btn btn-outline-custom btn-sm quantity-btn"
-
                                                             data-action="increase">
 
                                                             <i class="bi bi-plus"></i>
@@ -182,9 +157,7 @@
                                                     <!-- Item Actions btn Hapus-->
 
                                                     <button
-
                                                         class="btn btn-link text-danger text-decoration-none btn-sm delete-item"
-
                                                         data-id="{{ $item->id }}">
 
                                                         <i class="bi bi-trash "></i> Hapus
@@ -222,7 +195,6 @@
                                     </div>
 
                                 </div>
-
                             @endforelse
 
                         </div>
@@ -320,15 +292,12 @@
         </div>
 
     </div>
-
 @endsection
 
 
 
 @push('styles')
-
     <style>
-
         /* Hide number input spinners */
 
         input[type="number"]::-webkit-inner-spin-button,
@@ -436,9 +405,7 @@
             }
 
         }
-
     </style>
-
 @endpush
 
 
@@ -446,9 +413,7 @@
 <!--Perhitungan total belanja dan tombol beli dalam ringkasan belanja -->
 
 @push('scripts')
-
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
 
             const selectAllCheckbox = document.getElementById('selectAll');
@@ -864,13 +829,10 @@
             });
 
         });
-
     </script>
-
 @endpush
 
 <style>
-
     /* Menghilangkan tombol spinner untuk input number */
 
     input[type="number"]::-webkit-inner-spin-button,
@@ -892,7 +854,6 @@
         /* Firefox */
 
     }
-
 </style>
 
 
@@ -900,9 +861,7 @@
 
 
 @push('scripts')
-
     <script>
-
         document.getElementById('btn-checkout').addEventListener('click', async function() {
 
             const selectedItems = [];
@@ -1110,8 +1069,5 @@
             }
 
         });
-
     </script>
-
 @endpush
-

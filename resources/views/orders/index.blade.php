@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="mt-4">
         <div class="row">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -103,7 +103,7 @@
                                         <div class="d-flex flex-column flex-sm-row justify-content-end">
                                             <a href="{{ route('orders.show', $order) }}"
                                                 class="btn btn-danger btn-sm mb-2 mb-sm-0 me-sm-2">
-                                                Detail Pesanan
+                                                Detail
                                             </a>
                                             @if ($order->status === 'pending')
                                                 <form action="{{ route('orders.cancel', $order) }}" method="POST"
