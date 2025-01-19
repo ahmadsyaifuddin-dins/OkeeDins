@@ -9,14 +9,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('cart', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('user_id');
-            $table->unsignedBigInteger('product_id');
-            $table->integer('quantity');
-            $table->timestamps();
+            $table->bigIncrements('id'); // id Primary Key, UNSIGNED, AUTO_INCREMENT
+            $table->unsignedInteger('user_id'); // user_id Index, UNSIGNED
+            $table->unsignedBigInteger('produk_id'); // produk_id Index, UNSIGNED
+            $table->integer('quantity'); // quantity
+            $table->string('status', 20)->default('new'); // status, varchar(50), Default 'new'
+            $table->timestamps(); // created_at and updated_at
 
+            // Foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('produk')->onDelete('cascade');
+            $table->foreign('produk_id')->references('id')->on('produk')->onDelete('cascade');
         });
     }
 
