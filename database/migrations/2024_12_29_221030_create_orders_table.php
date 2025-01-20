@@ -14,7 +14,11 @@ return new class extends Migration
             $table->unsignedBigInteger('address_id');
             $table->string('order_number')->unique();
             $table->decimal('total_amount', 12, 2);
+            $table->int('qty', 11);
+            $table->enum('payment_method', ['Cash on Delivery', 'transfer', 'midtrans'])->default('Cash on Delivery');
+            $table->enum('payment_status', ['paid', 'unpaid'])->default('unpaid');
             $table->string('status')->default('pending');
+            $table->string('payment_proof', 255)->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderItems;
 use App\Models\Orders;
 use App\Models\Ulasan;
 use Illuminate\Http\Request;
@@ -107,9 +108,10 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Pesanan dalam pengiriman!');
     }
 
-    public function confirmReceipt(Request $request, $id)
+    public function confirmReceipt(Request $request, $id, $produk_id)
     {
         $order = Orders::findOrFail($id);
+        $orderItems = OrderItems::findOrFail($produk_id);
 
         // Validasi input rating dan ulasan
         $request->validate([
@@ -130,7 +132,7 @@ class OrderController extends Controller
         // Simpan ulasan
         Ulasan::create([
             'user_id' => $order->user_id,
-            'produk_id' => $order->produk_id,
+            'produk_id' => $orderItems->produk_id,
             'rating' => $request->rating,
             'ulasan' => $request->ulasan,
             'created_at' => now(),
