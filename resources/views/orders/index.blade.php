@@ -102,7 +102,7 @@
                                     <div class="col text-end">
                                         <div class="d-flex flex-column flex-sm-row justify-content-end">
                                             <a href="{{ route('orders.show', $order) }}"
-                                                class="btn btn-danger btn-sm mb-2 mb-sm-0 me-sm-2">
+                                                class="btn btn-danger btn-sm mb-2 me-sm-2 px-2">
                                                 Detail
                                             </a>
                                             @if ($order->status === 'pending')
@@ -111,7 +111,7 @@
                                                     onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="btn btn-outline-custom btn-sm">
+                                                    <button type="submit" class="btn btn-outline-custom btn-sm px-2">
                                                         Batalkan
                                                     </button>
                                                 </form>

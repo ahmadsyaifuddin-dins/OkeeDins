@@ -24,6 +24,19 @@
     color: var(--marketColorPrimary);
 }
 
+/* Custom radio button checked color */
+.custom-radio:checked {
+    background-color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorPrimary) !important;
+}
+
+/* Custom checkbox checked color */
+.checkbox-custom:checked {
+    background-color: var(--marketColorPrimary) !important;
+    border-color: var(--marketColorPrimary) !important;
+}
+
+
 /* Warna Background Badges or Background suatu objek*/
 .bg-custom {
     background-color: var(--marketColorPrimary) !important;
@@ -279,3 +292,70 @@
 }
 
 /* End Custom Banner Slider Hover */
+
+/* Start Custom Kategori Slider */
+.kategoriSwiper {
+    padding: 0 35px !important;
+    position: relative;
+}
+
+/* Hide navigation buttons by default */
+.kategoriSwiper .swiper-button-next,
+.kategoriSwiper .swiper-button-prev {
+    opacity: 0;
+    width: 35px;
+    height: 35px;
+    background-color: var(--marketColorThirty);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Show navigation buttons on slider hover */
+.kategoriSwiper:hover .swiper-button-next,
+.kategoriSwiper:hover .swiper-button-prev {
+    opacity: 1;
+}
+
+.kategoriSwiper .swiper-button-next:after,
+.kategoriSwiper .swiper-button-prev:after {
+    font-size: 15px;
+    color: var(--marketColorPrimary);
+}
+
+/* Add translation animation */
+.kategoriSwiper .swiper-button-next {
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+}
+
+.kategoriSwiper .swiper-button-prev {
+    transform: translateX(-20px);
+    transition: all 0.3s ease;
+}
+
+.kategoriSwiper:hover .swiper-button-next {
+    transform: translateX(0);
+}
+
+.kategoriSwiper:hover .swiper-button-prev {
+    transform: translateX(0);
+}
+
+/* Optional: Add hover effect on the buttons themselves */
+.kategoriSwiper .swiper-button-next:hover,
+.kategoriSwiper .swiper-button-prev:hover {
+    background-color: var(--marketColorThirty);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling untuk slide kategori */
+.kategoriSwiper .swiper-slide {
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.kategoriSwiper .swiper-slide:hover {
+    transform: translateY(-2px);
+}
+/* End Custom Kategori Slider */

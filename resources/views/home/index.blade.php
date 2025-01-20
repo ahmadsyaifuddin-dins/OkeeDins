@@ -9,21 +9,31 @@
             <!-- Flash Sale Banner -->
             @include('home.flash-sale')
 
-            <!-- Kategori untuk Desktop dan Mobile secara horizontal -->
+            <!-- Kategori Slider -->
             <div class="col-12">
-                <div class="d-flex justify-content-start flex-wrap mb-4">
-                    <!-- Add "All Categories" option -->
-                    <a href="{{ route('home.index') }}"
-                        class="btn {{ !request()->query('kategori') ? 'btn-custom' : 'btn-outline-custom' }} me-2 mb-2">
-                        Semua Kategori
-                    </a>
+                <div class="swiper kategoriSwiper mb-4">
+                    <div class="swiper-wrapper">
+                        <!-- Semua Kategori -->
+                        <div class="swiper-slide">
+                            <a href="{{ route('home.index') }}"
+                                class="btn {{ !request()->query('kategori') ? 'btn-custom' : 'btn-outline-custom' }} w-100">
+                                Semua Kategori
+                            </a>
+                        </div>
 
-                    @foreach ($kategori as $kat)
-                        <a href="{{ route('home.index', ['kategori' => $kat->slug]) }}"
-                            class="btn {{ request()->query('kategori') == $kat->slug ? 'btn-custom' : 'btn-outline-custom' }} me-2 mb-2">
-                            {{ $kat->nama_kategori }}
-                        </a>
-                    @endforeach
+                        <!-- Kategori Items -->
+                        @foreach ($kategori as $kat)
+                            <div class="swiper-slide">
+                                <a href="{{ route('home.index', ['kategori' => $kat->slug]) }}"
+                                    class="btn {{ request()->query('kategori') == $kat->slug ? 'btn-custom' : 'btn-outline-custom' }} w-100">
+                                    {{ $kat->nama_kategori }}
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
 

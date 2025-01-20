@@ -3,7 +3,7 @@
 @section('content')
     <div class="mt-4">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10 col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-3">
                         <!-- Status Banner -->
@@ -34,11 +34,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="text-end ms-3">
-                                        <span class="text-danger fw-medium">
-                                            Rp{{ number_format($item->subtotal, 0, ',', '.') }}
-                                        </span>
-                                    </div>
                                 </div>
                             @endforeach
 
@@ -49,14 +44,19 @@
                                     <span>{{ $order->qty }} barang</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted">Total Harga</span>
-                                    <span>Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                                    <span class="text-muted">Harga Awal</span>
+                                    <span>Rp{{ number_format($order->total_original_price, 0, ',', '.') }}</span>
                                 </div>
+                                @if($order->total_discount > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Total Diskon</span>
+                                    <span class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
+                                </div>
+                                @endif
                                 <hr class="my-2">
                                 <div class="d-flex justify-content-between">
                                     <strong>Total Pembayaran</strong>
-                                    <strong
-                                        class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
+                                    <strong class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                                 </div>
                             </div>
                         </div>
