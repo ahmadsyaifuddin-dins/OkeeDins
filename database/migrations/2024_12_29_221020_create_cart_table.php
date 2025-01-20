@@ -13,6 +13,8 @@ return new class extends Migration
             $table->unsignedInteger('user_id'); // user_id Index, UNSIGNED
             $table->unsignedBigInteger('produk_id'); // produk_id Index, UNSIGNED
             $table->integer('quantity'); // quantity
+            $table->decimal('price', 12, 2); // price
+            $table->decimal('amount', 12, 2); // amount
             $table->string('status', 20)->default('new'); // status, varchar(50), Default 'new'
             $table->timestamps(); // created_at and updated_at
 
