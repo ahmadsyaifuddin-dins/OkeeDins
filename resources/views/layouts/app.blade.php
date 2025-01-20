@@ -22,28 +22,28 @@
     <style>
         /* Atur di file style-market.css atau CSS lainnya */
 
-/* Desktop */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
+        /* Desktop */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-/* Tablet dan Mobile */
-@media (max-width: 768px) {
-    .container .px-5 {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-}
+        /* Tablet dan Mobile */
+        @media (max-width: 768px) {
+            .container .px-5 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
 
-/* Mobile */
-@media (max-width: 576px) {
-    .container .px-5 {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
-}
-        </style>
+        /* Mobile */
+        @media (max-width: 576px) {
+            .container .px-5 {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+        }
+    </style>
 
 
 </head>
@@ -54,12 +54,12 @@
         <div class="row">
             <div class="col-12 col-md-10 col-lg-12 mx-auto"> <!-- Mengatur lebar konten berdasarkan ukuran layar -->
                 <div class="px-5 px-md-5 mt-4">
-        @yield('content')
-        @stack('scripts')
-        @include('layouts.footer')
-    </div>
-    </div>
-    </div>
+                    @yield('content')
+                    @stack('scripts')
+                    @include('layouts.footer')
+                </div>
+            </div>
+        </div>
     </div>
     @include('layouts.bottom-nav')
 

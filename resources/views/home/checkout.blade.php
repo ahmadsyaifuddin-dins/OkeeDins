@@ -243,15 +243,15 @@
                     <div class="card-body">
                         <h5 class="card-title mb-3">Metode Pembayaran</h5>
                         <div class="form-check mb-2">
-                            <input class="form-check-input custom-radio" type="radio" name="payment_method" id="cod"
-                                value="Cash on Delivery" checked>
+                            <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                id="cod" value="Cash on Delivery" checked>
                             <label class="form-check-label" for="cod">
                                 COD (Cash on Delivery)
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input custom-radio" type="radio" name="payment_method" id="transfer"
-                                value="Transfer">
+                            <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                id="transfer" value="Transfer">
                             <label class="form-check-label" for="transfer">
                                 Transfer Bank
                             </label>
@@ -344,8 +344,8 @@
                     const response = await fetch('/addresses', {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').content,
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content,
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
@@ -361,7 +361,11 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Error saving address: ' + error.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error saving address: ' + error.message
+                    });
                 }
             };
 
@@ -379,8 +383,8 @@
                     const response = await fetch(`/addresses/${addressId}`, {
                         method: 'PUT',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').content,
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content,
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
@@ -396,45 +400,61 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Error updating address: ' + error.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error updating address: ' + error.message
+                    });
                 }
             };
 
             // Delete address
             window.deleteAddress = async function(addressId) {
-                if (!confirm('Are you sure you want to delete this address?')) return;
+                const result = await Swal.fire({
+                    title: 'Yakin Hapus Alamat ini?',
+                    text: "Tindakan ini tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                });
 
-                try {
-                    const response = await fetch(`/addresses/${addressId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`/addresses/${addressId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .content,
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            Swal.fire(
+                                'Terhapus!',
+                                'Alamat berhasil dihapus',
+                                'success'
+                            ).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            throw new Error(result.message || 'Failed to delete address');
                         }
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        window.location.reload();
-                    } else {
-                        throw new Error(result.message || 'Failed to delete address');
+                    } catch (error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error deleting address: ' + error.message
+                        });
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error deleting address: ' + error.message);
                 }
             };
-
-            // Original checkout script
-            const transferProofDiv = document.getElementById('transfer-proof');
-            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
-            paymentMethods.forEach(method => {
-                method.addEventListener('change', function() {
-                    transferProofDiv.classList.toggle('d-none', this.value !== 'Transfer');
-                });
-            });
 
             // Handle checkout form submission
             const btnPay = document.getElementById('btn-pay');
@@ -444,7 +464,11 @@
                 const selectedAddress = document.querySelector(
                     'input[name="selected_address"]:checked');
                 if (!selectedAddress) {
-                    alert('Silakan pilih alamat pengiriman');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Alamat Belum Dipilih',
+                        text: 'Silahkan pilih alamat terlebih dahulu.'
+                    });
                     return;
                 }
 
@@ -467,26 +491,39 @@
                     });
                 });
 
-                console.log('Items to be sent:', items);
-
                 // Add payment method, notes, items, and selected address to form data
                 formData.append('payment_method', paymentMethod);
                 formData.append('seller_notes', sellerNotes);
                 formData.append('items', JSON.stringify(items));
                 formData.append('address_id', selectedAddress.value);
-                formData.append('isFromCart', '{{ $isFromCart ?? true }}'); // Add isFromCart flag
+                formData.append('isFromCart', document.getElementById('is-from-cart').value);
 
                 // If transfer method is selected, add proof of payment
                 if (paymentMethod === 'Transfer') {
                     const proofFile = document.getElementById('proof_of_payment').files[0];
                     if (!proofFile) {
-                        alert('Silakan upload bukti transfer terlebih dahulu');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Bukti Pembayaran Belum Dipilih',
+                            text: 'Silahkan upload bukti pembayaran terlebih dahulu.'
+                        });
                         return;
                     }
                     formData.append('proof_of_payment', proofFile);
                 }
 
                 try {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Memproses pesanan',
+                        text: 'Tunggu bentar...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
                     const response = await fetch('/checkout', {
                         method: 'POST',
                         headers: {
@@ -496,29 +533,38 @@
                         body: formData
                     });
 
-                    if (!response.ok) {
-                        const errorResult = await response.text();
-                        console.error('Error response:', errorResult);
-                        throw new Error('Terjadi kesalahan saat memproses pesanan');
-                    }
-
                     const result = await response.json();
 
-                    if (response.ok) {
+                    if (response.ok && result.success) {
                         // Clear cart session storage if it exists
                         if (sessionStorage.getItem('checkoutItems')) {
                             sessionStorage.removeItem('checkoutItems');
                             sessionStorage.removeItem('checkoutSummary');
                         }
 
-                        alert('Pesanan berhasil dibuat!');
-                        window.location.href = result.redirect_url;
+                        // Show success message and redirect
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Pesanan Anda telah berhasil dilakukan',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Lihat Pesanan',
+                        }).then((swalResult) => {
+                            if (swalResult.isConfirmed) {
+                                window.location.href = result.redirect_url;
+                            }
+                        });
                     } else {
-                        throw new Error(result.message || 'Terjadi kesalahan saat memproses pesanan');
+                        throw new Error(result.message ||
+                            'Terjadi kesalahan saat memproses pesanan Anda');
                     }
                 } catch (error) {
-                    console.error('Error processing checkout:', error);
-                    alert(error.message);
+                    console.error('Kesalahan pemrosesan pembayaran:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Terjadi kesalahan saat memproses pesanan Anda'
+                    });
                 }
             });
         });
