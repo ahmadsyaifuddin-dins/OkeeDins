@@ -36,35 +36,34 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td class="d-flex gap-2 align-items-center">
                                                 <a href="{{ route('admin.pesanan.show', $order->order_number) }}"
-                                                    class="btn btn-primary btn-sm">Detail</a>
+                                                    class="btn btn-dark btn-sm">Detail</a>
 
-                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'pending')
-                                                    <form action="{{ route('admin.pesanan.confirm', $order->id) }}"
-                                                        method="POST" style="display:inline-block;">
+                                                @if ($order->payment_method === 'Cash on Delivery')
+                                                    <form action="{{ route('admin.pesanan.updateStatus', $order->id) }}"
+                                                        method="POST" id="statusForm-{{ $order->id }}">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                            onclick="return confirm('Apakah Anda yakin ingin mengonfirmasi pesanan ini?')">Konfirmasi</button>
-                                                    </form>
-                                                @endif
-
-                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'confirmed')
-                                                    <form action="{{ route('admin.pesanan.process', $order->id) }}"
-                                                        method="POST" style="display:inline-block;">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-info btn-sm"
-                                                            onclick="return confirm('Apakah Anda yakin ingin memproses pesanan ini?')">Proses</button>
-                                                    </form>
-                                                @endif
-
-                                                @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'processing')
-                                                    <form action="{{ route('admin.pesanan.delivery', $order->id) }}"
-                                                        method="POST" style="display:inline-block;">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-info btn-sm"
-                                                            onclick="return confirm('Proses Pengiriman Pesanan ini?')">Kirim
-                                                            Pesanan</button>
+                                                        @method('PUT')
+                                                        <select name="status"
+                                                            class="form-select form-select-sm status-select status-{{ $order->status }}"
+                                                            onchange="if(confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')) { this.form.submit(); }">
+                                                            <option value="pending"
+                                                                {{ $order->status === 'pending' ? 'selected' : '' }}
+                                                                class="status-bg-pending">Pending</option>
+                                                            <option value="confirmed"
+                                                                {{ $order->status === 'confirmed' ? 'selected' : '' }}
+                                                                class="status-bg-confirmed">Konfirmasi</option>
+                                                            <option value="processing"
+                                                                {{ $order->status === 'processing' ? 'selected' : '' }}
+                                                                class="status-bg-processing">Proses</option>
+                                                            <option value="delivered"
+                                                                {{ $order->status === 'delivered' ? 'selected' : '' }}
+                                                                class="status-bg-delivery">Kirim</option>
+                                                            <option value="completed"
+                                                                {{ $order->status === 'completed' ? 'selected' : '' }}
+                                                                class="status-bg-completed">Selesai</option>
+                                                        </select>
                                                     </form>
                                                 @endif
 
@@ -79,11 +78,13 @@
                                                 @endif --}}
 
                                                 <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
-                                                    method="POST" style="display:inline-block;">
+                                                    method="POST" class="mb-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">Hapus</button>
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">
+                                                        Hapus
+                                                    </button>
                                                 </form>
                                             </td>
 
@@ -152,4 +153,90 @@
         background-color: #fff;
         border-top: 1px solid #dee2e6;
     }
+
+
+    .status-select {
+        min-width: 120px;
+        height: 31px;
+        padding: 2px 8px;
+        font-size: 0.875rem;
+        border-radius: 0.25rem;
+        border: 1px solid #d2d6da;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+    }
+
+    /* Warna background untuk select berdasarkan status aktif */
+    .status-pending {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+    }
+
+    .status-confirmed {
+        background-color: #e0f2fe !important;
+        color: #075985 !important;
+    }
+
+    .status-processing {
+        background-color: #f3e8ff !important;
+        color: #6b21a8 !important;
+    }
+
+    .status-delivered {
+        background-color: #dcfce7 !important;
+        color: #166534 !important;
+    }
+
+    .status-completed {
+        background-color: #bbf7d0 !important;
+        color: #15803d !important;
+    }
+
+    /* Warna background untuk options */
+    .status-select option.status-bg-pending {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+    }
+
+    .status-select option.status-bg-confirmed {
+        background-color: #e0f2fe !important;
+        color: #075985 !important;
+    }
+
+    .status-select option.status-bg-processing {
+        background-color: #f3e8ff !important;
+        color: #6b21a8 !important;
+    }
+
+    .status-select option.status-bg-delivery {
+        background-color: #dcfce7 !important;
+        color: #166534 !important;
+    }
+
+    .status-select option.status-bg-completed {
+        background-color: #bbf7d0 !important;
+        color: #15803d !important;
+    }
+
+    .status-select:focus {
+        border-color: #344767;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(52, 71, 103, 0.25);
+    }
+
+    td.d-flex {
+        padding: 0.5rem !important;
+    }
+
+    td.d-flex form {
+        margin-right: 0.5rem;
+    }
+
+    td.d-flex form:last-child {
+        margin-right: 0;
+    }
+</style>
+
+<style>
+
 </style>

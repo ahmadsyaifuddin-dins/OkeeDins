@@ -141,10 +141,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/pesanan/{id}', [AdminController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
 
-            Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
-            Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
-            Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
-            Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
+            // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
+            // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
+            // Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
+            // Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
+            Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
             Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
 
 

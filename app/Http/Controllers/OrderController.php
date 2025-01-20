@@ -108,10 +108,19 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Pesanan dalam pengiriman!');
     }
 
-    public function confirmReceipt(Request $request, $id, $produk_id)
+    public function updateStatus(Request $request, $id)
     {
         $order = Orders::findOrFail($id);
-        $orderItems = OrderItems::findOrFail($produk_id);
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status pesanan berhasil diupdate');
+    }
+
+    public function confirmReceipt(Request $request, $id)
+    {
+        $order = Orders::findOrFail($id);
+        $orderItems = OrderItems::findOrFail($id);
 
         // Validasi input rating dan ulasan
         $request->validate([
