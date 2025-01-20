@@ -2,9 +2,9 @@
 @section('content')
     <section class="py-5">
         <div class="container">
-            <div class="row g-4">
+            <div class="row justify-content-center g-4"> <!-- Tambahkan justify-content-center -->
                 <!-- Left Sidebar -->
-                <div class="col-lg-3">
+                <div class="col-lg-4 col-xl-3"> <!-- Ubah col-lg-3 menjadi col-lg-4 col-xl-3 -->
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="text-center">
@@ -85,7 +85,7 @@
                 </div>
 
                 <!-- Right Content -->
-                <div class="col-lg-9">
+                <div class="col-lg-8 col-xl-7">
                     <div class="card shadow-sm">
                         <div class="card-header bg-custom text-white py-3">
                             <h5 class="card-title mb-0">

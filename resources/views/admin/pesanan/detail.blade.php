@@ -78,6 +78,6 @@
                 <td>{{ $pesanan->user ? $pesanan->user->alamat : 'Alamat tidak tersedia' }}</td>
             </tr>
         </table>
-        <a href="{{ route('admin.pesanan.index') }}" class="btn btn-primary">Kembali</a>
+        <a href="{{ route('admin.pesanan.index') }}" class="btn btn-dark">Kembali</a>
     </div>
 @endsection

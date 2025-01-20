@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Alamat Pengiriman</h5>
-                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-outline-custom btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#addAddressModal">
                                 <i class="bi bi-plus"></i> Tambah Alamat Baru
                             </button>
@@ -20,15 +20,15 @@
                         <div class="addresses-container">
                             @foreach (auth()->user()->addresses as $address)
                                 <div
-                                    class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-primary @endif">
+                                    class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-custom @endif">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="selected_address"
+                                        <input class="form-check-input custom-radio" type="radio" name="selected_address"
                                             id="address_{{ $address->id }}" value="{{ $address->id }}"
                                             @if ($address->is_primary) checked @endif>
                                         <label class="form-check-label" for="address_{{ $address->id }}">
                                             <strong>{{ $address->label }}</strong>
                                             @if ($address->is_primary)
-                                                <span class="badge bg-primary ms-2">Utama</span>
+                                                <span class="badge bg-custom ms-2">Utama</span>
                                             @endif
                                         </label>
                                     </div>
@@ -38,7 +38,7 @@
                                         <p class="mb-0">{{ $address->full_address }}</p>
                                     </div>
                                     <div class="mt-2 ms-4">
-                                        <button type="button" class="btn btn-link btn-sm p-0 text-primary me-3"
+                                        <button type="button" class="btn btn-link btn-sm p-0 text-custom me-3"
                                             data-bs-toggle="modal" data-bs-target="#editAddressModal"
                                             data-address-id="{{ $address->id }}">
                                             Edit
@@ -84,7 +84,7 @@
                                         <textarea class="form-control" name="full_address" rows="3" required></textarea>
                                     </div>
                                     <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" name="is_primary"
+                                        <input type="checkbox" class="form-check-input checkbox-custom" name="is_primary"
                                             id="makeAddressPrimary">
                                         <label class="form-check-label" for="makeAddressPrimary">Jadikan Alamat
                                             Utama</label>
@@ -93,7 +93,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="button" class="btn btn-primary" onclick="saveNewAddress()">Simpan</button>
+                                <button type="button" class="btn btn-custom" onclick="saveNewAddress()">Simpan</button>
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                                         <textarea class="form-control" name="full_address" rows="3" required>{{ $address->full_address }}</textarea required></textarea>
                                     </div>
                                     <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input"
+                                        <input type="checkbox" class="form-check-input checkbox-custom"
                                             {{ $address->is_primary ? 'checked' : '' }} name="is_primary"
                                             id="editMakeAddressPrimary">
                                         <label class="form-check-label" for="editMakeAddressPrimary">Jadikan Alamat
@@ -140,7 +140,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="button" class="btn btn-primary" onclick="updateAddress()">Simpan</button>
+                                <button type="button" class="btn btn-custom" onclick="updateAddress()">Simpan</button>
                             </div>
                         </div>
                     </div>
@@ -243,14 +243,14 @@
                     <div class="card-body">
                         <h5 class="card-title mb-3">Metode Pembayaran</h5>
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="payment_method" id="cod"
+                            <input class="form-check-input custom-radio" type="radio" name="payment_method" id="cod"
                                 value="Cash on Delivery" checked>
                             <label class="form-check-label" for="cod">
                                 COD (Cash on Delivery)
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="transfer"
+                            <input class="form-check-input custom-radio" type="radio" name="payment_method" id="transfer"
                                 value="Transfer">
                             <label class="form-check-label" for="transfer">
                                 Transfer Bank

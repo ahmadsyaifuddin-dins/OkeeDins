@@ -62,8 +62,8 @@
                         <!-- Payment Info -->
                         <div class="border rounded-3 p-3 mb-4">
                             <h6 class="mb-3">Informasi Pembayaran</h6>
-                            <div class="row">
-                                <div class="col-6">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
                                     <p class="text-muted mb-1">Metode Pembayaran</p>
                                     <p class="mb-3 text-capitalize">{{ $order->payment_method }}</p>
 
@@ -99,11 +99,13 @@
                                     </p>
                                 </div>
 
-                                <div class="col-6 text-end">
-                                    <p class="text-muted mb-1">Total Harga ({{ $order->qty }} Barang)</p>
-                                    <p class="text-danger mb-0 fw-bold">
-                                        Rp{{ number_format($order->total_amount, 0, ',', '.') }}
-                                    </p>
+                                <div class="col-12 col-md-6">
+                                    <div class="text-md-end">
+                                        <p class="text-muted mb-1">Total Harga ({{ $order->qty }} Barang)</p>
+                                        <p class="text-danger mb-0 fw-bold">
+                                            Rp{{ number_format($order->total_amount, 0, ',', '.') }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

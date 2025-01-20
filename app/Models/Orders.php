@@ -49,6 +49,20 @@ class Orders extends Model
         'quantity' => 'integer',
     ];
 
+
+    // Accessors & Mutators untuk menghitung total harga awal dan total diskon
+    public function getTotalOriginalPriceAttribute()
+    {
+        return $this->orderItems->sum(function($item) {
+            return $item->quantity * $item->price;
+        });
+    }
+
+    public function getTotalDiscountAttribute()
+    {
+    return $this->total_original_price - $this->total_amount;
+    }
+
     // Define status constants for better code readability
     const STATUS_PENDING = 'pending';
     const STATUS_CONFIRMED = 'confirmed';
