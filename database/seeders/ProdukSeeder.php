@@ -15,9 +15,9 @@ class ProdukSeeder extends Seeder
     {
         DB::table('produk')->insert([
             [
-                'slug' => Str::slug('Smartphone XYZ Pro'),
-                'gambar' => 'https://via.placeholder.com/300x300.png?text=Smartphone+XYZ+Pro',
-                'nama_produk' => 'Smartphone XYZ Pro',
+                'slug' => Str::slug('Apple iPhone 15 Pro Max'),
+                'gambar' => 'https://gateway.nilam.xyz/Media/1/Item/120490/8039f6cc-078b-4540-9bee-c254e1440a38-4tz0cmpf-ai4s.jpg',
+                'nama_produk' => 'Apple iPhone 15 Pro Max',
                 'deskripsi' => 'Smartphone dengan performa tinggi, layar OLED 6.5 inci, dan kamera 108 MP.',
                 'harga' => 7500000,
                 'diskon' => 10, // Persentase diskon
@@ -30,7 +30,7 @@ class ProdukSeeder extends Seeder
             ],
             [
                 'slug' => Str::slug('Sneakers Sporty'),
-                'gambar' => 'https://via.placeholder.com/300x300.png?text=Sneakers+Sporty',
+                'gambar' => null,
                 'nama_produk' => 'Sneakers Sporty',
                 'deskripsi' => 'Sepatu olahraga yang nyaman dengan desain trendy dan daya tahan tinggi.',
                 'harga' => 500000,
@@ -44,7 +44,7 @@ class ProdukSeeder extends Seeder
             ],
             [
                 'slug' => Str::slug('Blender Multi-Function'),
-                'gambar' => 'https://via.placeholder.com/300x300.png?text=Blender+Multi-Function',
+                'gambar' => null,
                 'nama_produk' => 'Blender Multi-Function',
                 'deskripsi' => 'Blender serbaguna dengan 5 mode pengaturan kecepatan.',
                 'harga' => 850000,
