@@ -26,7 +26,7 @@
                                 <tbody>
                                     @forelse($pesanan as $key => $order)
                                         <tr>
-                                            <td>{{ $key + 1 }}</td>
+                                            <td >{{ $key + 1 }}</td>
                                             <td>{{ $order->order_number }}</td>
                                             <td>{{ $order->user->name ?? 'Guest' }}</td>
                                             <td>{{ $order->created_at->format('d M Y') }}</td>
@@ -36,7 +36,8 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </td>
-                                            <td class="d-flex gap-2 align-items-center">
+                                            <td class="d-flex align-items-center justify-content-center gap-2" style="height: 100%; min-height: 60px;">
+                                                <div class="d-flex align-items-center justify-content-center gap-2" style="width: 100%;">
                                                 <a href="{{ route('admin.pesanan.show', $order->order_number) }}"
                                                     class="btn btn-dark btn-sm">Detail</a>
 
@@ -86,6 +87,7 @@
                                                         Hapus
                                                     </button>
                                                 </form>
+                                                </div>
                                             </td>
 
                                         </tr>
@@ -125,7 +127,35 @@
 @endsection
 
 <style>
-    /* Tambahkan CSS berikut ke file CSS Anda */
+
+
+.table td, .table th {
+    vertical-align: middle !important;
+    text-align: center !important;
+    padding: 12px 8px !important;
+    height: 60px !important;
+}
+
+/* Update button and form styles */
+.table .btn-sm {
+    margin-bottom: 0 !important;
+    padding: 0.25rem 0.5rem !important;
+    height: 31px !important;
+    min-width: 60px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+}
+
+
+.table form {
+    margin: 0;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+
     .pagination {
         margin-bottom: 0;
     }
@@ -156,15 +186,11 @@
 
 
     .status-select {
-        min-width: 120px;
-        height: 31px;
-        padding: 2px 8px;
-        font-size: 0.875rem;
-        border-radius: 0.25rem;
-        border: 1px solid #d2d6da;
-        cursor: pointer;
-        transition: all 0.15s ease-in-out;
-    }
+    min-width: 120px;
+    height: 31px !important;
+    padding: 2px 8px !important;
+    font-size: 0.875rem !important;
+}
 
     /* Warna background untuk select berdasarkan status aktif */
     .status-pending {
@@ -224,19 +250,6 @@
         box-shadow: 0 0 0 0.2rem rgba(52, 71, 103, 0.25);
     }
 
-    td.d-flex {
-        padding: 0.5rem !important;
-    }
-
-    td.d-flex form {
-        margin-right: 0.5rem;
-    }
-
-    td.d-flex form:last-child {
-        margin-right: 0;
-    }
-</style>
-
-<style>
 
 </style>
+
