@@ -13,11 +13,42 @@ class KategoriProdukSeeder extends Seeder
      */
     public function run(): void
     {
+        // Hapus semua data dari tabel
+        // DB::table('kategori_produk')->truncate();
+
         DB::table('kategori_produk')->insert([
             [
-                'slug' => Str::slug('Elektronik'),
-                'nama_kategori' => 'Elektronik',
-                'deskripsi' => 'Produk elektronik seperti televisi, komputer, dan perangkat lainnya.',
+                'slug' => Str::slug('Makanan'),
+                'nama_kategori' => 'Makanan',
+                'deskripsi' => 'Produk makanan seperti makanan ringan, makanan berat, dan lainnya.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => Str::slug('Minuman'),
+                'nama_kategori' => 'Minuman',
+                'deskripsi' => 'Produk minuman seperti teh, kopi, jus, dan lainnya.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => Str::slug('Cemilan'),
+                'nama_kategori' => 'Cemilan',
+                'deskripsi' => 'Cemilan seperti keripik, biskuit, coklat, dan lainnya.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => Str::slug('Action Figure'),
+                'nama_kategori' => 'Action Figure',
+                'deskripsi' => 'Berbagai jenis action figure koleksi.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => Str::slug('Mainan'),
+                'nama_kategori' => 'Mainan',
+                'deskripsi' => 'Produk mainan untuk anak-anak maupun dewasa.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -36,9 +67,9 @@ class KategoriProdukSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'slug' => Str::slug('Olahraga dan Kebugaran'),
-                'nama_kategori' => 'Olahraga dan Kebugaran',
-                'deskripsi' => 'Produk perlengkapan olahraga dan kebugaran.',
+                'slug' => Str::slug('Elektronik'),
+                'nama_kategori' => 'Elektronik',
+                'deskripsi' => 'Produk elektronik seperti televisi, komputer, dan perangkat lainnya.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -50,30 +81,9 @@ class KategoriProdukSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'slug' => Str::slug('Makanan'),
-                'nama_kategori' => 'Makanan',
-                'deskripsi' => 'Produk makanan seperti makanan ringan, makanan berat, dan lainnya.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'slug' => Str::slug('Minuman'),
-                'nama_kategori' => 'Minuman',
-                'deskripsi' => 'Produk minuman seperti teh, kopi, jus, dan lainnya.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'slug' => Str::slug('Buah-Buahan'),
                 'nama_kategori' => 'Buah-Buahan',
                 'deskripsi' => 'Berbagai jenis buah-buahan segar dan kering.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'slug' => Str::slug('Cemilan'),
-                'nama_kategori' => 'Cemilan',
-                'deskripsi' => 'Cemilan seperti keripik, biskuit, coklat, dan lainnya.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
