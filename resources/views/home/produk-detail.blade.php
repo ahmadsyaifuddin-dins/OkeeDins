@@ -73,9 +73,28 @@
                     <button class="btn btn-custom flex-grow-1" onclick="addToCart()">
                         <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
                     </button>
-                    <button class="btn btn-outline-custom">
-                        <i class="bi bi-heart"></i>
-                    </button>
+                    
+                    @auth
+                        @if(Auth::user()->wishlists->contains('produk_id', $product->id))
+                            <form action="{{ route('wishlist.destroy', Auth::user()->wishlists->where('produk_id', $product->id)->first()) }}" 
+                                  method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
+                            @csrf
+                            @method('DELETE')
+                        @else
+                            <form action="{{ route('wishlist.store') }}" method="POST" class="d-inline" 
+                                  onsubmit="confirmAddToWishlist(event, this)">
+                            @csrf
+                        @endif
+                            <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                            <button type="submit" class="btn btn-outline-custom">
+                                <i class="bi bi-heart{{ Auth::user()->wishlists->contains('produk_id', $product->id) ? '-fill text-danger' : '' }}"></i>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-custom">
+                            <i class="bi bi-heart"></i>
+                        </a>
+                    @endauth
                 </div>
 
                 <form action="{{ route('checkout.pay-now') }}" method="POST" id="payNowForm">
@@ -443,5 +462,30 @@
         const queryString = encodeURIComponent(JSON.stringify(checkoutItems)); window.location.href =
         `{{ route('checkout.pay-now') }}?items=${queryString}`;
         });
+    </script>
+@endpush
+
+@push('scripts')
+    <script>
+        function confirmAddToWishlist(event, form) {
+            event.preventDefault();
+            
+            const isDelete = form.method.toLowerCase() === 'post' && form.innerHTML.includes('DELETE');
+            const message = isDelete ? 'Hapus dari wishlist?' : 'Tambahkan ke wishlist?';
+            
+            Swal.fire({
+                title: message,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                confirmButtonColor: '#007bff',
+                cancelButtonColor: '#C62828'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
     </script>
 @endpush
