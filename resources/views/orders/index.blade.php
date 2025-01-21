@@ -47,7 +47,7 @@
                                                 </span>
                                             @break
 
-                                            @case('awaiting_payment')
+                                            @case('awaiting payment')
                                                 <span class="badge bg-info">Menunggu Konfirmasi Pembayaran</span>
                                             @break
 

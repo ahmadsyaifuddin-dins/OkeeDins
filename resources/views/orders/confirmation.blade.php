@@ -47,16 +47,18 @@
                                     <span class="text-muted">Harga Awal</span>
                                     <span>Rp{{ number_format($order->total_original_price, 0, ',', '.') }}</span>
                                 </div>
-                                @if($order->total_discount > 0)
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted">Total Diskon</span>
-                                    <span class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
-                                </div>
+                                @if ($order->total_discount > 0)
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Total Diskon</span>
+                                        <span
+                                            class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
+                                    </div>
                                 @endif
                                 <hr class="my-2">
                                 <div class="d-flex justify-content-between">
                                     <strong>Total Pembayaran</strong>
-                                    <strong class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
+                                    <strong
+                                        class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -71,10 +73,10 @@
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Status Pembayaran</span>
                                 <span class="badge {{ $order->status === 'pending' ? 'bg-warning' : 'bg-info' }}">
-                                    {{ ucfirst($order->status) }}
+                                    {{ ucfirst($order->status_label) }}
                                 </span>
                             </div>
-                            @if ($order->payment_method === 'Transfer' && $order->payment_proof)
+                            @if ($order->payment_method === 'transfer' && $order->payment_proof)
                                 <div class="mt-3">
                                     <label class="form-label">Bukti Transfer</label>
                                     <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer"

@@ -216,7 +216,7 @@ class CheckoutController extends Controller
                     // 'produk_id' => $items[0]['id'],
                     'payment_proof' => $validated['payment_proof'] ?? null,
                     'payment_method' => $validated['payment_method'],
-                    'status' => $validated['payment_method'] === 'Cash on Delivery' ? 'pending' : 'awaiting_payment',
+                    'status' => $validated['payment_method'] === 'Cash on Delivery' ? 'pending' : 'awaiting payment',
                     'total_amount' => $totalAmount,
                     'qty' => array_sum(array_column($items, 'quantity')),
                     'order_date' => now(),
