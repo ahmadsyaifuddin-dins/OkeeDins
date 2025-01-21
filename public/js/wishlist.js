@@ -60,35 +60,38 @@ function confirmAddToWishlist(event, form) {
 document.addEventListener('DOMContentLoaded', function() {
     const wishlistBtns = document.querySelectorAll('.wishlist-btn');
     wishlistBtns.forEach(btn => {
+        // Set initial state
+        const icon = btn.querySelector('i');
+        if (!icon.classList.contains('bi-heart-fill')) {
+            btn.style.backgroundColor = '#fff';
+            icon.classList.add('text-danger');
+        }
+
         btn.addEventListener('mouseenter', function() {
             const icon = this.querySelector('i');
             if (icon.classList.contains('bi-heart-fill')) {
-                // If already in wishlist, show blue heart with red outline
+                // Jika sudah di wishlist, tampilkan efek hover merah muda
                 icon.classList.remove('text-danger');
-                icon.style.background = 'linear-gradient(to right, #0d6efd, #0d6efd)';
-                icon.style.webkitBackgroundClip = 'text';
-                icon.style.backgroundClip = 'text';
-                icon.style.color = 'transparent';
-                icon.style.textShadow = '0 0 1px #dc3545';
+                icon.style.color = '#fff';
             } else {
-                // If not in wishlist, show red heart
-                icon.classList.add('text-danger');
+                // Jika belum di wishlist, ubah background jadi putih dan icon jadi merah
+                this.style.backgroundColor = '#f00';
+                icon.classList.remove('text-danger');
+                icon.classList.add('text-light');
             }
         });
         
         btn.addEventListener('mouseleave', function() {
             const icon = this.querySelector('i');
             if (icon.classList.contains('bi-heart-fill')) {
-                // Restore filled heart color to red
+                // Kembalikan ke warna merah normal
                 icon.classList.add('text-danger');
-                icon.style.background = '';
-                icon.style.webkitBackgroundClip = '';
-                icon.style.backgroundClip = '';
-                icon.style.color = '';
-                icon.style.textShadow = '';
+                icon.style.color = '#fff';
             } else {
-                // Remove hover color if not in wishlist
-                icon.classList.remove('text-danger');
+                // Kembalikan ke warna default (background merah, icon putih)
+                this.style.backgroundColor = '#fff';
+                icon.classList.add('text-danger'); 
+                icon.classList.remove('text-light');
             }
         });
     });
