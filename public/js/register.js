@@ -5,7 +5,7 @@ styleSheet.textContent = `
 .formbold-form-input {
     width: 100%;
     padding: 13px 5px 13px 22px;
-    height: 44px; 
+    height: 44px;
     border: 1px solid #DDE3EC;
     border-radius: 8px;
     background: #FFFFFF;
@@ -98,11 +98,11 @@ width: 0;
     width: 100%;
     font-size: 12px;
     color: #666;
-    margin-top: 8px;  
+    margin-top: 8px;
     position: relative;
-    order: 3;  
-    clear: both;  
-    padding-top: 5px; 
+    order: 3;
+    clear: both;
+    padding-top: 5px;
 }
 
 .very-weak { background-color: #FF4136; width: 20%; }
@@ -115,17 +115,17 @@ width: 0;
     position: relative;
     width: 100%;
     margin-bottom: 5px;
-    height: 44px; 
-    display: block;  
+    height: 44px;
+    display: block;
 }
 
 .password-toggle {
     position: absolute;
     right: 12px;
-    top: 0; 
-    height: 100%;  
+    top: 0;
+    height: 100%;
     cursor: pointer;
-    padding: 0 5px; 
+    padding: 0 5px;
     z-index: 10;
     background: none;
     border: none;
@@ -402,8 +402,29 @@ $(document).ready(function () {
         "Nomor tidak valid",
     ];
 
+    // Tambahkan array blacklist nomor
+    const blacklistedNumbers = ['08123456789', '0812345679',  '0812345678910', '0812345678911', '0812345678', '08123456788', '08123456787', '08123456786', '08123456785', '08123456784', '08123456783', '08123456782', '08123456781', '08123456780', '081234567890', '081234567891', '081234567892', '081234567893', '081234567894', '081234567895', '081234567896', '081234567897', '081234567898', '081234567899'];
+
     // Mencegah input karakter non-angka
     input.addEventListener("keypress", function (e) {
+        const countryCode = iti.getSelectedCountryData().iso2;
+
+        // Khusus untuk Indonesia, pastikan dimulai dengan '08'
+        if (countryCode === 'id') {
+            const inputValue = this.value;
+            // Jika input masih kosong, hanya izinkan '0'
+            if (inputValue.length === 0 && e.key !== '0') {
+                e.preventDefault();
+                return;
+            }
+            // Jika input sudah ada '0', karakter kedua harus '8'
+            if (inputValue === '0' && e.key !== '8') {
+                e.preventDefault();
+                return;
+            }
+        }
+
+        // Tetap hanya izinkan angka untuk semua negara
         if (e.key.match(/[^0-9]/)) {
             e.preventDefault();
         }
@@ -435,11 +456,69 @@ $(document).ready(function () {
         validMsg.classList.add("hide");
     }
 
+    // Tambahkan fungsi untuk mendeteksi provider
+    function detectProvider(number) {
+        // Hapus kode negara dan karakter non-digit
+        number = number.replace(/\D/g, '');
+
+        // Daftar prefix provider Indonesia
+        const providers = {
+            '0811': 'Telkomsel', '0812': 'Telkomsel', '0813': 'Telkomsel', '0821': 'Telkomsel', '0822': 'Telkomsel', '0823': 'Telkomsel',
+            '0814': 'Indosat', '0815': 'Indosat', '0816': 'Indosat', '0855': 'Indosat', '0856': 'Indosat', '0857': 'Indosat', '0858': 'Indosat',
+            '0817': 'XL', '0818': 'XL', '0819': 'XL', '0859': 'XL', '0877': 'XL', '0878': 'XL',
+            '0838': 'Axis', '0831': 'Axis', '0832': 'Axis', '0833': 'Axis',
+            '0895': 'Three', '0896': 'Three', '0897': 'Three', '0898': 'Three', '0899': 'Three',
+            '0881': 'Smartfren', '0882': 'Smartfren', '0883': 'Smartfren', '0884': 'Smartfren', '0885': 'Smartfren', '0886': 'Smartfren', '0887': 'Smartfren'
+        };
+
+        // Cek prefix
+        for (let prefix in providers) {
+            if (number.startsWith(prefix)) {
+                return providers[prefix];
+            }
+        }
+
+        // Jika nomor dimulai dengan '08' tapi tidak cocok dengan provider manapun
+        if (number.startsWith('08')) {
+            return 'Unknown Provider';
+        }
+
+    return ''; // Return string kosong jika bukan format Indonesia
+}
+
+    // Modifikasi fungsi validatePhoneNumber
     function validatePhoneNumber() {
         resetPhoneValidation();
 
         if (input.value.trim()) {
+            const currentNumber = input.value.replace(/\D/g, '');
+
+            // Cek apakah nomor ada di blacklist
+            if (blacklistedNumbers.includes(currentNumber)) {
+                input.classList.remove("valid");
+                input.classList.add("invalid");
+                errorMsg.innerHTML = "Nomor tidak diizinkan, gak boleh input sembarang😆";
+                errorMsg.classList.remove("hide");
+                setTimeout(() => errorMsg.classList.add("show"), 10);
+                return false;
+            }
+
             if (iti.isValidNumber()) {
+                const countryCode = iti.getSelectedCountryData().iso2;
+
+                if (countryCode === 'id') {
+                    const provider = detectProvider(input.value);
+                    if (provider === 'Unknown Provider') {
+                        validMsg.innerHTML = `✓ Valid (Unknown Provider)`;
+                    } else if (provider) {
+                        validMsg.innerHTML = `✓ Valid (${provider})`;
+                    } else {
+                        validMsg.innerHTML = `✓ Valid`;
+                    }
+                } else {
+                    validMsg.innerHTML = `✓ Valid`;
+                }
+
                 validMsg.classList.remove("hide");
                 setTimeout(() => validMsg.classList.add("show"), 10);
                 input.classList.add("valid");
@@ -561,7 +640,7 @@ $(document).ready(function () {
     formSubmitBtn.on("click", function (event) {
         event.preventDefault();
 
-        //! Start Step Menu Pertama 
+        //! Start Step Menu Pertama
         if (stepMenuOne.hasClass("active")) {
             const fullname = $("#fullname").val().trim();
             const telepon = $("#telepon").val().trim();
@@ -570,7 +649,96 @@ $(document).ready(function () {
             const makananFav = $("#makanan_fav").val().trim();
             const address = $("#address").val().trim();
 
-            //!Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
+            //! Modify SweetAlert2Start Isian Nama Lengkap jika tidak di isi (secara Spesifik)
+            if (!fullname) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Mohon Perhatian!",
+                    text: 'Isi Nama Lengkap!'
+                });
+                return;
+            }
+
+            // Validasi nomor telepon terlebih dahulu
+            if (!telepon) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Mohon Perhatian!",
+                    text: "Nomor telepon wajib diisi!"
+                });
+                return;
+            }
+
+            // Cek apakah nomor ada di blacklist
+            const currentNumber = telepon.replace(/\D/g, '');
+            if (blacklistedNumbers.includes(currentNumber)) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Nomor Tidak Diizinkan",
+                    text: "Nomor ini tidak diperbolehkan, gak boleh input sembarang😆",
+                    showConfirmButton: true,
+                    confirmButtonText: "Oke, Saya Mengerti",
+                    confirmButtonColor: "#3085d6"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#telepon").val(''); // Kosongkan input setelah user klik OK
+                        resetPhoneValidation();
+                    }
+                });
+                return;
+            }
+
+            // Periksa validitas nomor telepon menggunakan intl-tel-input
+            if (!iti.isValidNumber()) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Nomor Telepon Tidak Valid",
+                    text: errorMap[iti.getValidationError()] || "Mohon masukkan nomor telepon yang valid"
+                });
+                return;
+            }
+
+            //! Modify SweetAlert2Start Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
+            // Tambahkan pengecekan spesifik untuk Tanggal Lahir
+            if (!tglLahir) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Mohon Perhatian!',
+                    text: 'Isi Tanggal lahirmu!'
+                });
+                return;
+            }
+
+            if (!jenisKelamin) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Mohon Perhatian!',
+                    text: 'Pilih Jenis Kelaminmu!'
+                });
+                return;
+            }
+
+            //! Modify SweetAlert2Start Isian Makanan Favorit jika tidak di isi (secara Spesifik)
+            // Tambahkan pengecekan spesifik untuk Makanan Favorit
+            if (!makananFav) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Mohon Perhatian!",
+                    text: "Input Makanan Favoritmu!",
+                });
+                return;
+            }
+
+            if (!address) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Mohon Perhatian!",
+                    text: "Input Alamatmu Kocak!",
+                });
+                return;
+            }
+
+             //!Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
             if (fullname && telepon && tglLahir && jenisKelamin && makananFav && address) {
                 stepMenuOne.removeClass("active");
                 stepMenuTwo.addClass("active");
@@ -580,69 +748,18 @@ $(document).ready(function () {
                 formSubmitBtn.text("Selanjutnya");
             } else {
                 Swal.fire({
-                    icon: "error",
+                    icon: "warning",
                     title: "Mohon Perhatian!",
                     text: "Mohon isi semua field yang wajib diisi",
                 });
             }
             //!End Global
 
-
-            //! Modify SweetAlert2Start Isian Nama Lengkap jika tidak di isi (secara Spesifik)
-            if (!fullname) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Mohon Perhatian!",
-                    text: 'Isi Nama Lengkap!'
-                });
-                return;
             }
-            //! Modify SweetAlert2End Isian Nama Lengkap jika tidak di isi (secara Spesifik)
-
-
-            //! Modify SweetAlert2Start Isian Number jika tidak di isi (secara Spesifik)        
-            // Check phone number validation
-            if (!iti.isValidNumber()) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Perhatikan Inputan Nomor Telepon",
-                    text:
-                        errorMap[iti.getValidationError()] ||
-                        "Mohon masukkan nomor telepon yang valid",
-                });
-                return;
-            }
-            //! Modify SweetAlert2End Isian Number jika tidak di isi (secara Spesifik)
-
-
-            //! Modify SweetAlert2Start Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
-            // Tambahkan pengecekan spesifik untuk Tanggal Lahir
-            // if (!tglLahir) {
-            // Swal.fire({
-            //     icon: 'error',
-            //     title: 'Mohon Perhatian!',
-            //     text: 'Isi Tanggal lahirmu Kocak!'
-            //     });
-            //     return;
-            // }
-            //! Modify SweetAlert2End Isian Tanggal Lahir jika tidak di isi (secara Spesifik)
-
-
-            //! Modify SweetAlert2Start Isian Makanan Favorit jika tidak di isi (secara Spesifik)
-            // Tambahkan pengecekan spesifik untuk Makanan Favorit
-            if (!makananFav) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Mohon Perhatian!",
-                    text: "Input Makanan Favoritmu Kocak!",
-                });
-                return;
-            }
-            //! Modify SweetAlert2End Isian Makanan Favorit jika tidak di isi (secara Spesifik)
             //! End Step Menu Pertama
 
             //! Start Step Menu Kedua
-        } else if (stepMenuTwo.hasClass("active")) {
+         else if (stepMenuTwo.hasClass("active")) {
             const email = emailInput.val().trim();
             const password = passwordInput.val().trim();
             const confirmPassword = confirmPasswordInput.val().trim();

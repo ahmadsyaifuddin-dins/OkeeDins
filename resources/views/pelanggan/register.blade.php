@@ -55,12 +55,14 @@
                 <div class="formbold-form-step-1 active">
                     <div class="formbold-input-flex">
                         <div>
-                            <label for="fullname" class="formbold-form-label">Nama Lengkap </label>
+                            <label for="fullname" class="formbold-form-label">Nama Lengkap <b
+                                    style="color: red;">*</b></label>
                             <input type="text" name="name" placeholder="John Doe" id="fullname"
                                 class="formbold-form-input" required value="{{ old('name') }}" />
                         </div>
                         <div>
-                            <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp </label>
+                                <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp <b
+                                    style="color: red;">*</b></label>
                             <div class="telepon-wrapper">
                                 <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
                                     value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*"
@@ -74,13 +76,15 @@
 
                     <div class="formbold-input-flex">
                         <div>
-                            <label for="tgl_lahir" class="formbold-form-label">Tanggal Lahir </label>
+                            <label for="tgl_lahir" class="formbold-form-label">Tanggal Lahir <b
+                                    style="color: red;">*</b></label>
                             <input type="date" name="tgl_lahir" id="tgl_lahir" class="formbold-form-input" required
                                 value="{{ old('tgl_lahir') }}" />
                         </div>
 
                         <div class="mydict">
-                            <label for="jenis_kelamin" class="formbold-form-label">Jenis Kelamin</label>
+                            <label for="jenis_kelamin" class="formbold-form-label">Jenis Kelamin <b
+                                    style="color: red;">*</b></label>
                             <div>
                                 <label class="formbold-radio-label">
                                     <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="Laki-Laki"
@@ -97,17 +101,17 @@
                             </div>
                         </div>
 
-
                     </div>
 
                     <div>
-                        <label for="makanan_fav" class="formbold-form-label">Makanan Favorit </label>
+                        <label for="makanan_fav" class="formbold-form-label">Makanan Favorit <b
+                                style="color: red;">*</b></label>
                         <input type="text" name="makanan_fav" id="makanan_fav" class="formbold-form-input"
                             placeholder="Mandai, Bilungka, Kolak" required value="{{ old('makanan_fav') }}" />
                     </div>
                     <br>
                     <div>
-                        <label for="address" class="formbold-form-label">Alamat Lengkap </label>
+                        <label for="address" class="formbold-form-label">Alamat Lengkap *</label>
                         <input type="text" name="alamat" id="address"
                             placeholder="Isilah Alamat Lengkap untuk pengiriman paket anda📦!"
                             class="formbold-form-input" required value="{{ old('alamat') }}" />
