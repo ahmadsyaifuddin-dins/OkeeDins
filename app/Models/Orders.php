@@ -31,9 +31,11 @@ class Orders extends Model
     public function getStatusLabelAttribute()
     {
         return [
-            'pending' => 'Menunggu Pembayaran',
+            'pending' => 'Menunggu Konfirmasi Penjual',
+            'awaiting_payment' => 'Menunggu Pembayaran dikonfirmasi',
             'confirmed' => 'Pesanan Dikonfirmasi',
             'processing' => 'Diproses',
+            'delivered' => 'Dikirim',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan'
         ][$this->status] ?? ucfirst($this->status);
@@ -53,14 +55,14 @@ class Orders extends Model
     // Accessors & Mutators untuk menghitung total harga awal dan total diskon
     public function getTotalOriginalPriceAttribute()
     {
-        return $this->orderItems->sum(function($item) {
+        return $this->orderItems->sum(function ($item) {
             return $item->quantity * $item->price;
         });
     }
 
     public function getTotalDiscountAttribute()
     {
-    return $this->total_original_price - $this->total_amount;
+        return $this->total_original_price - $this->total_amount;
     }
 
     // Define status constants for better code readability
@@ -126,6 +128,7 @@ class Orders extends Model
         return match ($this->status) {
             self::STATUS_PENDING => 'bg-warning',
             self::STATUS_CONFIRMED => 'bg-info',
+            self::STATUS_AWAITING_PAYMENT => 'bg-info',
             self::STATUS_PROCESSING => 'bg-info',
             self::STATUS_DELIVERED => 'bg-primary',
             self::STATUS_COMPLETED => 'bg-success',
