@@ -409,7 +409,7 @@ $(document).ready(function () {
     ];
 
     // Tambahkan array blacklist nomor
-    const blacklistedNumbers = ['08123456789', '0812345679',  '0812345678910', '0812345678911', '0812345678', '08123456788', '08123456787', '08123456786', '08123456785', '08123456784', '08123456783', '08123456782', '08123456781', '08123456780', '081234567890', '081234567891', '081234567892', '081234567893', '081234567894', '081234567895', '081234567896', '081234567897', '081234567898', '081234567899'];
+    const blacklistedNumbers = ['08123456789', '0812345679', '0812345678910', '0812345678911', '0812345678', '08123456788', '08123456787', '08123456786', '08123456785', '08123456784', '08123456783', '08123456782', '08123456781', '08123456780', '081234567890', '081234567891', '081234567892', '081234567893', '081234567894', '081234567895', '081234567896', '081234567897', '081234567898', '081234567899'];
 
     // Mencegah input karakter non-angka
     input.addEventListener("keypress", function (e) {
@@ -489,8 +489,8 @@ $(document).ready(function () {
             return 'Unknown Provider';
         }
 
-    return ''; // Return string kosong jika bukan format Indonesia
-}
+        return ''; // Return string kosong jika bukan format Indonesia
+    }
 
     // Modifikasi fungsi validatePhoneNumber
     function validatePhoneNumber() {
@@ -562,22 +562,22 @@ $(document).ready(function () {
 
     //!Start Untuk Inputan Email
     // Email validation function
-function validateEmail(email) {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailPattern.test(email)) {
-        emailInput.removeClass("invalid").addClass("valid");
-        return true;
-    } else {
-        emailInput.removeClass("valid").addClass("invalid");
-        return false;
+    function validateEmail(email) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailPattern.test(email)) {
+            emailInput.removeClass("invalid").addClass("valid");
+            return true;
+        } else {
+            emailInput.removeClass("valid").addClass("invalid");
+            return false;
+        }
     }
-}
 
-// Hanya validasi format email saat input
-emailInput.on("input", function () {
-    validateEmail($(this).val());
-});
-//!End Untuk Inputan Email
+    // Hanya validasi format email saat input
+    emailInput.on("input", function () {
+        validateEmail($(this).val());
+    });
+    //!End Untuk Inputan Email
 
 
     // Handle back button
@@ -704,7 +704,7 @@ emailInput.on("input", function () {
                 return;
             }
 
-             //!Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
+            //!Start menampilkan SweetAlert2 jika ada kolom belum yg diisi (global/non-spesifik) dan ui Step Active
             if (fullname && telepon && tglLahir && jenisKelamin && makananFav && address) {
                 stepMenuOne.removeClass("active");
                 stepMenuTwo.addClass("active");
@@ -721,11 +721,11 @@ emailInput.on("input", function () {
             }
             //!End Global
 
-            }
-            //! End Step Menu Pertama
+        }
+        //! End Step Menu Pertama
 
-            //! Start Step Menu Kedua
-         else if (stepMenuTwo.hasClass("active")) {
+        //! Start Step Menu Kedua
+        else if (stepMenuTwo.hasClass("active")) {
             const email = emailInput.val().trim();
             const password = passwordInput.val().trim();
             const confirmPassword = confirmPasswordInput.val().trim();
@@ -741,15 +741,15 @@ emailInput.on("input", function () {
                 return;
             }
 
-              //! Validasi format email
-        if (!validateEmail(email)) {
-            Swal.fire({
-                icon: "error",
-                title: "Mohon Perhatian!",
-                text: "Format email tidak valid",
-            });
-            return;
-        }
+            //! Validasi format email
+            if (!validateEmail(email)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Mohon Perhatian!",
+                    text: "Format email tidak valid",
+                });
+                return;
+            }
 
             //! Jika Password dan Konfirmasi Password tidak cocok
             if (password !== confirmPassword) {
@@ -796,7 +796,7 @@ emailInput.on("input", function () {
 
             else if (stepMenuThree.hasClass("active")) {
                 const characterType = document.getElementById("type_char").value;
-            
+
                 if (!characterType) {
                     Swal.fire({
                         icon: "error",
@@ -805,59 +805,123 @@ emailInput.on("input", function () {
                     });
                     return;
                 }
-            
-                 // Dapatkan form
-    const form = $("form");
-    
-    // Submit form dengan AJAX
-    $.ajax({
-        url: form.attr('action'),
-        type: 'POST',
-        data: form.serialize(),
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Registrasi Berhasil!',
-                    text: 'Anda akan diarahkan ke halaman login',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    window.location.href = response.redirect || '/login';
+
+                // Dapatkan form
+                const form = $("form");
+
+                let isSubmitting = false;
+                // Submit form dengan AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                        // Prevent double submission
+                        if (isSubmitting) {
+                            return false;
+                        }
+                        isSubmitting = true;
+
+                        // Disable semua button dan input selama proses
+                        $('button, input, select, textarea').prop('disabled', true);
+
+                        // Show loading dengan pesan yang informatif
+                        Swal.fire({
+                            title: 'Sedang Memproses...',
+                            html: `
+                                    <div class="loading-wrapper">
+                                    <div>Mohon tunggu sebentar</div>
+                                    </div>
+                            `,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            allowEnterKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Show success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Registrasi Berhasil! 🎉',
+                                html: `
+                                    <div class="success-wrapper">
+                                        <div>Anda akan diarahkan ke halaman login...</div>
+                                    </div>
+                                `,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    const b = Swal.getHtmlContainer().querySelector('.success-wrapper');
+                                    b.style.display = 'flex';
+                                    b.style.flexDirection = 'column';
+                                    b.style.gap = '10px';
+                                }
+                            }).then(() => {
+                                window.location.href = response.redirect || '/login';
+                            });
+                        } else {
+                            handleError('Terjadi kesalahan saat registrasi');
+                        }
+                    },
+                    error: function (xhr) {
+                        let errorMessage = 'Terjadi kesalahan saat registrasi';
+
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            if (errors) {
+                                errorMessage = Object.values(errors).flat().join('\n');
+                            }
+                        } else if (xhr.status === 0) {
+                            errorMessage = 'Koneksi terputus. Mohon periksa internet anda dan coba lagi.';
+                        } else if (xhr.status === 408) {
+                            errorMessage = 'Waktu proses terlalu lama. Mohon coba lagi.';
+                        }
+
+                        handleError(errorMessage);
+                    },
+                    complete: function () {
+                        // Reset submission status
+                        isSubmitting = false;
+                        // Re-enable semua button dan input
+                        $('button, input, select, textarea').prop('disabled', false);
+                    },
+                    timeout: 30000 // Set timeout 30 detik
                 });
-            } else {
+            }
+
+            // Tambahkan function ini di luar event handler (di level yang sama dengan kode jQuery lainnya)
+            function handleError(message) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
-                    text: response.message || 'Terjadi kesalahan saat registrasi'
+                    html: `
+                        <div style="text-align: left;">
+                            <div style="margin-bottom: 10px;">${message}</div>
+                            <div style="font-size: 0.9em; color: #666;">
+                                Saran:
+                                <ul style="text-align: left; margin-top: 5px;">
+                                    <li>Periksa koneksi internet anda</li>
+                                    <li>Refresh halaman dan coba lagi</li>
+                                    <li>Jika masalah berlanjut, hubungi support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'Coba Lagi'
                 });
             }
-        },
-        error: function(xhr) {
-            let errorMessage = 'Terjadi kesalahan saat registrasi';
-            
-            // Handle validation errors
-            if (xhr.status === 422) {
-                const errors = xhr.responseJSON.errors;
-                if (errors) {
-                    errorMessage = Object.values(errors).flat().join('\n');
-                }
-            }
-            
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: errorMessage
-            });
         }
-    });
-
-    return false; // Prevent default form submission
-}                
-        }
+        return false; // Prevent default form submission
     });
 
     // Handle confirmation buttons

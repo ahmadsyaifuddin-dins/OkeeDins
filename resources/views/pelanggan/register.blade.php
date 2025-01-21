@@ -62,7 +62,7 @@
                                 class="formbold-form-input" required value="{{ old('name') }}" />
                         </div>
                         <div>
-                                <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp <b
+                            <label for="telepon" class="formbold-form-label">Nomor Telp/WhatsApp <b
                                     style="color: red;">*</b></label>
                             <div class="telepon-wrapper">
                                 <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
@@ -112,10 +112,11 @@
                     </div>
                     <br>
                     <div>
-                        <label for="address" class="formbold-form-label">Alamat Lengkap *</label>
-                        <input type="text" name="alamat" id="address"
-                            placeholder="Isilah Alamat Lengkap untuk pengiriman paket anda📦!"
-                            class="formbold-form-input" required value="{{ old('alamat') }}" />
+                        <label for="address" class="formbold-form-label">Alamat Lengkap <b
+                                style="color: red;">*</b></label>
+                        <textarea name="alamat" id="address" placeholder="Isilah Alamat Lengkap untuk pengiriman paket anda📦!"
+                            class="formbold-form-input" style="resize: none; height: 100px; overflow: hidden;"
+                            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required>{{ old('alamat') }}</textarea>
                     </div>
                 </div>
 
@@ -213,9 +214,12 @@
 
                     <button class="formbold-btn">
                         Selanjutnya
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_1675_1807)">
-                                <path d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z" fill="white" />
+                                <path
+                                    d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z"
+                                    fill="white" />
                             </g>
                             <defs>
                                 <clipPath id="clip0_1675_1807">
