@@ -309,6 +309,21 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const paymentMethodInputs = document.querySelectorAll('input[name="payment_method"]');
+            const transferProofDiv = document.getElementById('transfer-proof');
+
+            paymentMethodInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.value === 'Transfer') {
+                        transferProofDiv.classList.remove('d-none');
+                    } else {
+                        transferProofDiv.classList.add('d-none');
+                        // Clear any uploaded file when switching to COD
+                        document.getElementById('proof_of_payment').value = '';
+                    }
+                });
+            });
+
             // Handle address management
             const editAddressModal = document.getElementById('editAddressModal');
             if (editAddressModal) {
@@ -475,7 +490,7 @@
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked')
                     .value;
                 const sellerNotes = document.getElementById('seller_notes').value;
-                let formData = new FormData();
+
 
                 // Collect items data from the DOM
                 const items = [];
@@ -490,6 +505,56 @@
                             .diskon || 0)
                     });
                 });
+                // const formData = new FormData();
+
+                // Collect form data
+                const formData = new FormData();
+                formData.append('payment_method', paymentMethod);
+                formData.append('seller_notes', document.getElementById('seller_notes').value);
+                formData.append('items', JSON.stringify(items));
+                formData.append('address_id', selectedAddress.value);
+                formData.append('isFromCart', document.getElementById('is-from-cart').value);
+
+                // Validate proof of payment for transfer method
+                if (paymentMethod === 'Transfer') {
+                    const proofFile = document.getElementById('proof_of_payment').files[0];
+                    if (!proofFile) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Bukti Pembayaran Diperlukan',
+                            text: 'Silahkan upload bukti pembayaran untuk metode transfer.'
+                        });
+                        return;
+                    }
+
+                    // Validate file type
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!allowedTypes.includes(proofFile.type)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Format File Tidak Sesuai',
+                            text: 'Bukti pembayaran harus berupa gambar (JPG, JPEG, atau PNG)'
+                        });
+                        return;
+                    }
+
+                    // Validate file size (max 2MB)
+                    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+                    if (proofFile.size > maxSize) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ukuran File Terlalu Besar',
+                            text: 'Maksimal ukuran file adalah 2MB'
+                        });
+                        return;
+                    }
+                }
+
+                // Add proof of payment if method is transfer
+                if (paymentMethod === 'Transfer') {
+                    formData.append('proof_of_payment', document.getElementById('proof_of_payment')
+                        .files[0]);
+                }
 
                 // Add payment method, notes, items, and selected address to form data
                 formData.append('payment_method', paymentMethod);
@@ -512,6 +577,8 @@
                     formData.append('proof_of_payment', proofFile);
                 }
 
+
+
                 try {
                     // Show loading state
                     Swal.fire({
@@ -527,7 +594,8 @@
                     const response = await fetch('/checkout', {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]')
                                 .content
                         },
                         body: formData
@@ -563,7 +631,8 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message || 'Terjadi kesalahan saat memproses pesanan Anda'
+                        text: error.message ||
+                            'Terjadi kesalahan saat memproses pesanan Anda'
                     });
                 }
             });
