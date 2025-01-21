@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <th>Metode Pembayaran</th>
-                <td>{{ $pesanan->payment_method ?? 'Metode pembayaran tidak tersedia' }}</td>
+                <td class="text-capitalize">{{ $pesanan->payment_method ?? 'Metode pembayaran tidak tersedia' }}</td>
             </tr>
             <tr>
                 <th>Status Pesanan</th>
@@ -75,7 +75,7 @@
             </tr>
             <tr>
                 <th>Alamat Pengiriman</th>
-                <td>{{ $pesanan->user ? $pesanan->user->alamat : 'Alamat tidak tersedia' }}</td>
+                <td class="text-wrap">{{ $pesanan->user ? $pesanan->user->alamat : 'Alamat tidak tersedia' }}</td>
             </tr>
         </table>
         <a href="{{ route('admin.pesanan.index') }}" class="btn btn-dark">Kembali</a>

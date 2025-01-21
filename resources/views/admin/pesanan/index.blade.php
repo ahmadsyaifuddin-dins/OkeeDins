@@ -26,7 +26,7 @@
                                 <tbody>
                                     @forelse($pesanan as $key => $order)
                                         <tr>
-                                            <td >{{ $key + 1 }}</td>
+                                            <td>{{ $pesanan->firstItem() + $key }}</td>
                                             <td>{{ $order->order_number }}</td>
                                             <td>{{ $order->user->name ?? 'Guest' }}</td>
                                             <td>{{ $order->created_at->format('d M Y') }}</td>
@@ -36,57 +36,78 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </td>
-                                            <td class="d-flex align-items-center justify-content-center gap-2" style="height: 100%; min-height: 60px;">
-                                                <div class="d-flex align-items-center justify-content-center gap-2" style="width: 100%;">
-                                                <a href="{{ route('admin.pesanan.show', $order->order_number) }}"
-                                                    class="btn btn-dark btn-sm">Detail</a>
+                                            <td class="d-flex align-items-center justify-content-center gap-2"
+                                                style="height: 100%; min-height: 60px;">
+                                                <div class="d-flex align-items-center justify-content-center gap-2"
+                                                    style="width: 100%;">
+                                                    <a href="{{ route('admin.pesanan.show', $order->order_number) }}"
+                                                        class="btn btn-dark btn-sm">Detail</a>
 
-                                                @if ($order->payment_method === 'Cash on Delivery')
-                                                    <form action="{{ route('admin.pesanan.updateStatus', $order->id) }}"
-                                                        method="POST" id="statusForm-{{ $order->id }}">
+                                                    @if ($order->payment_method === 'Cash on Delivery')
+                                                        <form action="{{ route('admin.pesanan.updateStatus', $order->id) }}"
+                                                            method="POST" id="statusForm-{{ $order->id }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <select name="status"
+                                                                class="form-select form-select-sm status-select status-{{ $order->status }}"
+                                                                onchange="if(confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')) { this.form.submit(); }">
+                                                                <option value="pending"
+                                                                    {{ $order->status === 'pending' ? 'selected' : '' }}
+                                                                    class="status-bg-pending">Pending</option>
+                                                                <option value="confirmed"
+                                                                    {{ $order->status === 'confirmed' ? 'selected' : '' }}
+                                                                    class="status-bg-confirmed">Konfirmasi</option>
+                                                                <option value="processing"
+                                                                    {{ $order->status === 'processing' ? 'selected' : '' }}
+                                                                    class="status-bg-processing">Proses</option>
+                                                                <option value="delivered"
+                                                                    {{ $order->status === 'delivered' ? 'selected' : '' }}
+                                                                    class="status-bg-delivery">Dikirim</option>
+                                                                <option value="completed"
+                                                                    {{ $order->status === 'completed' ? 'selected' : '' }}
+                                                                    class="status-bg-completed">Selesai</option>
+                                                            </select>
+                                                        </form>
+                                                    @endif
+
+                                                    @if ($order->payment_method === 'transfer')
+                                                        <form
+                                                            action="{{ route('admin.pesanan.updateStatus', $order->id) }}"
+                                                            method="POST" id="statusForm-{{ $order->id }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <select name="status"
+                                                                class="form-select form-select-sm status-select status-{{ $order->status }}"
+                                                                onchange="if(confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')) { this.form.submit(); }">
+                                                                <option value="awaiting-payment"
+                                                                    {{ $order->status === 'awaiting payment' ? 'selected' : '' }}
+                                                                    class="status-bg-pending">Pending</option>
+                                                                <option value="confirmed"
+                                                                    {{ $order->status === 'confirmed' ? 'selected' : '' }}
+                                                                    class="status-bg-confirmed">Konfirmasi
+                                                                </option>
+                                                                <option value="processing"
+                                                                    {{ $order->status === 'processing' ? 'selected' : '' }}
+                                                                    class="status-bg-processing">Proses</option>
+                                                                <option value="delivered"
+                                                                    {{ $order->status === 'delivered' ? 'selected' : '' }}
+                                                                    class="status-bg-delivery">Dikirim</option>
+                                                                <option value="completed"
+                                                                    {{ $order->status === 'completed' ? 'selected' : '' }}
+                                                                    class="status-bg-completed">Selesai</option>
+                                                            </select>
+                                                        </form>
+                                                    @endif
+
+                                                    <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
+                                                        method="POST" class="mb-0">
                                                         @csrf
-                                                        @method('PUT')
-                                                        <select name="status"
-                                                            class="form-select form-select-sm status-select status-{{ $order->status }}"
-                                                            onchange="if(confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')) { this.form.submit(); }">
-                                                            <option value="pending"
-                                                                {{ $order->status === 'pending' ? 'selected' : '' }}
-                                                                class="status-bg-pending">Pending</option>
-                                                            <option value="confirmed"
-                                                                {{ $order->status === 'confirmed' ? 'selected' : '' }}
-                                                                class="status-bg-confirmed">Konfirmasi</option>
-                                                            <option value="processing"
-                                                                {{ $order->status === 'processing' ? 'selected' : '' }}
-                                                                class="status-bg-processing">Proses</option>
-                                                            <option value="delivered"
-                                                                {{ $order->status === 'delivered' ? 'selected' : '' }}
-                                                                class="status-bg-delivery">Kirim</option>
-                                                            <option value="completed"
-                                                                {{ $order->status === 'completed' ? 'selected' : '' }}
-                                                                class="status-bg-completed">Selesai</option>
-                                                        </select>
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">
+                                                            Hapus
+                                                        </button>
                                                     </form>
-                                                @endif
-
-                                                {{-- @if ($order->payment_method === 'Cash on Delivery' && $order->status === 'completed')
-                                                    <form action="{{ route('admin.pesanan.complete', $order->id) }}"
-                                                        method="POST" style="display:inline-block;">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-info btn-sm"
-                                                            onclick="return confirm('Konfirmasi Pembayaran?')">Konfirmasi
-                                                            Pembayaran</button>
-                                                    </form>
-                                                @endif --}}
-
-                                                <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
-                                                    method="POST" class="mb-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">
-                                                        Hapus
-                                                    </button>
-                                                </form>
                                                 </div>
                                             </td>
 
@@ -127,33 +148,32 @@
 @endsection
 
 <style>
+    .table td,
+    .table th {
+        vertical-align: middle !important;
+        text-align: center !important;
+        padding: 12px 8px !important;
+        height: 60px !important;
+    }
+
+    /* Update button and form styles */
+    .table .btn-sm {
+        margin-bottom: 0 !important;
+        padding: 0.25rem 0.5rem !important;
+        height: 31px !important;
+        min-width: 60px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+    }
 
 
-.table td, .table th {
-    vertical-align: middle !important;
-    text-align: center !important;
-    padding: 12px 8px !important;
-    height: 60px !important;
-}
-
-/* Update button and form styles */
-.table .btn-sm {
-    margin-bottom: 0 !important;
-    padding: 0.25rem 0.5rem !important;
-    height: 31px !important;
-    min-width: 60px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-}
-
-
-.table form {
-    margin: 0;
-    display: inline-flex !important;
-    align-items: center !important;
-}
+    .table form {
+        margin: 0;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
 
 
     .pagination {
@@ -186,14 +206,20 @@
 
 
     .status-select {
-    min-width: 120px;
-    height: 31px !important;
-    padding: 2px 8px !important;
-    font-size: 0.875rem !important;
-}
+        min-width: 120px;
+        height: 31px !important;
+        padding: 2px 8px !important;
+        font-size: 0.875rem !important;
+    }
 
     /* Warna background untuk select berdasarkan status aktif */
     .status-pending {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+    }
+
+    /* Tambahkan ini di bagian CSS Anda */
+    .status-awaiting.payment {
         background-color: #fef3c7 !important;
         color: #92400e !important;
     }
@@ -217,6 +243,7 @@
         background-color: #bbf7d0 !important;
         color: #15803d !important;
     }
+
 
     /* Warna background untuk options */
     .status-select option.status-bg-pending {
@@ -249,7 +276,4 @@
         outline: 0;
         box-shadow: 0 0 0 0.2rem rgba(52, 71, 103, 0.25);
     }
-
-
 </style>
-

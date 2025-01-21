@@ -32,7 +32,7 @@ class Orders extends Model
     {
         return [
             'pending' => 'Menunggu Konfirmasi Penjual',
-            'awaiting_payment' => 'Menunggu Pembayaran dikonfirmasi',
+            'awaiting payment' => 'Menunggu Pembayaran dikonfirmasi',
             'confirmed' => 'Pesanan Dikonfirmasi',
             'processing' => 'Diproses',
             'delivered' => 'Dikirim',
@@ -68,7 +68,7 @@ class Orders extends Model
     // Define status constants for better code readability
     const STATUS_PENDING = 'pending';
     const STATUS_CONFIRMED = 'confirmed';
-    const STATUS_AWAITING_PAYMENT = 'awaiting_payment';
+    const STATUS_AWAITING_PAYMENT = 'awaiting payment';
     const STATUS_PROCESSING = 'processing';
     const STATUS_DELIVERED = 'delivered';
     const STATUS_COMPLETED = 'completed';
@@ -148,6 +148,16 @@ class Orders extends Model
         return $query->where('status', self::STATUS_PENDING);
     }
 
+    public function scopeConfirmed($query)
+    {
+        return $query->where('status', self::STATUS_CONFIRMED);
+    }
+
+    public function scopeAwaitingPayment($query)
+    {
+        return $query->where('status', self::STATUS_AWAITING_PAYMENT);
+    }
+
     public function scopeProcess($query)
     {
         return $query->where('status', self::STATUS_PROCESSING);
@@ -156,6 +166,11 @@ class Orders extends Model
     public function scopeDelivered($query)
     {
         return $query->where('status', self::STATUS_DELIVERED);
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', self::STATUS_COMPLETED);
     }
 
     public function scopeCancelled($query)
@@ -189,6 +204,16 @@ class Orders extends Model
         return $this->status === self::STATUS_PENDING;
     }
 
+    public function isConfirmed()
+    {
+        return $this->status === self::STATUS_CONFIRMED;
+    }
+
+    public function isAwaitingPayment()
+    {
+        return $this->status === self::STATUS_AWAITING_PAYMENT;
+    }
+
     public function isProcessing()
     {
         return $this->status === self::STATUS_PROCESSING;
@@ -197,6 +222,11 @@ class Orders extends Model
     public function isDelivered()
     {
         return $this->status === self::STATUS_DELIVERED;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status === self::STATUS_COMPLETED;
     }
 
     public function isCancelled()
@@ -217,7 +247,7 @@ class Orders extends Model
     // Method to update order status
     public function updateStatus($status)
     {
-        if (in_array($status, [self::STATUS_PENDING, self::STATUS_PROCESSING, self::STATUS_DELIVERED, self::STATUS_CANCELLED])) {
+        if (in_array($status, [self::STATUS_PENDING, self::STATUS_AWAITING_PAYMENT, self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_DELIVERED, self::STATUS_COMPLETED, self::STATUS_CANCELLED])) {
             $this->update(['status' => $status]);
             return true;
         }

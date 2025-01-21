@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('qty');
             $table->enum('payment_method', ['Cash on Delivery', 'transfer', 'midtrans'])->default('Cash on Delivery');
             $table->enum('payment_status', ['paid', 'unpaid'])->default('unpaid');
-            $table->enum('status', ['pending', 'awaiting_payment', 'confirmed', 'processing', 'delivered', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'awaiting payment', 'confirmed', 'processing', 'delivered', 'completed', 'cancelled'])->default('pending');
             $table->string('payment_proof', 255)->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
