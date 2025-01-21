@@ -33,6 +33,10 @@
                                         <span class="badge bg-warning">Menunggu Konfirmasi</span>
                                     @break
 
+                                    @case('awaiting payment')
+                                        <span class="badge bg-info">Menunggu Pembayaran Dikonfirmasi</span>
+                                    @break
+
                                     @case('confirmed')
                                         <span class="badge bg-success">
                                             @if ($order->payment_method === 'transfer')
@@ -95,7 +99,7 @@
                                             @elseif (strtolower($order->status) === 'pending')
                                                 <span class="text-warning">Menunggu Pembayaran</span>
                                             @elseif (strtolower($order->status) === 'awaiting payment')
-                                                <span class="text-info">Menunggu Konfirmasi Pembayaran</span>
+                                                <span class="text-info">Menunggu Pembayaran Dikonfirmasi</span>
                                             @elseif (strtolower($order->status) === 'confirmed')
                                                 <span class="text-success">Pembayaran Dikonfirmasi</span>
                                             @elseif (in_array(strtolower($order->status), ['processing', 'completed']))
@@ -109,7 +113,7 @@
                                             @elseif (strtolower($order->status) === 'pending')
                                                 <span class="text-warning">Menunggu Pembayaran</span>
                                             @elseif (strtolower($order->status) === 'awaiting payment')
-                                                <span class="text-info">Menunggu Konfirmasi Pembayaran</span>
+                                                <span class="text-info">Menunggu Pembayaran Dikonfirmasi</span>
                                             @elseif (in_array(strtolower($order->status), ['processing', 'completed']))
                                                 <span class="text-success">Lunas</span>
                                             @else

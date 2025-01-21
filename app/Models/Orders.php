@@ -32,7 +32,7 @@ class Orders extends Model
     {
         return [
             'pending' => 'Menunggu Konfirmasi Penjual',
-            'awaiting payment' => 'Menunggu Pembayaran dikonfirmasi',
+            'awaiting payment' => 'Menunggu Pembayaran Dikonfirmasi',
             'confirmed' => 'Pesanan Dikonfirmasi',
             'processing' => 'Diproses',
             'delivered' => 'Dikirim',
