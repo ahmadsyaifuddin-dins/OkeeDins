@@ -206,6 +206,12 @@ color: #F44424;
     position: relative;
 }
 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
 `;
 document.head.appendChild(styleSheet);
 
@@ -556,62 +562,22 @@ $(document).ready(function () {
 
     //!Start Untuk Inputan Email
     // Email validation function
-    function validateEmail(email) {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (emailPattern.test(email)) {
-            emailInput.removeClass("invalid").addClass("valid");
-            return true;
-        } else {
-            emailInput.removeClass("valid").addClass("invalid");
-            return false;
-        }
+function validateEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailPattern.test(email)) {
+        emailInput.removeClass("invalid").addClass("valid");
+        return true;
+    } else {
+        emailInput.removeClass("valid").addClass("invalid");
+        return false;
     }
+}
 
-    function checkEmailExistence(email) {
-        return $.ajax({
-            url: "/check-email", // Add this route to your web.php
-            method: "POST",
-            data: {
-                email: email,
-                _token: $('meta[name="csrf-token"]').attr("content"),
-            },
-        });
-    }
-
-    // Modify the email input event handler
-    emailInput.on("input", function () {
-        const email = $(this).val();
-        if (validateEmail(email)) {
-            // Check email existence only if format is valid
-            checkEmailExistence(email).then(function (response) {
-                if (response.exists) {
-                    emailInput.removeClass("valid").addClass("invalid");
-                    // Show warning using SweetAlert2
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Email Sudah Terdaftar",
-                        text: "Email ini sudah terdaftar. Silakan gunakan email lain atau login ke akun Anda.",
-                        showCancelButton: true,
-                        confirmButtonText: "Login",
-                        cancelButtonText: "Gunakan Email Lain",
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/login";
-                        }
-                    });
-                } else {
-                    emailInput.removeClass("invalid").addClass("valid");
-                }
-            });
-        }
-    });
-
-    // Real-time validation for email
-    emailInput.on("input", function () {
-        validateEmail($(this).val());
-    });
-    //!End Untuk Inputan Email
+// Hanya validasi format email saat input
+emailInput.on("input", function () {
+    validateEmail($(this).val());
+});
+//!End Untuk Inputan Email
 
 
     // Handle back button
@@ -775,6 +741,16 @@ $(document).ready(function () {
                 return;
             }
 
+              //! Validasi format email
+        if (!validateEmail(email)) {
+            Swal.fire({
+                icon: "error",
+                title: "Mohon Perhatian!",
+                text: "Format email tidak valid",
+            });
+            return;
+        }
+
             //! Jika Password dan Konfirmasi Password tidak cocok
             if (password !== confirmPassword) {
                 Swal.fire({
@@ -787,16 +763,6 @@ $(document).ready(function () {
 
             const isEmailValid = validateEmail(email);
             const isPasswordValid = strength >= 3; // Minimum medium strength required
-
-            //! Jika Inputan Email Tidak Valid, maka akan menampilkan alert
-            if (!isEmailValid) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Mohon Perhatian!",
-                    text: "Format email tidak valid",
-                });
-                return;
-            }
 
             //! Jika Inputan Password Lemah, maka akan menampilkan alert
             if (!isPasswordValid) {
@@ -828,7 +794,69 @@ $(document).ready(function () {
                 return;
             }
 
-            $("form").submit();
+            else if (stepMenuThree.hasClass("active")) {
+                const characterType = document.getElementById("type_char").value;
+            
+                if (!characterType) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Mohon Perhatian!",
+                        text: "Silakan pilih tipe karakter Anda!",
+                    });
+                    return;
+                }
+            
+                 // Dapatkan form
+    const form = $("form");
+    
+    // Submit form dengan AJAX
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: form.serialize(),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registrasi Berhasil!',
+                    text: 'Anda akan diarahkan ke halaman login',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = response.redirect || '/login';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: response.message || 'Terjadi kesalahan saat registrasi'
+                });
+            }
+        },
+        error: function(xhr) {
+            let errorMessage = 'Terjadi kesalahan saat registrasi';
+            
+            // Handle validation errors
+            if (xhr.status === 422) {
+                const errors = xhr.responseJSON.errors;
+                if (errors) {
+                    errorMessage = Object.values(errors).flat().join('\n');
+                }
+            }
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: errorMessage
+            });
+        }
+    });
+
+    return false; // Prevent default form submission
+}                
         }
     });
 
@@ -841,18 +869,25 @@ $(document).ready(function () {
 });
 
 function selectCharacter(type) {
-    // Reset semua button ke state awal
-    document.querySelectorAll(".formbold-confirm-btn").forEach((btn) => {
-        btn.classList.remove("active");
+    document.getElementById('type_char').value = type;
+
+    // Remove selected class from all cards
+    document.querySelectorAll('.character-card').forEach(card => {
+        card.classList.remove('selected');
     });
 
-    // Aktifkan button yang dipilih
-    const button =
-        type === "Hero"
-            ? document.getElementById("hero-btn")
-            : document.getElementById("villain-btn");
-    button.classList.add("active");
+    // Add selected class to chosen card
+    if (type === 'Hero') {
+        document.getElementById('hero-card').classList.add('selected');
+    } else {
+        document.getElementById('villain-card').classList.add('selected');
+    }
 
-    // Set nilai ke input hidden
-    document.getElementById("type_char").value = type;
+    // Add selection animation
+    const card = type === 'Hero' ? document.getElementById('hero-card') : document.getElementById('villain-card');
+    card.style.animation = 'pulse 0.5s';
+    setTimeout(() => {
+        card.style.animation = '';
+    }, 500);
 }
+

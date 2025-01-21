@@ -45,37 +45,47 @@ class RegisterController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Log data untuk debugging
-        Log::info('Data registrasi: ', $request->all());
+{
+    // Log data untuk debugging
+    Log::info('Data registrasi: ', $request->all());
 
-        $validator = validator($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email', // Perbaikan di sini
-            'password' => 'required|min:8|confirmed',
-            'alamat' => 'required',
-            'tgl_lahir' => 'required|date',
-            'jenis_kelamin' => 'required',
-            'telepon' => 'required',
-            'makanan_fav' => 'required',
-            'type_char' => 'required|in:Hero,Villain',
-        ], [
-            'email.unique' => 'Email sudah dipakai! Silakan gunakan email lain atau login dengan email yg terdaftar.',
-            'password.min' => 'Password minimal 8 karakter.',
-        ]);
+    $validator = validator($request->all(), [
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:8|confirmed',
+        'alamat' => 'required',
+        'tgl_lahir' => 'required|date',
+        'jenis_kelamin' => 'required',
+        'telepon' => 'required',
+        'makanan_fav' => 'required',
+        'type_char' => 'required|in:Hero,Villain',
+    ], [
+        'email.unique' => 'Email sudah dipakai! Silakan gunakan email lain atau login dengan email yg terdaftar.',
+        'password.min' => 'Password minimal 8 karakter.',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan pada data yang Anda masukkan.')
-                ->withInput($request->except('password'));
+    if ($validator->fails()) {
+        // Jika request adalah AJAX, return JSON response
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
         }
+        
+        // Jika bukan AJAX, gunakan redirect
+        return redirect()->back()
+            ->withErrors($validator)
+            ->with('error', 'Terdapat kesalahan pada data yang Anda masukkan.')
+            ->withInput($request->except('password'));
+    }
 
-
+    try {
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => $request->password, // Jangan lupa hash password!
             'alamat' => $request->alamat,
             'tgl_lahir' => $request->tgl_lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
@@ -86,6 +96,32 @@ class RegisterController extends Controller
             'remember_token' => '',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login :)');
+        // Jika request adalah AJAX, return JSON response
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Registrasi berhasil! Silakan login :)',
+                'redirect' => route('login')
+            ]);
+        }
+
+        // Jika bukan AJAX, gunakan redirect
+        return redirect()->route('login')
+            ->with('success', 'Registrasi berhasil! Silakan login :)');
+
+    } catch (\Exception $e) {
+        Log::error('Error saat registrasi: ' . $e->getMessage());
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat registrasi'
+            ], 500);
+        }
+
+        return redirect()->back()
+            ->with('error', 'Terjadi kesalahan saat registrasi')
+            ->withInput($request->except('password'));
     }
+}
 }

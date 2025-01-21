@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Registrasi Pelanggan</title>
 
     <link rel="stylesheet" href="{{ url('css/register.css') }}">
@@ -29,7 +30,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan',
-                            html: '{!! implode('<br>', $errors->all()) !!}',
+                            html: '{{ implode('<br>', $errors->all()) }}',
                             showConfirmButton: true
                         });
                     </script>
@@ -87,13 +88,13 @@
                                     style="color: red;">*</b></label>
                             <div>
                                 <label class="formbold-radio-label">
-                                    <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="Laki-Laki"
+                                    <input type="radio" name="jenis_kelamin" value="Laki-Laki"
                                         class="formbold-radio-input" required
                                         {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }} />
                                     <span>Laki-Laki</span>
                                 </label>
                                 <label class="formbold-radio-label">
-                                    <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="Perempuan"
+                                    <input type="radio" name="jenis_kelamin" value="Perempuan"
                                         class="formbold-radio-input" required
                                         {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} />
                                     <span>Perempuan</span>
@@ -172,40 +173,31 @@
 
                 <div class="formbold-form-step-3">
                     <div class="formbold-form-confirm">
-                        <p>Di dunia ini tipe Karakter apa yg cocok dengan diri anda?</p>
-
+                        <h2 class="character-title">Pilih Karakter Yang Mencerminkan Dirimu!</h2>
                         <input type="hidden" name="type_char" id="type_char" value="">
 
-                        <div>
-                            <button type="button" onclick="selectCharacter('Hero')" class="formbold-confirm-btn"
-                                id="hero-btn">
-                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="11" cy="11" r="10.5" fill="white"
-                                        stroke="#DDE3EC" />
-                                    <g clip-path="url(#clip0_1667_1314)">
-                                        <path
-                                            d="M9.83343 12.8509L15.1954 7.48828L16.0208 8.31311L9.83343 14.5005L6.12109 10.7882L6.94593 9.96336L9.83343 12.8509Z"
-                                            fill="#536387" />
-                                    </g>
-                                </svg>
-                                Hero🦸
-                            </button>
+                        <div class="character-selection">
+                            <div class="character-card" onclick="selectCharacter('Hero')" id="hero-card">
+                                <div class="character-image">
+                                    <img src="{{ asset('images/hero-character.png') }}" alt="Hero Character">
+                                    <div class="character-glow hero-glow"></div>
+                                </div>
+                                <div class="character-info">
+                                    <h3>Hero 🦸‍♂️</h3>
+                                    <p>Pembela kebenaran dan keadilan</p>
+                                </div>
+                            </div>
 
-                            <button type="button" onclick="selectCharacter('Villain')" class="formbold-confirm-btn"
-                                id="villain-btn">
-                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="11" cy="11" r="10.5" fill="white"
-                                        stroke="#DDE3EC" />
-                                    <g clip-path="url(#clip0_1667_1314)">
-                                        <path
-                                            d="M9.83343 12.8509L15.1954 7.48828L16.0208 8.31311L9.83343 14.5005L6.12109 10.7882L6.94593 9.96336L9.83343 12.8509Z"
-                                            fill="#536387" />
-                                    </g>
-                                </svg>
-                                Villain🦹
-                            </button>
+                            <div class="character-card" onclick="selectCharacter('Villain')" id="villain-card">
+                                <div class="character-image">
+                                    <img src="{{ asset('images/villain-character.png') }}" alt="Villain Character">
+                                    <div class="character-glow villain-glow"></div>
+                                </div>
+                                <div class="character-info">
+                                    <h3>Villain 🦹‍♂️</h3>
+                                    <p>Penguasa kegelapan yang kuat</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,16 +213,13 @@
 
                     <button class="formbold-btn">
                         Selanjutnya
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_1675_1807)">
-                                <path
-                                    d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z"
-                                    fill="white" />
+                                <path d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z" fill="white" />
                             </g>
                             <defs>
-                                <clipPath id="clip0_1675_1807)">
-                                    <rect width="16" height="16)" fill="white" />
+                                <clipPath id="clip0_1675_1807">
+                                    <rect width="16" height="16" fill="white" />
                                 </clipPath>
                             </defs>
                         </svg>
