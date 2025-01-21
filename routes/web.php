@@ -11,7 +11,8 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
-use App\Http\Controllers\AddressController; // Add this line
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\WishlistController; // Add this line
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use PHPUnit\Framework\Attributes\Group;
@@ -41,6 +42,13 @@ Route::get('/', [MarketController::class, 'index'])->middleware('cegah.admin.aks
 // Market routes
 Route::get('/produk/{slug}', [MarketController::class, 'detailProduk'])->name('produk.detail');
 Route::get('/kategori/{slug}', [MarketController::class, 'index'])->name('market.kategori');
+
+// Wishlist routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store');
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+});
 
 //! Route untuk guest (belum login) untuk pelanggan
 Route::middleware('guest')->group(function () {

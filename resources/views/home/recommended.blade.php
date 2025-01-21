@@ -5,10 +5,30 @@
                 {{-- <a href="#" class="text-decoration-none"> --}}
                 <div class="card h-100 product-card shadow-sm position-relative">
                     <!-- Wishlist Button -->
-                    <button class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 shadow-sm wishlist-btn"
-                        onclick="event.stopPropagation();">
-                        <i class="bi bi-heart"></i>
-                    </button>
+                    @auth
+                        @if(Auth::user()->wishlists->contains('produk_id', $recom->id))
+                            <form action="{{ route('wishlist.destroy', Auth::user()->wishlists->where('produk_id', $recom->id)->first()) }}" 
+                                  method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
+                            @csrf
+                            @method('DELETE')
+                        @else
+                            <form action="{{ route('wishlist.store') }}" method="POST" class="d-inline" 
+                                  onsubmit="confirmAddToWishlist(event, this)">
+                            @csrf
+                        @endif
+                        <input type="hidden" name="produk_id" value="{{ $recom->id }}">
+                        <button type="submit" class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 shadow-sm wishlist-btn"
+                            onclick="event.stopPropagation();" style="min-width: 32px;">
+                            <i class="bi bi-heart{{ Auth::user()->wishlists->contains('produk_id', $recom->id) ? '-fill text-danger' : '' }}"
+                               style="{{ Auth::user()->wishlists->contains('produk_id', $recom->id) ? 'font-size: 1rem;' : '' }}"></i>
+                        </button>
+                    </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 shadow-sm wishlist-btn"
+                           onclick="event.stopPropagation();">
+                            <i class="bi bi-heart"></i>
+                        </a>
+                    @endauth
 
                     <!-- Discount Badge -->
                     @if ($recom->diskon > 0)

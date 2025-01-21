@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Address;
 use App\Models\Cart;
+use App\Models\Wishlist;
 // use App\Models\Pesanan;
 
 class User extends Authenticatable  implements MustVerifyEmail
@@ -87,5 +88,10 @@ class User extends Authenticatable  implements MustVerifyEmail
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

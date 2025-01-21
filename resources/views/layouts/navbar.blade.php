@@ -15,6 +15,7 @@
             <a class="btn" href="#">
                 <i class="bi bi-envelope"></i>
             </a>
+
             <a class="btn position-relative" id="cartBadgeMobile" href="{{ route('cart.index') }}">
                 <i class="bi bi-cart"></i>
                 @auth
@@ -45,10 +46,15 @@
                         <i class="bi bi-envelope me-1"></i> Pesan
                     </a>
                 </li>
-                <li class="nav-item">
-                    {{-- <a class="nav-link" href="{{ route('market.wishlist') }}"> --}}
-                    <a class="nav-link" href="#">
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link position-relative" href="{{ route('wishlist.index')}}">
                         <i class="bi bi-heart me-1"></i> Favorit
+                        @auth
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger" 
+                              style="top: 0px; right: -15px;">
+                            {{ $wishlistCount }}
+                        </span>
+                        @endauth
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block position-relative">
