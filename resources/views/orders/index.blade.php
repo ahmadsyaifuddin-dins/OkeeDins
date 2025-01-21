@@ -38,7 +38,13 @@
                                             @break
 
                                             @case('confirmed')
-                                                <span class="badge bg-info">Di Konfirmasi</span>
+                                                <span class="badge bg-success">
+                                                    @if ($order->payment_method === 'transfer')
+                                                        Pembayaran Dikonfirmasi
+                                                    @else
+                                                        Di Konfirmasi
+                                                    @endif
+                                                </span>
                                             @break
 
                                             @case('awaiting_payment')

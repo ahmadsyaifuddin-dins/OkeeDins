@@ -34,7 +34,13 @@
                                     @break
 
                                     @case('confirmed')
-                                        <span class="badge bg-info">Dikonfirmasi</span>
+                                        <span class="badge bg-success">
+                                            @if ($order->payment_method === 'transfer')
+                                                Pembayaran Dikonfirmasi
+                                            @else
+                                                Di Konfirmasi
+                                            @endif
+                                        </span>
                                     @break
 
                                     @case('processing')
@@ -83,12 +89,26 @@
                                             @else
                                                 <span class="text-warning">Menunggu Pengiriman</span>
                                             @endif
+                                        @elseif ($order->payment_method === 'transfer')
+                                            @if (strtolower($order->status) === 'cancelled')
+                                                <span class="text-danger">Dibatalkan</span>
+                                            @elseif (strtolower($order->status) === 'pending')
+                                                <span class="text-warning">Menunggu Pembayaran</span>
+                                            @elseif (strtolower($order->status) === 'awaiting payment')
+                                                <span class="text-info">Menunggu Konfirmasi Pembayaran</span>
+                                            @elseif (strtolower($order->status) === 'confirmed')
+                                                <span class="text-success">Pembayaran Dikonfirmasi</span>
+                                            @elseif (in_array(strtolower($order->status), ['processing', 'completed']))
+                                                <span class="text-success">Lunas</span>
+                                            @else
+                                                <span class="text-danger">Dibatalkan</span>
+                                            @endif
                                         @else
                                             @if (strtolower($order->status) === 'cancelled')
                                                 <span class="text-danger">Dibatalkan</span>
                                             @elseif (strtolower($order->status) === 'pending')
                                                 <span class="text-warning">Menunggu Pembayaran</span>
-                                            @elseif (strtolower($order->status) === 'awaiting_payment')
+                                            @elseif (strtolower($order->status) === 'awaiting payment')
                                                 <span class="text-info">Menunggu Konfirmasi Pembayaran</span>
                                             @elseif (in_array(strtolower($order->status), ['processing', 'completed']))
                                                 <span class="text-success">Lunas</span>
