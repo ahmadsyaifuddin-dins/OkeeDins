@@ -149,7 +149,7 @@
                     <div class="border rounded-3 p-3">
                         <h6 class="mb-3">Informasi Pengiriman</h6>
                         <p class="text-muted mb-1">Alamat Pengiriman</p>
-                        <p class="mb-1"><strong>{{ $order->user->name }}</strong></p>
+                        <p class="mb-1"><strong>{{ $order->address->receiver_name }}</strong></p>
                         <p class="mb-0">{{ $order->address->full_address }}</p>
                     </div>
 

@@ -90,7 +90,7 @@
                             <h5 class="mb-3">Informasi Penerima</h5>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Nama</span>
-                                <span>{{ $order->user->name }}</span>
+                                <span>{{ $order->address->receiver_name }}</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted">Alamat</span>
