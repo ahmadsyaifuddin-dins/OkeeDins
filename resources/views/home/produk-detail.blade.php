@@ -73,22 +73,34 @@
                     <button class="btn btn-custom flex-grow-1" onclick="addToCart()">
                         <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
                     </button>
-                    
+
                     @auth
-                        @if(Auth::user()->wishlist->contains('produk_id', $product->id))
-                            <form action="{{ route('wishlist.destroy', Auth::user()->wishlist->where('produk_id', $product->id)->first()) }}" 
-                                  method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
-                            @csrf
-                            @method('DELETE')
-                        @else
-                            <form action="{{ route('wishlist.store') }}" method="POST" class="d-inline" 
-                                  onsubmit="confirmAddToWishlist(event, this)">
-                            @csrf
+                        @if (Auth::user()->wishlist->contains('produk_id', $product->id))
+                            <form
+                                action="{{ route('wishlist.destroy',Auth::user()->wishlist->where('produk_id', $product->id)->first()) }}"
+                                method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
+                                @csrf
+                                @method('DELETE')
+                            @else
+                                <form action="{{ route('wishlist.store') }}" method="POST" class="d-inline"
+                                    onsubmit="confirmAddToWishlist(event, this)">
+                                    @csrf
                         @endif
-                            <input type="hidden" name="produk_id" value="{{ $product->id }}">
-                            <button type="submit" class="btn btn-outline-custom">
-                                <i class="bi bi-heart{{ Auth::user()->wishlist->contains('produk_id', $product->id) ? '-fill text-danger' : '' }}"></i>
-                            </button>
+                        <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn btn-outline-custom">
+                            <i
+                                class="bi bi-heart{{ Auth::user()->wishlist->contains('produk_id', $product->id) ? '-fill text-danger' : '' }} wishlist-icon"></i>
+                        </button>
+                        <style>
+                            .wishlist-icon:hover {
+                                color: white !important;
+                            }
+                        </style>
+                        <script>
+                            document.querySelector('.wishlist-icon').addEventListener('mouseleave', function() {
+                                this.style.color = this.classList.contains('text-danger') ? '#dc3545' : '';
+                            });
+                        </script>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-custom">
@@ -97,14 +109,9 @@
                     @endauth
                 </div>
 
-                <form action="{{ route('checkout.pay-now') }}" method="POST" id="payNowForm">
-                    @csrf
-                    <input type="hidden" name="produk_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" id="payNowQuantity">
-                    <button type="submit" class="btn btn-outline-custom w-100" id="btn-payNow">
-                        <i class="bi bi-cash"></i> Beli Sekarang
-                    </button>
-                </form>
+                <button type="button" class="btn btn-outline-custom w-100" id="btn-payNow" onclick="buyNow()">
+                    <i class="bi bi-cash"></i> Beli Sekarang
+                </button>
             </div>
         </div>
 
@@ -160,6 +167,7 @@
     </div>
 @endsection
 
+
 @push('scripts')
     <script>
         const hargaProduk = {{ $product->harga_diskon }};
@@ -169,6 +177,7 @@
         const plusBtn = document.getElementById('btn-plus');
         const subtotalElement = document.getElementById('subtotal');
         const errorText = document.getElementById('qtyError');
+        const payNowQuantity = document.getElementById('payNowQuantity');
 
         function validateAndUpdateQty(value) {
             // Jika input kosong, set subtotal ke 0 dan return
@@ -202,49 +211,37 @@
                 errorText.classList.add('d-none');
             }
 
-            updateSubtotal(qty);
+            // Update subtotal dan quantity untuk beli sekarang
+            const subtotal = qty * hargaProduk;
+            subtotalElement.textContent = `Rp${new Intl.NumberFormat('id-ID').format(subtotal)}`;
+            payNowQuantity.value = qty;
         }
 
-        function updateSubtotal(qty) {
-            const total = Math.round(hargaProduk * qty);
-            subtotalElement.textContent = `Rp${total.toLocaleString('id-ID')}`;
-        }
+        // Event listener untuk input quantity
+        qtyInput.addEventListener('input', (e) => validateAndUpdateQty(e.target.value));
 
+        // Event listener untuk tombol minus
         minusBtn.addEventListener('click', () => {
-            let currentQty = parseInt(qtyInput.value) || 0;
-            let newQty = currentQty - 1;
-            if (newQty < 1) newQty = 1;
-            qtyInput.value = newQty;
-            validateAndUpdateQty(newQty);
+            const currentValue = parseInt(qtyInput.value) || 0;
+            if (currentValue > 1) {
+                qtyInput.value = currentValue - 1;
+                validateAndUpdateQty(qtyInput.value);
+            }
         });
 
+        // Event listener untuk tombol plus
         plusBtn.addEventListener('click', () => {
-            let currentQty = parseInt(qtyInput.value) || 0;
-            let newQty = currentQty + 1;
-            if (newQty > stokProduk) newQty = stokProduk;
-            qtyInput.value = newQty;
-            validateAndUpdateQty(newQty);
+            const currentValue = parseInt(qtyInput.value) || 0;
+            if (currentValue < stokProduk) {
+                qtyInput.value = currentValue + 1;
+                validateAndUpdateQty(qtyInput.value);
+            }
         });
 
-        qtyInput.addEventListener('input', (e) => {
-            validateAndUpdateQty(e.target.value);
-        });
+        // Set initial value
+        validateAndUpdateQty(qtyInput.value);
     </script>
 @endpush
-
-<style>
-    /* Menghilangkan tombol spinner untuk input number */
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    input[type="number"] {
-        -moz-appearance: textfield;
-        /* Firefox */
-    }
-</style>
 
 @push('scripts')
     <script>
@@ -341,127 +338,31 @@
     </script>
 @endpush
 
-
-@push('styles')
-    <style>
-        /* Styling untuk konten deskripsi dari TinyMCE */
-        .description-content {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .description-content ul,
-        .description-content ol {
-            padding-left: 20px;
-            margin-bottom: 1rem;
-        }
-
-        .description-content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .description-content p {
-            margin-bottom: 1rem;
-        }
-
-        .description-content img {
-            max-width: 100%;
-            height: auto;
-            margin: 1rem 0;
-        }
-
-        .description-content table {
-            width: 100%;
-            margin-bottom: 1rem;
-            border-collapse: collapse;
-        }
-
-        .description-content table td,
-        .description-content table th {
-            padding: 0.5rem;
-            border: 1px solid #dee2e6;
-        }
-
-        /* Menambahkan spacing yang lebih baik untuk lists */
-        .description-content ul li,
-        .description-content ol li {
-            padding: 0.25rem 0;
-        }
-
-        /* Style untuk blockquote jika ada */
-        .description-content blockquote {
-            margin: 1rem 0;
-            padding: 1rem;
-            border-left: 4px solid #007bff;
-            background-color: #f8f9fa;
-        }
-    </style>
-@endpush
-
-@push('styles')
-    <style>
-        /* Animasi loading saat menambah ke keranjang */
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-    </style>
-@endpush
-
-<!-- Tombol Beli Sekarang -->
 @push('scripts')
     <script>
-        // Tambahkan event listener untuk tombol Beli Sekarang
-        document.getElementById('btn-payNow').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Check if user is guest
+        function buyNow() {
             @guest
-            Swal.fire({
-                title: 'Login Diperlukan',
-                text: 'Silakan login terlebih dahulu untuk melakukan pembelian',
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonText: 'Login Sekarang',
-                cancelButtonText: 'Nanti Saja',
-                confirmButtonColor: '#007bff',
-                cancelButtonColor: '#C62828'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '{{ route('login') }}';
-                }
-            });
+            window.location.href = "{{ route('login') }}";
             return;
         @endguest
 
-        const quantity = parseInt(document.getElementById('quantity').value);
-
-        // Validasi quantity
-        if (quantity < 1 || quantity > {{ $product->stok }}) {
+        const qty = parseInt(document.getElementById('quantity').value);
+        if (!qty || qty < 1 || qty > stokProduk) {
             Swal.fire({
-                title: 'Peringatan',
-                text: 'Jumlah produk tidak valid',
-                icon: 'warning'
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Jumlah produk tidak valid!'
             });
             return;
         }
 
-        // Siapkan data item untuk checkout
-        const checkoutItems = [{
-            id: {{ $product->id }},
-            name: "{{ $product->nama_produk }}",
-            price: {{ $product->harga }},
-            discount: {{ $product->diskon }},
-            quantity: quantity,
-            image: "{{ asset('storage/' . $product->gambar) }}",
-            subtotal: {{ $product->harga_diskon }} * quantity
-        }];
-
-        // Redirect ke checkout dengan data produk
-        const queryString = encodeURIComponent(JSON.stringify(checkoutItems)); window.location.href =
-        `{{ route('checkout.pay-now') }}?items=${queryString}`;
-        });
+        // Redirect langsung ke checkout dengan parameter direct buy
+        window.location.href = "{{ route('checkout.show') }}?" + new URLSearchParams({
+            direct_buy: 1,
+            produk_id: {{ $product->id }},
+            quantity: qty
+        }).toString();
+        }
     </script>
 @endpush
 
@@ -469,10 +370,10 @@
     <script>
         function confirmAddToWishlist(event, form) {
             event.preventDefault();
-            
+
             const isDelete = form.method.toLowerCase() === 'post' && form.innerHTML.includes('DELETE');
             const message = isDelete ? 'Hapus dari wishlist?' : 'Tambahkan ke wishlist?';
-            
+
             Swal.fire({
                 title: message,
                 icon: 'question',
@@ -489,3 +390,76 @@
         }
     </script>
 @endpush
+
+<style>
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    /* Animasi loading saat menambah ke keranjang */
+    .btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+</style>
+
+<style>
+    /* Styling untuk konten deskripsi dari TinyMCE */
+    .description-content {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .description-content ul,
+    .description-content ol {
+        padding-left: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .description-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .description-content p {
+        margin-bottom: 1rem;
+    }
+
+    .description-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+    }
+
+    .description-content table {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-collapse: collapse;
+    }
+
+    .description-content table td,
+    .description-content table th {
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Menambahkan spacing yang lebih baik untuk lists */
+    .description-content ul li,
+    .description-content ol li {
+        padding: 0.25rem 0;
+    }
+
+    /* Style untuk blockquote jika ada */
+    .description-content blockquote {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-left: 4px solid #007bff;
+        background-color: #f8f9fa;
+    }
+</style>

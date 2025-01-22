@@ -242,7 +242,7 @@
                                 <h5 class="modal-title">Upload Bukti Transfer</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
-                            <form action="{{ route('orders.upload-proof', $order) }}" method="POST"
+                            {{-- <form action="{{ route('orders.upload-proof', $order) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PATCH')
@@ -258,7 +258,7 @@
                                         data-bs-dismiss="modal">Batal</button>
                                     <button type="submit" class="btn btn-primary">Upload</button>
                                 </div>
-                            </form>
+                            </form> --}}
                         </div>
                     </div>
                 </div>

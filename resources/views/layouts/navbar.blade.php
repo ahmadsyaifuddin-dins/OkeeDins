@@ -93,6 +93,8 @@
                                     class="bi bi-person me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
                                 Pesanan Saya</a></li>
+                        <li><a class="dropdown-item" href="{{ route('payment.index') }}"><i class="bi bi-credit-card me-2"></i> Pembayaran
+                                </a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
                         <li>

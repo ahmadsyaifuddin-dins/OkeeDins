@@ -12,7 +12,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\WishlistController; // Add this line
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\VoucherController; // Tambah ini
+use App\Http\Controllers\PaymentController; // Tambah ini
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use PHPUnit\Framework\Attributes\Group;
@@ -65,7 +67,6 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
 
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
     Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
-    Route::get('/checkout/pay-now', [CheckoutController::class, 'payNow'])->name('checkout.pay-now');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
@@ -79,6 +80,21 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::patch('/cart/{cart}/quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
+    // Voucher routes
+    Route::post('/vouchers/validate', [VoucherController::class, 'validateVoucher'])->name('vouchers.validate');
+
+    // Payment Routes
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{order}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+
+    // Address Routes
+    Route::get('/addresses/list', [AddressController::class, 'getList'])->name('addresses.list');
+    Route::get('/addresses/{address}', [AddressController::class, 'show'])->name('addresses.show');
+    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+    Route::match(['PUT', 'PATCH'], '/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+
     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -91,7 +107,7 @@ Route::middleware('auth')->group(function () {
     // Address Management Routes
     Route::post('/addresses', [AddressController::class, 'store']);
     Route::get('/addresses/{address}', [AddressController::class, 'show']);
-    Route::put('/addresses/{address}', [AddressController::class, 'update']);
+    Route::match(['PUT', 'PATCH'], '/addresses/{address}', [AddressController::class, 'update']);
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy']);
 });
 
@@ -148,6 +164,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
             Route::delete('/pesanan/{id}', [AdminController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
+            // Voucher Management
+            Route::resource('vouchers', VoucherController::class);
 
             // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
             // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
@@ -155,7 +173,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
             Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
             Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
-
 
             Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
         });

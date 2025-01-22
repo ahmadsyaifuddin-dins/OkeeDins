@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     use HasFactory;
-    protected $table = 'cart'; // Nama tabel
+    protected $table = 'carts'; // Nama tabel
 
     protected $fillable = [
         'user_id',

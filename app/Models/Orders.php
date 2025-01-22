@@ -9,21 +9,18 @@ class Orders extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
-        'order_number',
         'user_id',
         'address_id',
-        'shipping_id',
-        'sub_total',
+        'order_number',
         'total_amount',
+        'voucher_discount',
+        'voucher_id',
         'qty',
-        'coupon',
-        'notes',
         'payment_method',
         'payment_status',
         'status',
-        // 'address',
+        'notes',
         'payment_proof'
     ];
 
@@ -105,6 +102,16 @@ class Orders extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItems::class, 'order_id');
+    }
+
+    public function items()
+    {
+        return $this->orderItems();
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
     }
 
     // Accessors & Mutators

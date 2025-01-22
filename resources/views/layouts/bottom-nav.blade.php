@@ -23,6 +23,11 @@
             <i class="bi bi-receipt fs-4"></i>
             <div>Transaksi</div>
         </a> --}}
+        <a href="{{ route('payment.index') }}"
+            class="text-center text-decoration-none {{ Route::currentRouteName() == 'payment.index' ? 'text-custom' : 'text-secondary' }}">
+            <i class="bi bi-credit-card fs-4"></i>
+            <div>Pembayaran</div>
+        </a>
         <a href="{{ route('orders.index') }}"
             class="text-center text-decoration-none {{ Route::currentRouteName() == 'orders.index' ? 'text-custom' : 'text-secondary' }}">
             <i class="bi bi-receipt fs-4"></i>

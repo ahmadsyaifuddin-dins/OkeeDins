@@ -107,21 +107,21 @@
                                     </div>
                                     <div class="col text-end">
                                         <div class="d-flex flex-column flex-sm-row justify-content-end">
+                                            @if ($order->status === 'pending')
+                                            <form action="{{ route('orders.cancel', $order) }}" method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-outline-custom btn-sm me-sm-2 px-2 mb-2">
+                                                    Batalkan
+                                                </button>
+                                            </form>
+                                            @endif
                                             <a href="{{ route('orders.show', $order) }}"
-                                                class="btn btn-danger btn-sm mb-2 me-sm-2 px-2">
+                                                class="btn btn-danger btn-sm mb-2">
                                                 Detail
                                             </a>
-                                            @if ($order->status === 'pending')
-                                                <form action="{{ route('orders.cancel', $order) }}" method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-outline-custom btn-sm px-2">
-                                                        Batalkan
-                                                    </button>
-                                                </form>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>
