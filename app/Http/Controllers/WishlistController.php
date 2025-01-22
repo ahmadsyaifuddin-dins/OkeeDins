@@ -11,8 +11,8 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        $wishlists = Auth::user()->wishlists()->with('produk')->get();
-        return view('wishlist.index', compact('wishlists'));
+        $wishlist = Auth::user()->wishlist()->with('produk')->get();
+        return view('wishlist.index', compact('wishlist'));
     }
 
     public function store(Request $request)

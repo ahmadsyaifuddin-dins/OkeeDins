@@ -75,8 +75,8 @@
                     </button>
                     
                     @auth
-                        @if(Auth::user()->wishlists->contains('produk_id', $product->id))
-                            <form action="{{ route('wishlist.destroy', Auth::user()->wishlists->where('produk_id', $product->id)->first()) }}" 
+                        @if(Auth::user()->wishlist->contains('produk_id', $product->id))
+                            <form action="{{ route('wishlist.destroy', Auth::user()->wishlist->where('produk_id', $product->id)->first()) }}" 
                                   method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
                             @csrf
                             @method('DELETE')
@@ -87,7 +87,7 @@
                         @endif
                             <input type="hidden" name="produk_id" value="{{ $product->id }}">
                             <button type="submit" class="btn btn-outline-custom">
-                                <i class="bi bi-heart{{ Auth::user()->wishlists->contains('produk_id', $product->id) ? '-fill text-danger' : '' }}"></i>
+                                <i class="bi bi-heart{{ Auth::user()->wishlist->contains('produk_id', $product->id) ? '-fill text-danger' : '' }}"></i>
                             </button>
                         </form>
                     @else

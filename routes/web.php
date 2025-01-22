@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
 
 //! Route untuk halaman utama (market)
 Route::get('/', [MarketController::class, 'index'])->middleware('cegah.admin.akses.pelanggan')->name('home.index');
-
+Route::get('/search', [MarketController::class, 'search'])->name('home.search');
 
 // Route::get('/', [MarketController::class, 'index'])->name('home.index');
 // Route::get('/cart', [MarketController::class, 'cart'])->name('market.cart');

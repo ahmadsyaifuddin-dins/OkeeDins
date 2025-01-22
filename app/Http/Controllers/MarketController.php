@@ -37,4 +37,36 @@ class MarketController extends Controller
         $product = Produk::where('slug', $slug)->firstOrFail();
         return view('home.produk-detail', compact('product'));
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        
+        $products = Produk::query()
+            ->with('kategori')  
+            ->join('kategori_produk', 'produk.kategori_id', '=', 'kategori_produk.id')
+            ->select('produk.*')
+            ->when($query, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('produk.nama_produk', 'like', "%{$search}%")
+                      ->orWhere('produk.deskripsi', 'like', "%{$search}%")
+                      ->orWhere('kategori_produk.nama_kategori', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
+
+        // Get wishlist items for the authenticated user
+        $wishlistItems = [];
+        if (auth()->check()) {
+            $wishlistItems = auth()->user()->wishlist()->pluck('produk_id')->toArray();
+        }
+
+        return view('home.search', [
+            'products' => $products,
+            'searchQuery' => $query,
+            'wishlistItems' => $wishlistItems
+        ]);
+    }
 }

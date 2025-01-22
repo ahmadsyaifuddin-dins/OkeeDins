@@ -140,7 +140,6 @@
             </div>
 
             <!-- Shopping Summary -->
-
             <div class="col-lg-4">
 
                 <div class="card">
@@ -192,7 +191,6 @@
     </div>
 
     <!-- Empty Cart State -->
-
     <div class="container mt-4 d-none">
 
         <div class="text-center py-5">
@@ -296,8 +294,6 @@
 
             }
 
-
-
             .delete-item {
 
                 padding: 0;
@@ -311,7 +307,6 @@
 @endpush
 
 <!--Perhitungan total belanja dan tombol beli dalam ringkasan belanja -->
-
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -355,6 +350,9 @@
             function calculateAndUpdateSummary() {
                 let totalPrice = 0;
                 let totalDiscount = 0;
+                let totalDiscountPercentage = 0;
+                let weightedSum = 0;
+                let priceSum = 0;
                 let selectedCount = 0;
                 // Calculate totals for checked items
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
@@ -362,39 +360,37 @@
                     const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
                     const price = parseFloat(checkbox.dataset.price);
                     const discount = parseFloat(checkbox.dataset.discount) || 0;
-                    // Calculate total price and discount considering quantity
-                    totalPrice += price * quantity;
-                    totalDiscount += discount * quantity;
+                    // Calculate total price and discount
+                    const itemTotalPrice = price * quantity;
+                    totalPrice += itemTotalPrice;
+                    const itemDiscount = (price * (discount / 100)) * quantity;
+                    totalDiscount += itemDiscount;
+                    // Calculate weighted discount
+                    weightedSum += discount * itemTotalPrice;
+                    priceSum += itemTotalPrice;
                     selectedCount += quantity;
                 });
+                // Calculate weighted average discount percentage
+                const effectiveDiscountPercentage = priceSum > 0 ? (weightedSum / priceSum) : 0;
                 // Update total price display
                 const totalHargaElement = document.getElementById('total-harga');
                 totalHargaElement.innerHTML = `
-
-            <span>Total Harga (${selectedCount} barang)</span>
-
-            <span>Rp${numberFormat(totalPrice)}</span>
-
-        `;
+                    <span>Total Harga (${selectedCount} barang)</span>
+                    <span>Rp${numberFormat(totalPrice)}</span>
+                `;
                 // Update total discount display
                 const totalDiskonElement = document.getElementById('total-diskon');
                 totalDiskonElement.innerHTML = `
-
-            <span>Total Diskon</span>
-
-            <span class="text-danger">${numberFormat(totalDiscount)}%</span>
-
-        `;
-                // Update grand total
+                    <span>Total Diskon (${effectiveDiscountPercentage.toFixed(1)}%)</span>
+                    <span class="text-danger">Rp${numberFormat(totalDiscount)}</span>
+                `;
+                // Update grand total (price minus discount)
                 const grandTotal = totalPrice - totalDiscount;
                 const totalBelanjaElement = document.getElementById('total-belanja');
                 totalBelanjaElement.innerHTML = `
-
-            <strong>Total Belanja</strong>
-
-            <strong class="text-danger">Rp${numberFormat(grandTotal)}</strong>
-
-        `;
+                    <strong>Total Belanja</strong>
+                    <strong class="text-danger">Rp${numberFormat(grandTotal)}</strong>
+                `;
                 // Update buy button
                 const buyButton = document.getElementById('btn-checkout');
                 buyButton.disabled = selectedCount === 0;
@@ -479,7 +475,18 @@
                 button.addEventListener('click', async function() {
                     const cartItemId = this.dataset.id;
                     const cartItem = this.closest('.cart-item');
-                    if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+                    const result = await Swal.fire({
+                        title: 'Konfirmasi',
+                        text: 'Apakah Anda yakin ingin menghapus item ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Tidak, batalkan!',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6'
+                    });
+
+                    if (result.isConfirmed) {
                         try {
                             const response = await fetch(`/cart/${cartItemId}`, {
                                 method: 'DELETE',
@@ -497,7 +504,11 @@
                             calculateAndUpdateSummary(); // Perbarui ringkasan belanja
                         } catch (error) {
                             console.error('Error:', error);
-                            alert(error.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: error.message || 'Terjadi kesalahan!'
+                            });
                         }
                     }
                 });
@@ -518,8 +529,6 @@
         margin: 0;
 
     }
-
-
 
     input[type="number"] {
 

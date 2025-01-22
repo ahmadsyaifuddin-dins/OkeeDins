@@ -21,11 +21,11 @@
 
                             <!-- Order Items -->
                             @foreach ($order->orderItems as $item)
-                                <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                <div class="d-flex flex-column flex-sm-row align-items-center mb-3 pb-3 border-bottom">
                                     <img src="{{ asset('storage/' . $item->produk->gambar) }}"
-                                        alt="{{ $item->produk->nama_produk }}" class="rounded" width="100" height="100"
+                                        alt="{{ $item->produk->nama_produk }}" class="rounded mb-2 mb-sm-0" width="100" height="100"
                                         style="object-fit: cover;">
-                                    <div class="ms-3 flex-grow-1">
+                                    <div class="ms-sm-3 flex-grow-1 text-center text-sm-start">
                                         <h6 class="mb-1">{{ $item->produk->nama_produk }}</h6>
                                         <div class="text-muted small">
                                             {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
@@ -39,26 +39,24 @@
 
                             <!-- Order Summary -->
                             <div class="bg-light rounded p-3">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted">Total Item</span>
+                                <div class="d-flex flex-wrap justify-content-between mb-2">
+                                    <span class="text-muted mb-1 mb-sm-0">Total Item</span>
                                     <span>{{ $order->qty }} barang</span>
                                 </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted">Harga Awal</span>
+                                <div class="d-flex flex-wrap justify-content-between mb-2">
+                                    <span class="text-muted mb-1 mb-sm-0">Harga Awal</span>
                                     <span>Rp{{ number_format($order->total_original_price, 0, ',', '.') }}</span>
                                 </div>
                                 @if ($order->total_discount > 0)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted">Total Diskon</span>
-                                        <span
-                                            class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
+                                    <div class="d-flex flex-wrap justify-content-between mb-2">
+                                        <span class="text-muted mb-1 mb-sm-0">Total Diskon</span>
+                                        <span class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
                                     </div>
                                 @endif
                                 <hr class="my-2">
-                                <div class="d-flex justify-content-between">
-                                    <strong>Total Pembayaran</strong>
-                                    <strong
-                                        class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
+                                <div class="d-flex flex-wrap justify-content-between">
+                                    <strong class="mb-1 mb-sm-0">Total Pembayaran</strong>
+                                    <strong class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -66,12 +64,12 @@
                         <!-- Payment Info -->
                         <div class="border rounded-3 p-3 mb-4">
                             <h5 class="mb-3">Informasi Pembayaran</h5>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Metode Pembayaran</span>
+                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+                                <span class="text-muted mb-1 mb-sm-0">Metode Pembayaran</span>
                                 <span class="text-capitalize">{{ $order->payment_method }}</span>
                             </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Status Pembayaran</span>
+                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+                                <span class="text-muted mb-1 mb-sm-0">Status Pembayaran</span>
                                 <span class="badge {{ $order->status === 'pending' ? 'bg-warning' : 'bg-info' }}">
                                     {{ ucfirst($order->status_label) }}
                                 </span>

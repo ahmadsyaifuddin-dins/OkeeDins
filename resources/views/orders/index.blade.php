@@ -129,11 +129,82 @@
                         </div>
                     @endforeach
 
-                    <div class="d-flex justify-content-center">
-                        {{ $orders->links() }}
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Page navigation" class="pagination-wrapper">
+                            {{ $orders->links('vendor.pagination.custom') }}
+                        </nav>
                     </div>
                 @endif
             </div>
         </div>
     </div>
+
+    <style>
+        /* Custom Pagination Styles */
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pagination .page-item {
+            list-style: none;
+        }
+
+        .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #D32F2F;
+            border-color: #D32F2F;
+            color: #fff;
+        }
+
+        .pagination .page-link:hover:not(.active) {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+            color: #D32F2F;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 576px) {
+            .pagination {
+                gap: 3px;
+            }
+
+            .pagination .page-link {
+                min-width: 35px;
+                height: 35px;
+                padding: 0 8px;
+                font-size: 13px;
+            }
+
+            .pagination .page-item.mobile-hidden {
+                display: none;
+            }
+        }
+    </style>
 @endsection

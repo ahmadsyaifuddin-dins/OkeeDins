@@ -23,9 +23,9 @@
             </div>
         @endif
 
-        @if ($wishlists->count() > 0)
+        @if ($wishlist->count() > 0)
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                @foreach ($wishlists as $wishlist)
+                @foreach ($wishlist as $wishlist)
                     <div class="col">
                         <div class="card h-100 border-0 shadow-sm hover-shadow">
                             <div class="position-relative">
@@ -41,7 +41,20 @@
 
                                 <form action="{{ route('wishlist.destroy', $wishlist->id) }}" method="POST"
                                     class="position-absolute top-0 end-0 m-2"
-                                    onsubmit="return confirm('Are you sure you want to remove this item from your wishlist?');">
+                                    onsubmit="event.preventDefault(); Swal.fire({
+                                        title: 'Konfirmasi',
+                                        text: 'Apakah kamu yakin menghapus produk ini dari favorit?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ya, hapus!',
+                                        cancelButtonText: 'Tidak, batalkan!',
+                                        confirmButtonColor: '#d33',
+                                        cancelButtonColor: '#3085d6'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            this.submit();
+                                        }
+                                    });">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-light btn-sm shadow-sm">

@@ -70,8 +70,9 @@
             </ul>
 
             <!-- Search Form -->
-            <form class="d-flex align-items-center me-3">
-                <input class="form-control me-2" type="search" placeholder="Cari produk..." aria-label="Search">
+            <form action="{{ route('home.search') }}" method="GET" class="d-flex align-items-center me-3">
+                <input class="form-control me-2" type="search" name="query" placeholder="Cari produk..." 
+                       aria-label="Search" value="{{ request('query') }}">
                 <button class="btn btn-outline-custom d-flex align-items-center justify-content-center" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
