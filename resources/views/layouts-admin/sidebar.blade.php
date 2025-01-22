@@ -78,9 +78,9 @@
                 </h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="../pages/notifications.html">
-                    <i class="material-symbols-rounded opacity-5">local_offer</i>
-                    <span class="nav-link-text ms-1">Coupons</span>
+                <a class="nav-link text-dark" href="{{ route('admin.vouchers.index') }}">
+                    <i class="material-symbols-rounded opacity-5">redeem</i>
+                    <span class="nav-link-text ms-1">Vouchers</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
