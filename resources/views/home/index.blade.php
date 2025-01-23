@@ -40,20 +40,6 @@
             <!-- Produk Rekomendasi -->
             @include('home.recommended')
 
-            <!-- Produk Rekomendasi -->
-            <h3 class="fw-bold mb-4">Produk Rekomendasi</h3>
-            <div class="row">
-                @forelse ($recommendedProducts as $prod)
-                    @include('home.produk', ['produk' => $prod])
-                @empty
-                    <div class="col-12">
-                        <div class="alert alert-info text-center">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Belum ada produk tersedia
-                        </div>
-                    </div>
-                @endforelse
-            </div>
         </div>
     </div>
 @endsection

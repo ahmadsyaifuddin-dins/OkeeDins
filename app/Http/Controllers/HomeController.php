@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Produk;
-use GuzzleHttp\Handler\Proxy;
+use App\Models\Category;
+use App\Models\KategoriProduk;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $products = Produk::latest()->paginate(12);
-        return view('home.index', compact('products'));
+        $categories = KategoriProduk::all();
+        $latestProducts = Produk::latest()->take(8)->get();
+
+        return view('home.index', compact('categories', 'latestProducts'));
     }
 
     public function search(Request $request)

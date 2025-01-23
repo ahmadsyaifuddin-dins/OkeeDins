@@ -1,5 +1,4 @@
 <div class="row">
-    {{-- <livewire:asset-table /> --}}
     @foreach ($recommendedProducts as $recom)
         <div class="col-lg-3 col-md-4 col-6 mb-4">
             <a href="{{ route('produk.detail', $recom->slug) }}" class="text-decoration-none">

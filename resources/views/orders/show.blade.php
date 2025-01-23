@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mt-4">
-        <div class="row ">
+    <div class="mt-4 mb-5 pb-5">
+        <div class="row">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <a href="{{ route('orders.index') }}" class="text-decoration-none me-3">
@@ -154,7 +154,7 @@
                     @if (strtolower($order->status) === 'pending')
                         <div class="mt-4 text-center">
                             @if ($order->payment_method === 'transfer')
-                                <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-primary me-2 mb-2" data-bs-toggle="modal"
                                     data-bs-target="#uploadBuktiModal">
                                     Upload Bukti Transfer
                                 </button>
@@ -163,7 +163,7 @@
                                 onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-danger mb-2">
                                     Batalkan Pesanan
                                 </button>
                             </form>
@@ -171,65 +171,59 @@
                     @endif
 
                     <!-- Konfirmasi Penerimaan untuk COD -->
-                    <!-- Add this right after the confirm receipt form -->
                     @if ($order->payment_method === 'Cash on Delivery' && strtolower($order->status) === 'delivered')
                         <div class="mt-4 text-center">
-                            <!-- Ganti dengan button biasa untuk trigger modal -->
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-success mb-2" data-bs-toggle="modal"
                                 data-bs-target="#ratingModal">
                                 <i class="bi bi-check-circle me-2"></i>Konfirmasi Barang Diterima
                             </button>
                         </div>
                     @endif
-                    <!-- Modal Rating -->
-                    <div class="modal fade" id="ratingModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Beri Rating dan Ulasan</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <!-- Ubah form untuk menggabungkan konfirmasi penerimaan dan rating -->
-                                <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <div class="modal-body">
-                                        <!-- Star Rating -->
-                                        <div class="mb-3">
-                                            <label class="form-label">Rating Produk</label>
-                                            <div class="star-rating">
-                                                <div class="stars">
-                                                    @for ($i = 5; $i >= 1; $i--)
-                                                        <input type="radio" id="star{{ $i }}" name="rating"
-                                                            value="{{ $i }}" required>
-                                                        <label for="star{{ $i }}"><i
-                                                                class="bi bi-star-fill"></i></label>
-                                                    @endfor
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Review Text -->
-                                        <div class="mb-3">
-                                            <label for="ulasan" class="form-label">Ulasan Anda</label>
-                                            <textarea class="form-control" id="ulasan" name="ulasan" rows="3" required
-                                                placeholder="Bagikan pengalaman Anda menggunakan produk ini..."></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-primary">Konfirmasi & Kirim Ulasan</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
+            <!-- Modal Rating -->
+            <div class="modal fade" id="ratingModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Beri Rating dan Ulasan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Rating Produk</label>
+                                    <div class="star-rating">
+                                        <div class="stars">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating"
+                                                    value="{{ $i }}" required>
+                                                <label for="star{{ $i }}"><i
+                                                        class="bi bi-star-fill"></i></label>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="ulasan" class="form-label">Ulasan Anda</label>
+                                    <textarea class="form-control" id="ulasan" name="ulasan" rows="3" required
+                                        placeholder="Bagikan pengalaman Anda menggunakan produk ini..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Konfirmasi & Kirim Ulasan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal Upload Bukti Transfer -->
             @if ($order->payment_method === 'transfer' && strtolower($order->status) === 'pending')
@@ -263,83 +257,50 @@
             @endif
         </div>
     </div>
+
+    <style>
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            direction: rtl;
+        }
+
+        .stars {
+            display: inline-block;
+        }
+
+        .stars input[type="radio"] {
+            display: none;
+        }
+
+        .stars label {
+            float: right;
+            padding: 0 2px;
+            font-size: 20px;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .stars label:hover,
+        .stars label:hover~label,
+        .stars input[type="radio"]:checked~label {
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+            h6 {
+                font-size: 1rem;
+            }
+            p {
+                font-size: 0.9rem;
+            }
+            .badge {
+                font-size: 0.8rem;
+                white-space:
+            }
+        }
+    </style>
         @endsection
-
-        <!-- Add this CSS to your stylesheet or in a style tag -->
-        <style>
-            .star-rating {
-                display: flex;
-                justify-content: center;
-                direction: rtl;
-            }
-
-            .stars {
-                display: inline-block;
-            }
-
-            .stars input[type="radio"] {
-                display: none;
-            }
-
-            .stars label {
-                float: right;
-                padding: 0 2px;
-                font-size: 20px; /* Ukuran bintang lebih kecil di mobile */
-                color: #ddd;
-                cursor: pointer;
-            }
-
-            .stars label:hover,
-            .stars label:hover~label,
-            .stars input[type="radio"]:checked~label {
-                color: #ffd700;
-            }
-
-            /* Responsive adjustments */
-            @media (max-width: 768px) {
-                .card-body {
-                    padding: 1rem;
-                }
-
-                h6 {
-                    font-size: 1rem;
-                }
-
-                p {
-                    font-size: 0.9rem;
-                }
-
-                .badge {
-                    font-size: 0.8rem;
-                    white-space: normal;
-                    text-align: center;
-                    padding: 0.5rem 0.75rem;
-                    line-height: 1.2;
-                    width: auto;
-                }
-
-                .btn {
-                    width: 100%;
-                    margin-bottom: 0.5rem;
-                }
-
-                .modal-dialog {
-                    margin: 0.5rem;
-                }
-
-                .bg-light {
-                    padding: 1rem !important;
-                }
-
-                /* Status pesanan styling */
-                .d-flex.flex-column.flex-sm-row {
-                    width: 100%;
-                }
-
-                .text-wrap {
-                    min-width: 120px;
-                    max-width: 100%;
-                    height: auto;
-                }
-            }
-        </style>

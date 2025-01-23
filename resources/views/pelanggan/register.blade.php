@@ -17,10 +17,28 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.js"></script>
     <!-- IntlTelInput JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    
+    <!-- Pace.js -->
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
+    <style>
+        .pace {-webkit-pointer-events: none;pointer-events: none;-webkit-user-select: none;-moz-user-select: none;user-select: none;}
+        .pace-inactive {display: none;}
+        .pace .pace-activity {display: block;position: fixed;z-index: 2000;top: 50%;left: 50%;width: 50px;height: 50px;margin: -25px 0 0 -25px;border: 3px solid transparent;border-top-color: #D32F2F;border-radius: 50%;-webkit-animation: pace-spinner 0.8s linear infinite;animation: pace-spinner 0.8s linear infinite;}
+        @-webkit-keyframes pace-spinner {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}
+        @keyframes pace-spinner {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}
+        .formbold-main-wrapper {display: none;}
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Pace.on('done', function() {
+                document.querySelector('.formbold-main-wrapper').style.display = 'block';
+            });
+        });
+    </script>
 </head>
 
 <body>
-    {{-- <livewire:asset-loading /> --}}
 
     <div class="formbold-main-wrapper">
 
