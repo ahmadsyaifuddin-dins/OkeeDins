@@ -366,7 +366,7 @@
     </script>
 @endpush
 
-@push('scripts')
+{{-- @push('scripts')
     <script>
         function confirmAddToWishlist(event, form) {
             event.preventDefault();
@@ -389,7 +389,7 @@
             });
         }
     </script>
-@endpush
+@endpush --}}
 
 <style>
     input[type="number"]::-webkit-inner-spin-button,
