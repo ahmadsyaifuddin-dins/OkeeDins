@@ -68,25 +68,30 @@
                             <h5 class="card-title mb-4">Detail Pembelian</h5>
                             <div id="checkout-items">
                                 @foreach ($cartItems as $item)
-                                    <div class="d-flex mb-3 align-items-center">
-                                        <img src="{{ asset('storage/' . $item->product->gambar) }}"
-                                            alt="{{ $item->product->nama_produk }}" class="img-thumbnail me-3"
-                                            style="width: 100px; height: 100px; object-fit: cover;">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">{{ $item->product->nama_produk }}</h6>
-                                            <p class="mb-1">{{ $item->quantity }} x Rp
-                                                {{ number_format($item->product->harga, 0, ',', '.') }}</p>
-                                            @if ($item->product->diskon > 0)
-                                                <p class="mb-0 text-danger">
-                                                    Diskon {{ $item->product->diskon }}%
-                                                </p>
-                                            @endif
+                                    <div class="d-flex flex-column flex-sm-row mb-3 border-bottom pb-3">
+                                        <div class="text-center text-sm-start mb-3 mb-sm-0">
+                                            <img src="{{ asset('storage/' . $item->product->gambar) }}"
+                                                alt="{{ $item->product->nama_produk }}"
+                                                class="img-thumbnail me-sm-3"
+                                                style="width: 120px; height: 120px; object-fit: cover;">
                                         </div>
-                                        <div class="text-end">
-                                            <h6 class="mb-0">
-                                                Rp
-                                                {{ number_format($item->product->harga * $item->quantity - ($item->product->harga * $item->quantity * $item->product->diskon) / 100, 0, ',', '.') }}
-                                            </h6>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-2">{{ $item->product->nama_produk }}</h6>
+                                            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                                <div>
+                                                    <p class="mb-1">{{ $item->quantity }} x Rp {{ number_format($item->product->harga, 0, ',', '.') }}</p>
+                                                    @if ($item->product->diskon > 0)
+                                                        <p class="mb-2 text-danger">
+                                                            Diskon {{ $item->product->diskon }}%
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="mt-2 mt-sm-0">
+                                                    <h6 class="mb-0 text-end">
+                                                        Rp {{ number_format($item->product->harga * $item->quantity - ($item->product->harga * $item->quantity * $item->product->diskon) / 100, 0, ',', '.') }}
+                                                    </h6>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach

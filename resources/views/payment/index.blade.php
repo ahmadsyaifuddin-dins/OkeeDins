@@ -16,19 +16,19 @@
                         @else
                             @foreach ($orders as $order)
                                 <div class="card mb-3">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col">
-                                                <h6 class="mb-1">Order #{{ $order->id }}</h6>
-                                                <p class="mb-1">Total: Rp
+                                    <div class="card-body p-3">
+                                        <div class="row g-2">
+                                            <div class="col-12 col-sm">
+                                                <h6 class="mb-2">Order #{{ $order->id }}</h6>
+                                                <p class="mb-2">Total: Rp
                                                     {{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                                                <small class="text-muted">
+                                                <small class="text-muted d-block mb-2 mb-sm-0">
                                                     Batas waktu: {{ $order->created_at->addDays(1)->format('d M Y H:i') }}
                                                 </small>
                                             </div>
-                                            <div class="col-auto">
+                                            <div class="col-12 col-sm-auto d-grid d-sm-block">
                                                 <a href="{{ route('payment.show', $order->id) }}"
-                                                    class="btn btn-custom btn-sm">
+                                                    class="btn btn-custom">
                                                     Bayar Sekarang
                                                 </a>
                                             </div>
