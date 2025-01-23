@@ -6,7 +6,7 @@
             @csrf
             <input type="hidden" name="address_id" id="address_id_input">
             <input type="hidden" name="total_amount" id="total_amount_input" value="{{ $cartTotal }}">
-            @foreach($cartItems as $item)
+            @foreach ($cartItems as $item)
                 <input type="hidden" name="selected_items[]" value="{{ $item->id }}">
             @endforeach
             <div class="row">
@@ -24,15 +24,17 @@
 
                             <div class="addresses-container">
                                 @foreach (auth()->user()->addresses as $address)
-                                    <div class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-primary @endif">
+                                    <div
+                                        class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-primary @endif">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="selected_address"
-                                                id="address_{{ $address->id }}" value="{{ $address->id }}"
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="selected_address" id="address_{{ $address->id }}"
+                                                value="{{ $address->id }}"
                                                 @if ($address->is_primary) checked @endif>
                                             <label class="form-check-label" for="address_{{ $address->id }}">
                                                 <strong>{{ $address->label }}</strong>
                                                 @if ($address->is_primary)
-                                                    <span class="badge bg-primary ms-2">Utama</span>
+                                                    <span class="badge bg-custom ms-2">Utama</span>
                                                 @endif
                                             </label>
                                         </div>
@@ -96,7 +98,8 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Catatan</h5>
-                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Tambahkan catatan untuk penjual (opsional)"></textarea>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"
+                                placeholder="Tambahkan catatan untuk penjual (opsional)"></textarea>
                         </div>
                     </div>
 
@@ -105,15 +108,15 @@
                         <div class="card-body">
                             <h5 class="card-title mb-3">Metode Pembayaran</h5>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="payment_method" id="transfer"
-                                    value="transfer">
+                                <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                    id="transfer" value="transfer">
                                 <label class="form-check-label" for="transfer">
                                     Transfer Bank
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="cod"
-                                    value="Cash on Delivery">
+                                <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                    id="cod" value="Cash on Delivery">
                                 <label class="form-check-label" for="cod">
                                     Bayar di Tempat (COD)
                                 </label>
@@ -123,7 +126,8 @@
                             <div id="transfer-info" class="mt-3" style="display: none;">
                                 <div class="alert alert-info">
                                     <h6 class="alert-heading">Informasi Transfer:</h6>
-                                    <p class="mb-0">Setelah checkout, Anda akan diarahkan ke halaman pembayaran untuk melihat
+                                    <p class="mb-0">Setelah checkout, Anda akan diarahkan ke halaman pembayaran untuk
+                                        melihat
                                         nomor rekening dan mengunggah bukti transfer.</p>
                                 </div>
                             </div>
@@ -136,14 +140,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Ringkasan Pesanan</h5>
-                            
+
                             <!-- Voucher Section -->
                             <div class="mb-4">
                                 <label for="voucher_code" class="form-label">Kode Voucher</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="voucher_code" name="voucher_code" 
+                                    <input type="text" class="form-control" id="voucher_code" name="voucher_code"
                                         placeholder="Masukkan kode voucher">
-                                    <button class="btn btn-outline-primary" type="button" id="apply_voucher">
+                                    <button class="btn btn-outline-custom" type="button" id="apply_voucher">
                                         Terapkan
                                     </button>
                                 </div>
@@ -155,7 +159,8 @@
                                     <span>Subtotal</span>
                                     <span id="subtotal">Rp {{ number_format($cartTotal, 0, ',', '.') }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between mb-2" id="discount_row" style="display: none !important;">
+                                <div class="d-flex justify-content-between mb-2" id="discount_row"
+                                    style="display: none !important;">
                                     <span>Diskon Voucher</span>
                                     <span id="discount_amount" class="text-success">-Rp 0</span>
                                 </div>
@@ -174,17 +179,17 @@
                             <input type="hidden" id="applied_discount_amount" name="discount_amount" value="0">
 
                             <!-- Add hidden input for cart items -->
-                            @if(isset($directBuy) && $directBuy)
+                            @if (isset($directBuy) && $directBuy)
                                 <input type="hidden" name="direct_buy" value="1">
                                 <input type="hidden" name="produk_id" value="{{ $cartItems->first()->produk_id }}">
                                 <input type="hidden" name="quantity" value="{{ $cartItems->first()->quantity }}">
                             @else
-                                @foreach($cartItems as $item)
+                                @foreach ($cartItems as $item)
                                     <input type="hidden" name="cart_items[]" value="{{ $item->id }}">
                                 @endforeach
                             @endif
 
-                            <button type="submit" class="btn btn-primary w-100 mt-3" id="btn-pay">
+                            <button type="submit" class="btn btn-custom w-100 mt-3" id="btn-pay">
                                 <i class="bi bi-shield-lock-fill me-2"></i>Bayar Sekarang
                             </button>
                         </div>

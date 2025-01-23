@@ -1,11 +1,11 @@
 // Konfigurasi SweetAlert2 default
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true
-});
+// const Toast = Swal.mixin({
+//     toast: true,
+//     position: 'top-start',
+//     showConfirmButton: false,
+//     timer: 3000,
+//     timerProgressBar: true
+// });
 
 // Fungsi untuk refresh container alamat
 async function refreshAddressContainer() {
@@ -16,9 +16,9 @@ async function refreshAddressContainer() {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         });
-        
+
         if (!response.ok) throw new Error('Gagal memuat daftar alamat');
-        
+
         const result = await response.json();
         if (!result.success) {
             throw new Error(result.message || 'Gagal memuat daftar alamat');
@@ -71,7 +71,7 @@ async function saveNewAddress() {
 
         // Refresh container alamat
         await refreshAddressContainer();
-        
+
         Toast.fire({
             icon: 'success',
             title: 'Alamat berhasil ditambahkan'
@@ -116,7 +116,7 @@ async function updateAddress() {
 
         // Refresh container alamat
         await refreshAddressContainer();
-        
+
         Toast.fire({
             icon: 'success',
             title: 'Alamat berhasil diperbarui'
@@ -178,7 +178,7 @@ function attachEditModalListeners() {
     const editModal = document.getElementById('editAddressModal');
     if (!editModal) return;
 
-    editModal.addEventListener('show.bs.modal', async function(event) {
+    editModal.addEventListener('show.bs.modal', async function (event) {
         const button = event.relatedTarget;
         const addressId = button.getAttribute('data-address-id');
 
@@ -207,19 +207,19 @@ function attachEditModalListeners() {
 }
 
 // Event listener untuk form tambah alamat
-document.getElementById('addAddressForm')?.addEventListener('submit', async function(e) {
+document.getElementById('addAddressForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
     await saveNewAddress();
 });
 
 // Event listener untuk form edit alamat
-document.getElementById('editAddressForm')?.addEventListener('submit', async function(e) {
+document.getElementById('editAddressForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
     await updateAddress();
 });
 
 // Initialize event listeners when document is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Konfigurasi SweetAlert2 default
     const Toast = Swal.mixin({
         toast: true,
@@ -238,9 +238,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             });
-            
+
             if (!response.ok) throw new Error('Gagal memuat daftar alamat');
-            
+
             const result = await response.json();
             if (!result.success) {
                 throw new Error(result.message || 'Gagal memuat daftar alamat');
@@ -261,10 +261,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event handler untuk form tambah alamat
-    window.saveNewAddress = async function() {
+    window.saveNewAddress = async function () {
         const form = document.getElementById('addAddressForm');
         const formData = new FormData(form);
-        
+
         // Handle checkbox value
         formData.set('is_primary', form.querySelector('[name="is_primary"]').checked ? '1' : '0');
 
@@ -307,14 +307,14 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Event handler untuk form edit alamat
-    window.updateAddress = async function() {
+    window.updateAddress = async function () {
         const form = document.getElementById('editAddressForm');
         const formData = new FormData(form);
         const addressId = formData.get('address_id');
-        
+
         // Handle checkbox value
         formData.set('is_primary', form.querySelector('[name="is_primary"]').checked ? '1' : '0');
-        
+
         // Tambahkan method spoofing
         formData.append('_method', 'PUT');
 
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Event handler untuk hapus alamat
-    window.deleteAddress = async function(addressId) {
+    window.deleteAddress = async function (addressId) {
         try {
             const result = await Swal.fire({
                 title: 'Hapus Alamat?',
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const data = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(data.message || 'Gagal menghapus alamat');
                 }
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const editModal = document.getElementById('editAddressModal');
         if (!editModal) return;
 
-        editModal.addEventListener('show.bs.modal', async function(event) {
+        editModal.addEventListener('show.bs.modal', async function (event) {
             const button = event.relatedTarget;
             const addressId = button.getAttribute('data-address-id');
 
@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const data = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(data.message || 'Gagal mengambil data alamat');
                 }
