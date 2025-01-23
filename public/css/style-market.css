@@ -11,6 +11,10 @@
 
     /* Warna teks (putih) */
     --marketColorThirty: #fff;
+
+    /* Radio button custom properties */
+    --radio-checked-bg: var(--marketColorPrimary);
+    --radio-border: var(--marketColorPrimary);
 }
 
 
@@ -24,11 +28,13 @@
     color: var(--marketColorPrimary);
 }
 
-/* Custom radio button checked color */
-.custom-radio:checked {
+
+/* Custom radio button styles with high specificity */
+.radio-custom:checked {
     background-color: var(--marketColorPrimary) !important;
     border-color: var(--marketColorPrimary) !important;
 }
+
 
 /* Custom checkbox checked color */
 .checkbox-custom:checked {
@@ -42,11 +48,13 @@
     background-color: var(--marketColorPrimary) !important;
 }
 
+
 .btn-custom {
     background-color: var(--marketColorPrimary) !important;
     border-color: var(--marketColorPrimary) !important;
     color: var(--marketColorThirty) !important;
 }
+
 
 /* .btn-secondary {
     background-color: var(--marketColorSecondary) !important;
@@ -358,4 +366,5 @@
 .kategoriSwiper .swiper-slide:hover {
     transform: translateY(-2px);
 }
+
 /* End Custom Kategori Slider */

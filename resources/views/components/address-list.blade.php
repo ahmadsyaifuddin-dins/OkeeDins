@@ -1,13 +1,13 @@
 @foreach ($addresses as $address)
     <div class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-primary @endif">
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="selected_address"
+            <input class="form-check-input radio-custom" type="radio" name="selected_address"
                 id="address_{{ $address->id }}" value="{{ $address->id }}"
                 @if ($address->is_primary) checked @endif>
             <label class="form-check-label" for="address_{{ $address->id }}">
                 <strong>{{ $address->label }}</strong>
                 @if ($address->is_primary)
-                    <span class="badge bg-primary ms-2">Utama</span>
+                    <span class="badge bg-custom ms-2">Utama</span>
                 @endif
             </label>
         </div>

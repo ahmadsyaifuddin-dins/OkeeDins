@@ -184,6 +184,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        // 'Image' => Intervention\Image\Facades\Image::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),

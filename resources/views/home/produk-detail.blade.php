@@ -213,7 +213,8 @@
 
             // Update subtotal dan quantity untuk beli sekarang
             const subtotal = qty * hargaProduk;
-            subtotalElement.textContent = `Rp${new Intl.NumberFormat('id-ID').format(subtotal)}`;
+            subtotalElement.textContent =
+            `Rp${new Intl.NumberFormat('id-ID', {maximumFractionDigits: 0}).format(subtotal)}`;
             payNowQuantity.value = qty;
         }
 

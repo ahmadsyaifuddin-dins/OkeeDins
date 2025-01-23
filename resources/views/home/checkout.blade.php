@@ -27,10 +27,9 @@
                                     <div
                                         class="address-item mb-3 p-3 border rounded @if ($address->is_primary) border-primary @endif">
                                         <div class="form-check">
-                                            <input class="form-check-input custom-radio" type="radio"
+                                            <input class="form-check-input radio-custom" type="radio"
                                                 name="selected_address" id="address_{{ $address->id }}"
-                                                value="{{ $address->id }}"
-                                                @if ($address->is_primary) checked @endif>
+                                                value="{{ $address->id }}" @if ($address->is_primary) checked @endif>
                                             <label class="form-check-label" for="address_{{ $address->id }}">
                                                 <strong>{{ $address->label }}</strong>
                                                 @if ($address->is_primary)
@@ -108,14 +107,14 @@
                         <div class="card-body">
                             <h5 class="card-title mb-3">Metode Pembayaran</h5>
                             <div class="form-check mb-2">
-                                <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                <input class="form-check-input radio-custom" type="radio" name="payment_method"
                                     id="transfer" value="transfer">
                                 <label class="form-check-label" for="transfer">
                                     Transfer Bank
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input custom-radio" type="radio" name="payment_method"
+                                <input class="form-check-input radio-custom" type="radio" name="payment_method"
                                     id="cod" value="Cash on Delivery">
                                 <label class="form-check-label" for="cod">
                                     Bayar di Tempat (COD)
@@ -163,6 +162,11 @@
                                     style="display: none !important;">
                                     <span>Diskon Voucher</span>
                                     <span id="discount_amount" class="text-success">-Rp 0</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Diskon Produk</span>
+                                    <span id="product_discount" class="text-success">-Rp
+                                        {{ number_format($totalDiscount, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Ongkos Kirim</span>
