@@ -12,9 +12,12 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VoucherController; // Tambah ini
 use App\Http\Controllers\PaymentController; // Tambah ini
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\PesananController;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use PHPUnit\Framework\Attributes\Group;
@@ -117,7 +120,6 @@ Route::get('/cart/get-selected-items', [CartController::class, 'getSelectedItems
 
 
 //! Route Admin
-
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes
     Route::middleware('guest')->group(function () {
@@ -133,36 +135,35 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'adminOnly'])->group(function () {
         Route::get('/beranda', [AdminController::class, 'index'])->name('dashboard'); // Ini akan menjadi admin.dashboard
         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+        Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
 
         Route::prefix('')->group(function () {  // Tambahkan grup kosong untuk memastikan prefix nama benar
 
-            Route::get('/pengguna', [AdminController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
-            Route::get('/kategori', [AdminController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
-            Route::get('/produk', [AdminController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
-            Route::get('/pesanan', [AdminController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
+            Route::get('/pengguna', [PenggunaController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
+            Route::get('/pengguna/create', [PenggunaController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
+            Route::post('/pengguna', [PenggunaController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
+            Route::get('/pengguna/{id}/edit', [PenggunaController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
+            Route::put('/pengguna/{id}', [PenggunaController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
+            Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
 
-            Route::get('/pesanan/{order_number}', [AdminController::class, 'showPesanan'])->name('pesanan.show');
+            Route::get('/kategori', [KategoriProdukController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
+            Route::get('/kategori/create', [KategoriProdukController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
+            Route::post('/kategori', [KategoriProdukController::class, 'storeKategori'])->name('kategori.store'); // Proses tambah kategori
+            Route::get('/kategori/{id}/edit', [KategoriProdukController::class, 'editKategori'])->name('kategori.edit'); // Halaman form edit kategori
+            Route::put('/kategori/{id}', [KategoriProdukController::class, 'updateKategori'])->name('kategori.update'); // Proses edit kategori
+            Route::delete('/kategori/{id}', [KategoriProdukController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
 
-            Route::get('/pengguna/create', [AdminController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
-            Route::get('/kategori/create', [AdminController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
-            Route::get('/produk/create', [AdminController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
+            Route::get('/produk', [ProdukController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
+            Route::get('/produk/create', [ProdukController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
+            Route::post('/produk', [ProdukController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
+            Route::get('/produk/{id}/edit', [ProdukController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
+            Route::put('/produk/{id}', [ProdukController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
+            Route::delete('/produk/{id}', [ProdukController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
 
-            Route::post('/pengguna', [AdminController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
-            Route::post('/kategori', [AdminController::class, 'storeKategori'])->name('kategori.store'); // Proses tambah kategori
-            Route::post('/produk', [AdminController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
-
-            Route::get('/pengguna/{id}/edit', [AdminController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
-            Route::get('/kategori/{id}/edit', [AdminController::class, 'editKategori'])->name('kategori.edit'); // Halaman form edit kategori
-            Route::get('/produk/{id}/edit', [AdminController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
-
-            Route::put('/pengguna/{id}', [AdminController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
-            Route::put('/kategori/{id}', [AdminController::class, 'updateKategori'])->name('kategori.update'); // Proses edit kategori
-            Route::put('/produk/{id}', [AdminController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
-
-            Route::delete('/pengguna/{id}', [AdminController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
-            Route::delete('/kategori/{id}', [AdminController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
-            Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
-            Route::delete('/pesanan/{id}', [AdminController::class, 'destroyPesanan'])->name('pesanan.destroy');
+            Route::get('/pesanan', [PesananController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
+            Route::get('/pesanan/{order_number}', [PesananController::class, 'showPesanan'])->name('pesanan.show');
+            Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
+            Route::delete('/pesanan/{id}', [PesananController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
             // Voucher Management
             Route::resource('vouchers', VoucherController::class);
@@ -174,14 +175,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
             // Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
             // Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
-            Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
             Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
-
-            Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
         });
     });
-    // Fallback untuk dashboard jika belum login
-    // Route::get('/dashboard', function () {
-    //     return redirect()->route('admin.login');
-    // })->middleware('guest');
 });

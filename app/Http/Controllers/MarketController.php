@@ -2,12 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class MarketController extends Controller
 {
+    public function mostPopularProducts()
+    {
+        $produk = Produk::orderBy('popularity', 'desc') // Atau kriteria lain seperti penjualan
+            ->take(10) // Batasi jumlah produk
+            ->get();
+
+        return view('most_popular_products', compact('produk'));
+    }
+
+    public function market()
+    {
+        $produk = Produk::orderBy('popularity', 'desc')->take(10)->get();
+
+        return view('home.index', compact('produk'));
+    }
+
+
     public function index(Request $request)
     {
         $kategori = KategoriProduk::all();
@@ -41,16 +59,16 @@ class MarketController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        
+
         $products = Produk::query()
-            ->with('kategori')  
+            ->with('kategori')
             ->join('kategori_produk', 'produk.kategori_id', '=', 'kategori_produk.id')
             ->select('produk.*')
             ->when($query, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('produk.nama_produk', 'like', "%{$search}%")
-                      ->orWhere('produk.deskripsi', 'like', "%{$search}%")
-                      ->orWhere('kategori_produk.nama_kategori', 'like', "%{$search}%");
+                        ->orWhere('produk.deskripsi', 'like', "%{$search}%")
+                        ->orWhere('kategori_produk.nama_kategori', 'like', "%{$search}%");
                 });
             })
             ->latest()
@@ -68,5 +86,10 @@ class MarketController extends Controller
             'searchQuery' => $query,
             'wishlistItems' => $wishlistItems
         ]);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'produk_id');
     }
 }
