@@ -102,10 +102,10 @@
         @else
             <div class="text-center py-5">
                 <i class="bi bi-heart display-1 text-muted mb-3"></i>
-                <h2 class="h4 text-muted">Your wishlist is empty</h2>
-                <p class="text-muted mb-4">Browse our products and add your favorites to the wishlist!</p>
+                <h2 class="h4 text-muted">Daftar keinginan Anda kosong</h2>
+                <p class="text-muted mb-4">Jelajahi produk kami dan tambahkan favorit Anda ke daftar keinginan!</p>
                 <a href="{{ route('home.index') }}" class="btn btn-custom">
-                    <i class="bi bi-shop me-1"></i> Start Shopping
+                    <i class="bi bi-shop me-1"></i> Mulai Belanja
                 </a>
             </div>
         @endif
