@@ -29,7 +29,8 @@
                                         <div class="form-check">
                                             <input class="form-check-input radio-custom" type="radio"
                                                 name="selected_address" id="address_{{ $address->id }}"
-                                                value="{{ $address->id }}" @if ($address->is_primary) checked @endif>
+                                                value="{{ $address->id }}"
+                                                @if ($address->is_primary) checked @endif>
                                             <label class="form-check-label" for="address_{{ $address->id }}">
                                                 <strong>{{ $address->label }}</strong>
                                                 @if ($address->is_primary)
@@ -194,7 +195,14 @@
                             @endif
 
                             <button type="submit" class="btn btn-custom w-100 mt-3" id="btn-pay">
-                                <i class="bi bi-shield-lock-fill me-2"></i>Bayar Sekarang
+                                <span class="normal-state">
+                                    <i class="bi bi-shield-lock-fill me-2"></i>Bayar Sekarang
+                                </span>
+                                <span class="loading-state d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    Memproses...
+                                </span>
                             </button>
                         </div>
                     </div>

@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', function () {
         checkoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
+            const btnPay = document.getElementById('btn-pay');
+            const normalState = btnPay.querySelector('.normal-state');
+            const loadingState = btnPay.querySelector('.loading-state');
+
+            // Jika tombol sudah disabled, hentikan proses
+            if (btnPay.disabled) {
+                return;
+            }
+
             // Validate address selection
             const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
             const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
@@ -59,6 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 return;
             }
+
+            // Tampilkan loading state
+            btnPay.disabled = true;
+            normalState.classList.add('d-none');
+            loadingState.classList.remove('d-none');
 
             // Update hidden address_id input before submission
             if (addressInput) {
@@ -119,6 +133,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         text: 'Terjadi kesalahan saat menghubungi server.',
                         footer: '<a href="#">Hubungi dukungan</a>'
                     });
+                })
+                .finally(() => {
+                    // Kembalikan tombol ke keadaan normal
+                    btnPay.disabled = false;
+                    normalState.classList.remove('d-none');
+                    loadingState.classList.add('d-none');
                 });
         });
     }
