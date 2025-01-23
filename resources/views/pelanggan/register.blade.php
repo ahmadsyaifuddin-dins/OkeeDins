@@ -20,6 +20,8 @@
 </head>
 
 <body>
+    {{-- <livewire:asset-loading /> --}}
+
     <div class="formbold-main-wrapper">
 
         <div class="formbold-form-wrapper">

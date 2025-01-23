@@ -26,19 +26,19 @@
 
                         <!-- Status Pesanan -->
                         <div class="bg-light rounded p-3 mb-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>Status Pesanan</span>
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                                <span class="text-muted">Status Pesanan</span>
                                 @switch(strtolower($order->status))
                                     @case('pending')
-                                        <span class="badge bg-warning">Menunggu Konfirmasi</span>
+                                        <span class="badge bg-warning text-wrap">Menunggu Konfirmasi</span>
                                     @break
 
                                     @case('awaiting payment')
-                                        <span class="badge bg-info">Menunggu Pembayaran Dikonfirmasi</span>
+                                        <span class="badge bg-info text-wrap">Menunggu Pembayaran Dikonfirmasi</span>
                                     @break
 
                                     @case('confirmed')
-                                        <span class="badge bg-success">
+                                        <span class="badge bg-success text-wrap">
                                             @if ($order->payment_method === 'transfer')
                                                 Pembayaran Dikonfirmasi
                                             @else
@@ -48,23 +48,23 @@
                                     @break
 
                                     @case('processing')
-                                        <span class="badge bg-primary">Sedang Dikemas</span>
+                                        <span class="badge bg-primary text-wrap">Sedang Dikemas</span>
                                     @break
 
                                     @case('delivered')
-                                        <span class="badge bg-primary">Dalam Pengiriman <i class="bi bi-truck"></i></span>
+                                        <span class="badge bg-primary text-wrap">Dalam Pengiriman <i class="bi bi-truck"></i></span>
                                     @break
 
                                     @case('completed')
-                                        <span class="badge bg-success">Selesai</span>
+                                        <span class="badge bg-success text-wrap">Selesai</span>
                                     @break
 
                                     @case('cancelled')
-                                        <span class="badge bg-danger">Dibatalkan</span>
+                                        <span class="badge bg-danger text-wrap">Dibatalkan</span>
                                     @break
 
                                     @default
-                                        <span class="badge bg-secondary">{{ ucfirst($order->status) }}</span>
+                                        <span class="badge bg-secondary text-wrap">{{ ucfirst($order->status) }}</span>
                                 @endswitch
                             </div>
                         </div>
@@ -73,12 +73,12 @@
                         <div class="border rounded-3 p-3 mb-4">
                             <h6 class="mb-3">Informasi Pembayaran</h6>
                             <div class="row g-3">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12">
                                     <p class="text-muted mb-1">Metode Pembayaran</p>
                                     <p class="mb-3 text-capitalize">{{ $order->payment_method }}</p>
 
                                     <p class="text-muted mb-1">Status Pembayaran</p>
-                                    <p class="mb-0">
+                                    <p class="mb-3">
                                         @if ($order->payment_method === 'Cash on Delivery')
                                             @if ($order->status === 'cancelled')
                                                 <span class="text-danger">Dibatalkan</span>
@@ -121,15 +121,11 @@
                                             @endif
                                         @endif
                                     </p>
-                                </div>
 
-                                <div class="col-12 col-md-6">
-                                    <div class="text-md-end">
-                                        <p class="text-muted mb-1">Total Harga ({{ $order->qty }} Barang)</p>
-                                        <p class="text-danger mb-0 fw-bold">
-                                            Rp{{ number_format($order->total_amount, 0, ',', '.') }}
-                                        </p>
-                                    </div>
+                                    <p class="text-muted mb-1">Total Harga ({{ $order->qty }} Barang)</p>
+                                    <p class="text-danger mb-0 fw-bold">
+                                        Rp{{ number_format($order->total_amount, 0, ',', '.') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -148,9 +144,11 @@
                     <!-- Shipping Info -->
                     <div class="border rounded-3 p-3">
                         <h6 class="mb-3">Informasi Pengiriman</h6>
-                        <p class="text-muted mb-1">Alamat Pengiriman</p>
-                        <p class="mb-1"><strong>{{ $order->address->receiver_name }}</strong></p>
-                        <p class="mb-0">{{ $order->address->full_address }}</p>
+                        <div class="p-2">
+                            <p class="text-muted mb-1">Alamat Pengiriman</p>
+                            <p class="mb-1"><strong>{{ $order->address->receiver_name }}</strong></p>
+                            <p class="mb-0" style="word-wrap: break-word;">{{ $order->address->full_address }}</p>
+                        </div>
                     </div>
 
                     @if (strtolower($order->status) === 'pending')
@@ -263,6 +261,8 @@
                     </div>
                 </div>
             @endif
+        </div>
+    </div>
         @endsection
 
         <!-- Add this CSS to your stylesheet or in a style tag -->
@@ -284,7 +284,7 @@
             .stars label {
                 float: right;
                 padding: 0 2px;
-                font-size: 24px;
+                font-size: 20px; /* Ukuran bintang lebih kecil di mobile */
                 color: #ddd;
                 cursor: pointer;
             }
@@ -293,5 +293,53 @@
             .stars label:hover~label,
             .stars input[type="radio"]:checked~label {
                 color: #ffd700;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .card-body {
+                    padding: 1rem;
+                }
+
+                h6 {
+                    font-size: 1rem;
+                }
+
+                p {
+                    font-size: 0.9rem;
+                }
+
+                .badge {
+                    font-size: 0.8rem;
+                    white-space: normal;
+                    text-align: center;
+                    padding: 0.5rem 0.75rem;
+                    line-height: 1.2;
+                    width: auto;
+                }
+
+                .btn {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+
+                .modal-dialog {
+                    margin: 0.5rem;
+                }
+
+                .bg-light {
+                    padding: 1rem !important;
+                }
+
+                /* Status pesanan styling */
+                .d-flex.flex-column.flex-sm-row {
+                    width: 100%;
+                }
+
+                .text-wrap {
+                    min-width: 120px;
+                    max-width: 100%;
+                    height: auto;
+                }
             }
         </style>
