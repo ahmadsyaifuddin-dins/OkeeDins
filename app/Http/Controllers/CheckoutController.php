@@ -75,6 +75,7 @@ class CheckoutController extends Controller
                 'totalPrice' => $price,
                 'totalDiscount' => $discount,
                 'grandTotal' => $price - $discount,
+                'cartTotal' => $price - $discount,
                 'addresses' => $addresses,
                 'directBuy' => true
             ]);
@@ -122,6 +123,7 @@ class CheckoutController extends Controller
             'totalPrice' => $totalPrice,
             'totalDiscount' => $totalDiscount,
             'grandTotal' => $grandTotal,
+            'cartTotal' => $grandTotal,
             'addresses' => $addresses,
             'directBuy' => false
         ]);
@@ -237,12 +239,17 @@ class CheckoutController extends Controller
             if (!empty($data['voucher_code'])) {
                 $voucher = Voucher::where('code', $data['voucher_code'])->first();
                 if ($voucher) {
+                    // Create voucher usage record
                     VoucherUser::create([
                         'user_id' => $user->id,
                         'voucher_id' => $voucher->id,
+                        'discount_amount' => $voucher->value,
                         'order_id' => $order->id,
                         'used_at' => now()
                     ]);
+
+                    // Increment used_count
+                    $voucher->increment('used_count');
                 }
             }
 
@@ -251,7 +258,8 @@ class CheckoutController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order berhasil dibuat!',
-                'order_id' => $order->id
+                'order_id' => $order->id,
+                'payment_method' => $data['payment_method']
             ]);
 
         } catch (\Exception $e) {
@@ -259,8 +267,160 @@ class CheckoutController extends Controller
             Log::error('Checkout error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat memproses checkout: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan saat memproses checkout.',
+                'alert' => [
+                    'icon' => 'error',
+                    'title' => 'Oops...',
+                    'text' => 'Terjadi kesalahan saat memproses checkout.',
+                    'footer' => '<a href="#">Hubungi dukungan</a>',
+                    'showConfirmButton' => true,
+                    'confirmButtonText' => 'OK',
+                    'showCancelButton' => false,
+                ]
             ], 422);
+        }
+    }
+
+    public function validateVoucher(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Silakan login terlebih dahulu'
+                ], 401);
+            }
+
+            $request->validate([
+                'code' => 'required|string',
+                'subtotal' => 'required|numeric|min:0'
+            ]);
+
+            $voucher = Voucher::where('code', $request->code)
+                ->where('is_active', true)
+                ->where('valid_from', '<=', now())
+                ->where('valid_until', '>=', now())
+                ->first();
+
+            if (!$voucher) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Voucher tidak ditemukan atau sudah tidak berlaku'
+                ]);
+            }
+
+            // Check if voucher has reached max usage
+            if ($voucher->max_uses > 0) {
+                $usageCount = VoucherUser::where('voucher_id', $voucher->id)->count();
+                if ($usageCount >= $voucher->max_uses) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Voucher sudah mencapai batas penggunaan'
+                    ]);
+                }
+            }
+
+            // Check if user has used this voucher before
+            $hasUsed = VoucherUser::where('voucher_id', $voucher->id)
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if ($hasUsed) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda sudah menggunakan voucher ini'
+                ]);
+            }
+
+            // Check minimum purchase requirement
+            if ($voucher->min_purchase > 0 && $request->subtotal < $voucher->min_purchase) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Total belanja minimum Rp ' . number_format($voucher->min_purchase, 0, ',', '.') . ' untuk menggunakan voucher ini'
+                ]);
+            }
+
+            // Calculate discount
+            $discount = $voucher->type === 'fixed' 
+                ? $voucher->value
+                : ($request->subtotal * $voucher->value / 100);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Voucher berhasil diterapkan',
+                'voucher' => $voucher,
+                'discount' => $discount
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Voucher validation error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memvalidasi voucher'
+            ], 500);
+        }
+    }
+
+    public function processOrder(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Get cart items
+            $cartItems = Cart::where('user_id', auth()->id())->get();
+            if ($cartItems->isEmpty()) {
+                return redirect()->back()->with('error', 'Keranjang belanja kosong.');
+            }
+
+            // Validate voucher if applied
+            $voucherId = $request->voucher_id;
+            $discountAmount = 0;
+            
+            if ($voucherId) {
+                $voucher = Voucher::find($voucherId);
+                if ($voucher) {
+                    // Create voucher usage record
+                    VoucherUser::create([
+                        'voucher_id' => $voucher->id,
+                        'user_id' => auth()->id(),
+                        'used_at' => now()
+                    ]);
+                    
+                    $discountAmount = $request->discount_amount;
+                }
+            }
+
+            // Create order
+            $order = Orders::create([
+                'user_id' => auth()->id(),
+                'total_amount' => $request->total_amount,
+                'shipping_address' => $request->shipping_address,
+                'shipping_cost' => $request->shipping_cost,
+                'voucher_id' => $voucherId,
+                'discount_amount' => $discountAmount,
+                'status' => 'pending'
+            ]);
+
+            // Create order items
+            foreach ($cartItems as $item) {
+                OrderItems::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
+                    'subtotal' => $item->quantity * $item->product->price
+                ]);
+            }
+
+            // Clear cart
+            Cart::where('user_id', auth()->id())->delete();
+
+            DB::commit();
+            return redirect()->route('orders.show', $order->id)->with('success', 'Pesanan berhasil dibuat!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Order processing error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
     }
 

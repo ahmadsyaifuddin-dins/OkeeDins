@@ -1,205 +1,253 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const voucherInput = document.getElementById('voucher-code');
-    const btnApplyVoucher = document.getElementById('btn-apply-voucher');
-    const btnPay = document.getElementById('btn-pay');
-    const transferRadio = document.getElementById('transfer');
-    const codRadio = document.getElementById('cod');
     const transferInfo = document.getElementById('transfer-info');
+    const checkoutForm = document.getElementById('checkout-form');
+    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+    const addressInput = document.getElementById('address_id_input');
 
-    // Get selected items from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const itemsParam = urlParams.get('items');
-    const directBuy = urlParams.get('direct_buy');
-    const produkId = urlParams.get('produk_id');
-    const quantity = urlParams.get('quantity') || 1;
-
-    console.log('URL Parameters:', window.location.search);
-    console.log('Direct buy:', directBuy);
-    console.log('Produk ID:', produkId);
-
-    if (!directBuy && !itemsParam) {
-        console.error('No items parameter found in URL');
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'No items selected for checkout!'
-        }).then(() => {
-            window.location.href = '/cart';
-        });
-        return;
+    // Set initial address value if one is checked
+    const initialAddress = document.querySelector('input[name="selected_address"]:checked');
+    if (initialAddress && addressInput) {
+        addressInput.value = initialAddress.value;
     }
 
-    const selectedItems = directBuy ? [`direct_${produkId}`] : itemsParam.split(',').filter(Boolean);
-    console.log('Selected items:', selectedItems);
-
-    if (selectedItems.length === 0) {
-        console.error('No valid items found in URL parameter');
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'No items selected for checkout!'
-        }).then(() => {
-            window.location.href = '/cart';
+    // Listen for address changes
+    const addressRadios = document.querySelectorAll('input[name="selected_address"]');
+    addressRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked && addressInput) {
+                addressInput.value = this.value;
+            }
         });
-        return;
-    }
-
-    // Toggle transfer info when payment method changes
-    transferRadio?.addEventListener('change', function() {
-        transferInfo.style.display = this.checked ? 'block' : 'none';
     });
 
-    codRadio?.addEventListener('change', function() {
-        transferInfo.style.display = 'none';
-    });
-
-    // Handle voucher application
-    btnApplyVoucher?.addEventListener('click', async function() {
-        const code = voucherInput.value.trim();
-        if (!code) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Please enter a voucher code!'
-            });
-            return;
-        }
-
-        try {
-            const response = await fetch('/vouchers/validate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ code })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: data.message
-                });
-                // Update UI with voucher discount
-                updateTotalWithVoucher(data.discount);
-            } else {
-                throw new Error(data.message || 'Failed to apply voucher');
+    // Handle payment method changes
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            if (this.id === 'transfer' && this.checked && transferInfo) {
+                transferInfo.style.display = 'block';
+            } else if (transferInfo) {
+                transferInfo.style.display = 'none';
             }
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message
-            });
-        }
+        });
     });
 
-    // Handle payment
-    btnPay?.addEventListener('click', async function() {
-        // Validate required fields
-        const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
-        const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
-        const notes = document.getElementById('notes').value;
-        const voucherCode = document.getElementById('voucher-code').value;
-        const finalTotal = document.getElementById('final-total').textContent.replace(/[^0-9]/g, '');
-
-        if (!selectedAddress) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Silakan pilih alamat pengiriman!'
-            });
-            return;
-        }
-
-        if (!selectedPayment) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Silakan pilih metode pembayaran!'
-            });
-            return;
-        }
-
-        try {
-            const response = await fetch('/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    address_id: selectedAddress.value,
-                    payment_method: selectedPayment.value,
-                    notes: notes,
-                    voucher_code: voucherCode,
-                    total_amount: parseInt(finalTotal),
-                    selected_items: selectedItems,
-                    quantity: directBuy ? parseInt(quantity) : undefined
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Terjadi kesalahan saat memproses pembayaran');
-            }
-
-            const data = await response.json();
+    // Handle form submission
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            if (selectedPayment.value === 'transfer') {
-                // Redirect ke halaman pembayaran untuk transfer
-                window.location.href = `/payment/${data.order_id}`;
-            } else {
-                // Untuk COD, tampilkan pesan sukses dan redirect ke halaman konfirmasi
+            // Validate address selection
+            const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
+            const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+
+            // Show errors if validation fails
+            if (!selectedAddress || !selectedPayment) {
+                let errorMessage = '';
+                
+                if (!selectedAddress) {
+                    errorMessage = 'Silakan pilih alamat pengiriman terlebih dahulu';
+                }
+                
+                if (!selectedPayment) {
+                    errorMessage = errorMessage ? errorMessage + ' dan pilih metode pembayaran' : 'Silakan pilih metode pembayaran terlebih dahulu';
+                }
+
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Pesanan Anda berhasil dibuat!',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    window.location.href = `/orders/${data.order_id}/confirmation`;
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMessage
                 });
+                return;
             }
 
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error.message || 'Terjadi kesalahan saat memproses pembayaran'
+            // Update hidden address_id input before submission
+            if (addressInput) {
+                addressInput.value = selectedAddress.value;
+            }
+
+            // Collect form data
+            const formData = new FormData(this);
+            
+            // Submit form via AJAX
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server Response:', data);
+                
+                if (data.success) {
+                    // Show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (data.payment_method === 'transfer' && data.order_id) {
+                                window.location.href = `/payment/${data.order_id}`;
+                            } else if (data.order_id) {
+                                window.location.href = `/orders/${data.order_id}`;
+                            }
+                        }
+                    });
+                } else {
+                    // Show error message using the alert data from server
+                    if (data.alert) {
+                        Swal.fire(data.alert);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || 'Terjadi kesalahan saat memproses checkout.',
+                            footer: '<a href="#">Hubungi dukungan</a>'
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat menghubungi server.',
+                    footer: '<a href="#">Hubungi dukungan</a>'
+                });
             });
-        }
-    });
-
-    function updateTotalWithVoucher(voucherDiscount) {
-        const subtotalElement = document.getElementById('subtotal');
-        const productDiscountElement = document.getElementById('product-discount');
-        const discountRow = document.getElementById('discount-row');
-        const discountAmount = document.getElementById('discount-amount');
-        const finalTotal = document.getElementById('final-total');
-
-        const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
-        const productDiscount = productDiscountElement ? 
-            parseInt(productDiscountElement.textContent.replace(/[^0-9]/g, '')) : 0;
-
-        const voucherDiscountAmount = Math.floor((subtotal - productDiscount) * (voucherDiscount / 100));
-        
-        discountRow.style.display = 'flex';
-        discountAmount.textContent = numberFormat(voucherDiscountAmount);
-        
-        const total = subtotal - productDiscount - voucherDiscountAmount;
-        finalTotal.textContent = numberFormat(total);
+        });
     }
 
-    function numberFormat(number) {
-        return new Intl.NumberFormat('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(number);
+    // Voucher handling
+    const applyVoucherBtn = document.getElementById('apply_voucher');
+    const voucherInput = document.getElementById('voucher_code');
+    const voucherMessage = document.getElementById('voucher_message');
+    const discountRow = document.getElementById('discount_row');
+    const discountAmount = document.getElementById('discount_amount');
+    const totalAmount = document.getElementById('total_amount');
+    const totalAmountInput = document.getElementById('total_amount_input');
+    const subtotalElement = document.getElementById('subtotal');
+    const shippingCostElement = document.getElementById('shipping_cost');
+    
+    // Hidden inputs
+    const appliedVoucherId = document.getElementById('applied_voucher_id');
+    const appliedVoucherCode = document.getElementById('applied_voucher_code');
+    const appliedDiscountAmount = document.getElementById('applied_discount_amount');
+
+    if (applyVoucherBtn && voucherInput) {
+        applyVoucherBtn.addEventListener('click', function() {
+            const code = voucherInput.value.trim();
+            if (!code) {
+                showVoucherMessage('Masukkan kode voucher terlebih dahulu', 'text-danger');
+                return;
+            }
+
+            // Get the current subtotal
+            const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
+            const shippingCost = parseInt(shippingCostElement.textContent.replace(/[^0-9]/g, ''));
+
+            // Call API to validate and apply voucher
+            fetch('/vouchers/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    code: code,
+                    subtotal: subtotal
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Silakan login terlebih dahulu');
+                    }
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Terjadi kesalahan');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showVoucherMessage(data.message, 'text-success');
+                    
+                    // Update UI with discount
+                    const discount = data.discount;
+                    discountRow.style.display = 'flex';
+                    discountAmount.textContent = `-Rp ${formatNumber(discount)}`;
+                    
+                    // Update total
+                    const newTotal = subtotal + shippingCost - discount;
+                    totalAmount.textContent = `Rp ${formatNumber(newTotal)}`;
+                    totalAmountInput.value = newTotal;
+                    
+                    // Store voucher info
+                    appliedVoucherId.value = data.voucher.id;
+                    appliedVoucherCode.value = code;
+                    appliedDiscountAmount.value = discount;
+                    
+                    // Disable input and button
+                    voucherInput.disabled = true;
+                    applyVoucherBtn.disabled = true;
+                    
+                    // Change button to remove voucher
+                    applyVoucherBtn.textContent = 'Hapus';
+                    applyVoucherBtn.classList.remove('btn-outline-primary');
+                    applyVoucherBtn.classList.add('btn-outline-danger');
+                    applyVoucherBtn.onclick = removeVoucher;
+                } else {
+                    showVoucherMessage(data.message, 'text-danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showVoucherMessage(error.message || 'Terjadi kesalahan saat memvalidasi voucher', 'text-danger');
+            });
+        });
+    }
+
+    function removeVoucher() {
+        voucherInput.value = '';
+        voucherInput.disabled = false;
+        showVoucherMessage('', '');
+        discountRow.style.display = 'none';
+        discountAmount.textContent = '-Rp 0';
+        
+        // Reset hidden inputs
+        appliedVoucherId.value = '';
+        appliedVoucherCode.value = '';
+        appliedDiscountAmount.value = '0';
+        
+        // Reset button
+        applyVoucherBtn.textContent = 'Terapkan';
+        applyVoucherBtn.disabled = false;
+        applyVoucherBtn.classList.remove('btn-outline-danger');
+        applyVoucherBtn.classList.add('btn-outline-primary');
+        applyVoucherBtn.onclick = null;
+        
+        // Update total
+        const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
+        const shippingCost = parseInt(shippingCostElement.textContent.replace(/[^0-9]/g, ''));
+        const newTotal = subtotal + shippingCost;
+        totalAmount.textContent = `Rp ${formatNumber(newTotal)}`;
+        totalAmountInput.value = newTotal;
+    }
+
+    function showVoucherMessage(message, className) {
+        voucherMessage.textContent = message;
+        voucherMessage.className = 'small mt-2 ' + className;
+    }
+
+    function formatNumber(number) {
+        return new Intl.NumberFormat('id-ID').format(number);
     }
 });

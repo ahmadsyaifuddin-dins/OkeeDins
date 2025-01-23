@@ -73,13 +73,21 @@
                                         <p class="text-sm text-dark mb-0">Rp {{ number_format($voucher->min_purchase, 0, ',', '.') }}</p>
                                     </td>
                                     <td>
-                                        <span class="badge badge-sm bg-gradient-secondary">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2 text-sm">
+                                                {{ $voucher->used_count }} / {{ $voucher->max_uses ?: '∞' }}
+                                            </span>
                                             @if($voucher->max_uses)
-                                                {{ $voucher->used_count }}/{{ $voucher->max_uses }}
-                                            @else
-                                                {{ $voucher->used_count }}/∞
+                                                <div class="progress" style="width: 100px; height: 5px;">
+                                                    <div class="progress-bar bg-gradient-info" role="progressbar" 
+                                                        style="width: {{ ($voucher->used_count / $voucher->max_uses) * 100 }}%" 
+                                                        aria-valuenow="{{ $voucher->used_count }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="{{ $voucher->max_uses }}">
+                                                    </div>
+                                                </div>
                                             @endif
-                                        </span>
+                                        </div>
                                     </td>
                                     <td class="align-middle text-center">
                                         <span class="badge badge-sm {{ $voucher->is_active ? 'bg-gradient-success' : 'bg-gradient-danger' }}">
@@ -164,6 +172,10 @@
 
     .bg-gradient-secondary {
         background-image: linear-gradient(195deg, #747b8a 0%, #495361 100%);
+    }
+
+    .bg-gradient-info {
+        background-image: linear-gradient(195deg, #66BB6A 0%, #43A047 100%);
     }
 
     .badge {

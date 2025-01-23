@@ -81,7 +81,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {  // Tambah middlew
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     // Voucher routes
-    Route::post('/vouchers/validate', [VoucherController::class, 'validateVoucher'])->name('vouchers.validate');
+    Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])->name('vouchers.validate');
 
     // Payment Routes
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
@@ -166,6 +166,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Voucher Management
             Route::resource('vouchers', VoucherController::class);
+
+            Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])
+                ->name('api.vouchers.validate');
 
             // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
             // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');

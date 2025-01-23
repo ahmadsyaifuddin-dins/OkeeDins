@@ -28,7 +28,8 @@ class Voucher extends Model
         'valid_from' => 'datetime',
         'valid_until' => 'datetime',
         'value' => 'decimal:2',
-        'min_purchase' => 'decimal:2'
+        'min_purchase' => 'decimal:2',
+        'used_count' => 'integer'
     ];
 
     public function users()
