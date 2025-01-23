@@ -47,13 +47,13 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block">
-                    <a class="nav-link position-relative" href="{{ route('wishlist.index')}}">
+                    <a class="nav-link position-relative" href="{{ route('wishlist.index') }}">
                         <i class="bi bi-heart me-1"></i> Favorit
                         @auth
-                        <span class="position-absolute translate-middle badge rounded-pill bg-danger" 
-                              style="top: 0px; right: -15px;">
-                            {{ $wishlistCount }}
-                        </span>
+                            <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                style="top: 0px; right: -15px;">
+                                {{ $wishlistCount }}
+                            </span>
                         @endauth
                     </a>
                 </li>
@@ -71,8 +71,8 @@
 
             <!-- Search Form -->
             <form action="{{ route('home.search') }}" method="GET" class="d-flex align-items-center me-3">
-                <input class="form-control me-2" type="search" name="query" placeholder="Cari produk..." 
-                       aria-label="Search" value="{{ request('query') }}">
+                <input class="form-control me-2" type="search" name="query" placeholder="Cari produk..."
+                    aria-label="Search" value="{{ request('query') }}">
                 <button class="btn btn-outline-custom d-flex align-items-center justify-content-center" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
@@ -85,7 +85,7 @@
                         id="userDropdown" data-bs-toggle="dropdown">
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
                             alt="Foto Profil" class="rounded-circle me-2 img-fluid"
-                            style="width: 40px; height: 40px; object-fit: cover; min-width: 40px;">
+                            style="width: 35px; height: 35px; object-fit: cover; min-width: 35px;">
                         <span>{{ Auth::user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdown">
@@ -93,8 +93,9 @@
                                     class="bi bi-person me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
                                 Pesanan Saya</a></li>
-                        <li><a class="dropdown-item" href="{{ route('payment.index') }}"><i class="bi bi-credit-card me-2"></i> Pembayaran
-                                </a></li>
+                        <li><a class="dropdown-item" href="{{ route('payment.index') }}"><i
+                                    class="bi bi-credit-card me-2"></i> Pembayaran
+                            </a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
                         <li>
@@ -115,15 +116,17 @@
                 <div class="dropdown d-lg-none py-3 d-flex justify-content-center">
                     <button class="btn btn-outline-custom dropdown-toggle d-flex align-items-center" type="button"
                         id="userDropdownMobile" data-bs-toggle="dropdown">
-                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/default-profile.png') }}"
+                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
                             alt="Foto Profil" class="rounded-circle me-2 img-fluid"
-                            style="width: 40px; height: 40px; object-fit: cover; min-width: 40px;">
+                            style="width: 30px; height: 30px; object-fit: cover; min-width: 30px;"
+                            onchange="updateNavbarProfilePhoto(this.src)">
                         <span>{{ Auth::user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdownMobile">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i
+                                    class="bi bi-basket me-2"></i>
                                 Pesanan Saya</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
@@ -149,3 +152,8 @@
         </div>
     </div>
 </nav>
+
+<!-- Script untuk perubahan profil realtime pada navbar nya -->
+@push('scripts')
+    <script src="{{ asset('js/profile-pelanggan.js') }}"></script>
+@endpush

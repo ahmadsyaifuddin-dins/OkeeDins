@@ -47,8 +47,8 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi input
-        $validated = $request->validate([
+        // Validasi input dengan kondisi berbeda untuk request AJAX
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id, 'id')],
             'telepon' => ['nullable', 'string', 'max:20'],
@@ -58,7 +58,19 @@ class ProfileController extends Controller
             'makanan_fav' => ['nullable', 'string', 'max:200'],
             'photo' => 'nullable|image|max:2048',
             'password' => ['nullable', 'string', 'min:8'],
-        ]);
+        ];
+
+
+        // Jika ini request AJAX untuk update foto, kurangi validasi
+        if ($request->ajax() && $request->hasFile('photo')) {
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id, 'id')],
+                'photo' => 'required|image|max:2048',
+            ];
+        }
+
+        $validated = $request->validate($rules);
 
         // Handle address update
         if ($request->filled('selected_address')) {
@@ -72,17 +84,40 @@ class ProfileController extends Controller
                 $address->save();
             }
         } else {
-            // If no address is selected, use the input from textarea
-            $user->alamat = $validated['alamat'];
+            // Gunakan alamat dari input jika tersedia
+            $user->alamat = $request->input('alamat', $user->alamat);
         }
 
         // Proses perubahan foto profil
         if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
             if ($user->photo) {
                 Storage::delete('public/' . $user->photo);
             }
+            // Simpan foto baru
             $path = $request->file('photo')->store('uploads_photo_pelanggan', 'public');
             $user->photo = $path;
+        }
+
+        // Proses untuk request AJAX
+        if ($request->ajax()) {
+            try {
+                // Metode query builder untuk update
+                DB::table('users')->where('id', $user->id)->update([
+                    'photo' => $path ?? $user->photo
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Foto profil berhasil diperbarui',
+                    'photoUrl' => $user->photo ? asset('storage/' . $user->photo) : null
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal memperbarui foto profil: ' . $e->getMessage()
+                ], 500);
+            }
         }
 
         // Hapus foto jika checkbox "Hapus foto profil" dicentang

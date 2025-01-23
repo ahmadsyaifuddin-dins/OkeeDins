@@ -10,18 +10,21 @@
                             <div class="text-center">
                                 <div class="position-relative d-inline-block mb-3">
                                     <div class="position-relative" style="width: 120px; height: 120px; margin: 0 auto;">
-                                        @if (Auth::user()->photo)
-                                            <img src="{{ asset('storage/' . Auth::user()->photo) }}"
-                                                class="rounded-circle img-fluid border border-4"
-                                                style="width: 120px; height: 120px; object-fit: cover;" alt="Profile Photo">
-                                        @else
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
-                                                style="width: 120px; height: 120px;">
-                                                <i class="fas fa-user fa-3x text-secondary"></i>
-                                            </div>
-                                        @endif
+                                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
+                                            class="rounded-circle img-fluid border border-4"
+                                            style="width: 120px; height: 120px; object-fit: cover;" alt="Profile Photo">
+
                                         <div class="position-absolute bottom-0 end-0 bg-white rounded-circle p-2 shadow">
-                                            <i class="fas fa-camera text-custom"></i>
+                                            <form id="profilePhotoForm" action="{{ route('pelanggan.profile.update') }}"
+                                                method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('PUT')
+                                                <label for="photoUpload" class="mb-0" style="cursor: pointer;">
+                                                    <i class="bi bi-camera-fill text-custom"></i>
+                                                </label>
+                                                <input type="file" id="photoUpload" name="photo" class="d-none"
+                                                    accept="image/*" onchange="uploadProfilePhoto(this)">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -264,38 +267,7 @@
         </div>
     </section>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const addressSelector = document.getElementById('addressSelector');
-                const alamatTextarea = document.getElementById('alamatTextarea');
-
-                if (addressSelector) {
-                    // Set initial value based on primary address
-                    const primaryOption = Array.from(addressSelector.options)
-                        .find(option => option.text.includes('(Utama)'));
-                    if (primaryOption) {
-                        addressSelector.value = primaryOption.value;
-                        alamatTextarea.value = primaryOption.dataset.address;
-                        alamatTextarea.setAttribute('readonly', true);
-                    }
-
-                    addressSelector.addEventListener('change', function() {
-                        const selectedOption = this.options[this.selectedIndex];
-
-                        if (this.value === '') {
-                            alamatTextarea.value = '';
-                            alamatTextarea.removeAttribute('readonly');
-                        } else {
-                            alamatTextarea.value = selectedOption.dataset.address;
-                            alamatTextarea.setAttribute('readonly', true);
-                        }
-                    });
-                }
-            });
-        </script>
-    @endpush
-
+    <!-- Script untuk SweetAlert2 -->
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -334,4 +306,10 @@
             });
         </script>
     @endpush
+
+    <!-- Script untuk mengupload foto profil dan mengambil alamat tersimpan -->
+    @push('scripts')
+        <script src="{{ asset('js/profile-pelanggan.js') }}"></script>
+    @endpush
+
 @endsection
