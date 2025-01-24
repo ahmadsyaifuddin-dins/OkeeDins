@@ -44,9 +44,27 @@ class ProdukController extends Controller
         // Hilangkan titik pada harga untuk menyimpan angka murni
         $harga = str_replace('.', '', $request->harga);
 
-        $gambarPath = $request->file('gambar')
-            ? $request->file('gambar')->store('uploads_gambar_produk', 'public')
-            : null;
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $webpFilename = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+            $outputPath = 'uploads_gambar_produk/' . $webpFilename;
+            
+            // Create the directory if it doesn't exist
+            $directory = storage_path('app/public/uploads_gambar_produk');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+            
+            // Load and convert image to WebP using GD
+            $image = imagecreatefromstring(file_get_contents($file->getRealPath()));
+            $outputFullPath = storage_path('app/public/' . $outputPath);
+            imagewebp($image, $outputFullPath, 80); // 80 is the quality (0-100)
+            imagedestroy($image);
+            
+            $gambarPath = $outputPath;
+        }
 
         // Hitung harga setelah diskon
         $desimalDiskon = $request->diskon / 100; // Konversi ke float
@@ -80,7 +98,6 @@ class ProdukController extends Controller
     // Memperbarui produk
     public function updateProduk(Request $request, $id)
     {
-
         $request->validate([
             'slug' => 'required|string|max:200',
             'nama_produk' => 'required|string|max:255',
@@ -91,19 +108,35 @@ class ProdukController extends Controller
             'diskon' => 'required|numeric|min:0|max:100|regex:/^\d+(\.\d{1,2})?$/', // Memperbolehkan 2 angka desimal
             'kategori_id' => 'required',
             'recommended' => 'nullable',
-
         ]);
 
-
         $produk = Produk::findOrFail($id);
+        $gambarPath = $produk->gambar;
 
-        if ($request->file('gambar')) {
+        if ($request->hasFile('gambar')) {
+            // Delete old image if exists
             if ($produk->gambar) {
                 Storage::disk('public')->delete($produk->gambar);
             }
-            $gambarPath = $request->file('gambar')->store('uploads_gambar_produk', 'public');
-        } else {
-            $gambarPath = $produk->gambar;
+
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $webpFilename = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+            $outputPath = 'uploads_gambar_produk/' . $webpFilename;
+            
+            // Create the directory if it doesn't exist
+            $directory = storage_path('app/public/uploads_gambar_produk');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+            
+            // Load and convert image to WebP using GD
+            $image = imagecreatefromstring(file_get_contents($file->getRealPath()));
+            $outputFullPath = storage_path('app/public/' . $outputPath);
+            imagewebp($image, $outputFullPath, 80); // 80 is the quality (0-100)
+            imagedestroy($image);
+            
+            $gambarPath = $outputPath;
         }
 
         // Hitung harga setelah diskon

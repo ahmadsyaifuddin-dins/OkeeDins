@@ -63,7 +63,6 @@
     <!-- Add jQuery and Toastr JS (add before closing head tag) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4/dist/autoNumeric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
 
     {{-- Script TinyMCE --}}
@@ -172,6 +171,7 @@
 
 
     <!--   Core JS Files   -->
+    <script src="{{ asset('js-internal/AutoNumeric-4.5.4.js') }}"></script>
     <script src="{{ asset('material-dashboard/assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('material-dashboard/assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('material-dashboard/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
