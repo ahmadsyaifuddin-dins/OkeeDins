@@ -6,8 +6,8 @@
     <div class="row">
         <!-- Produk Section -->
         <div class="col-lg-12">
-            <!-- Flash Sale Banner -->
-            @include('home.flash-sale')
+            <!-- Banner -->
+            @include('home.banner')
 
             <!-- Kategori Slider -->
             <div class="col-12">

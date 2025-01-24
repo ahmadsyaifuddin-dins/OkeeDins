@@ -215,7 +215,7 @@
 
 <!--Perhitungan total belanja dan tombol beli dalam ringkasan belanja -->
 @push('scripts')
-   <script src="{{ asset('js/cart.js') }}"></script>
+    <script src="{{ asset('js/cart.js') }}"></script>
 @endpush
 
 <style>
@@ -225,100 +225,68 @@
         -webkit-appearance: none;
         margin: 0;
     }
+
     input[type="number"] {
         -moz-appearance: textfield;
         /* Firefox */
     }
 </style>
 
-    <style>
-        /* Hide number input spinners */
+<style>
+    /* Hide number input spinners */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
-        input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
 
-        input[type="number"]::-webkit-outer-spin-button {
+    .cart-item {
+        padding: 1rem 0;
+    }
 
-            -webkit-appearance: none;
+    .cart-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
 
-            margin: 0;
+    .quantity-controls {
+        min-width: 120px;
+    }
 
-        }
+    .quantity-controls .btn {
+        padding: 0.25rem 0.5rem;
+        line-height: 1;
+    }
 
-        input[type="number"] {
+    .quantity-input {
+        height: 28px;
+        font-size: 0.875rem;
+    }
 
-            -moz-appearance: textfield;
 
-        }
-
-        .cart-item {
-
-            padding: 1rem 0;
-
-        }
-
-        .cart-item:last-child {
-
-            border-bottom: none;
-
-            padding-bottom: 0;
-
-            margin-bottom: 0;
-
+    @media (max-width: 576px) {
+        .cart-item .row {
+            --bs-gutter-x: 0.5rem;
         }
 
         .quantity-controls {
-
-            min-width: 120px;
-
+            min-width: 110px;
         }
 
-        .quantity-controls .btn {
-
-            padding: 0.25rem 0.5rem;
-
-            line-height: 1;
-
-        }
 
         .quantity-input {
-
-            height: 28px;
-
-            font-size: 0.875rem;
-
+            width: 40px !important;
+            padding: 0.25rem;
         }
 
-
-        @media (max-width: 576px) {
-
-            .cart-item .row {
-
-                --bs-gutter-x: 0.5rem;
-
-            }
-
-            .quantity-controls {
-
-                min-width: 110px;
-
-            }
-
-
-            .quantity-input {
-
-                width: 40px !important;
-
-                padding: 0.25rem;
-
-            }
-
-            .delete-item {
-
-                padding: 0;
-
-                font-size: 0.75rem;
-
-            }
-
+        .delete-item {
+            padding: 0;
+            font-size: 0.75rem;
         }
-    </style>
+    }
+</style>
