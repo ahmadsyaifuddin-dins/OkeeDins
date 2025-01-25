@@ -25,48 +25,26 @@
                         </div>
 
                         <!-- Status Pesanan -->
-                        <div class="bg-light rounded p-3 mb-4">
-                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
-                                <span class="text-muted">Status Pesanan</span>
-                                @switch(strtolower($order->status))
-                                    @case('pending')
-                                        <span class="badge bg-warning text-wrap">Menunggu Konfirmasi</span>
-                                    @break
-
-                                    @case('awaiting payment')
-                                        <span class="badge bg-info text-wrap">Menunggu Pembayaran Dikonfirmasi</span>
-                                    @break
-
-                                    @case('confirmed')
-                                        <span class="badge bg-success text-wrap">
-                                            @if ($order->payment_method === 'transfer')
-                                                Pembayaran Dikonfirmasi
-                                            @else
-                                                Di Konfirmasi
-                                            @endif
-                                        </span>
-                                    @break
-
-                                    @case('processing')
-                                        <span class="badge bg-primary text-wrap">Sedang Dikemas</span>
-                                    @break
-
-                                    @case('delivered')
-                                        <span class="badge bg-primary text-wrap">Dalam Pengiriman <i class="bi bi-truck"></i></span>
-                                    @break
-
-                                    @case('completed')
-                                        <span class="badge bg-success text-wrap">Selesai</span>
-                                    @break
-
-                                    @case('cancelled')
-                                        <span class="badge bg-danger text-wrap">Dibatalkan</span>
-                                    @break
-
-                                    @default
-                                        <span class="badge bg-secondary text-wrap">{{ ucfirst($order->status) }}</span>
-                                @endswitch
+                        <div class="mb-4">
+                            <h5>Status Pesanan</h5>
+                            <div class="alert {{ $order->status === 'completed' ? 'alert-success' : 'alert-info' }}">
+                                {{ $order->status_label }}
                             </div>
+
+                            @if ($order->payment_method === 'Cash on Delivery' && in_array($order->status, ['processing', 'delivered']))
+                                <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST" class="mt-3">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin telah menerima pesanan ini?')">
+                                        Konfirmasi Penerimaan Barang
+                                    </button>
+                                </form>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        * Klik tombol di atas jika Anda sudah menerima pesanan Anda
+                                    </small>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Payment Info -->
@@ -303,4 +281,4 @@
             }
         }
     </style>
-        @endsection
+@endsection

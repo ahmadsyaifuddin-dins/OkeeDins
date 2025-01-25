@@ -13,12 +13,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\TransactionController;
 
 class CheckoutController extends Controller
 {
+    private $transactionController;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->transactionController = new TransactionController();
     }
 
     public function showCheckout(Request $request)
@@ -132,11 +136,13 @@ class CheckoutController extends Controller
     public function processCheckout(Request $request)
     {
         try {
+            Log::info('Checkout request:', $request->all());
+            
             DB::beginTransaction();
 
             $user = auth()->user();
             $data = $request->validate([
-                'address_id' => 'required|exists:addresses,id',
+                'selected_address' => 'required|exists:addresses,id',
                 'payment_method' => 'required|in:transfer,Cash on Delivery',
                 'notes' => 'nullable|string',
                 'voucher_code' => 'nullable|exists:vouchers,code',
@@ -146,8 +152,11 @@ class CheckoutController extends Controller
                 'quantity' => 'required_if:direct_buy,1|integer|min:1'
             ]);
 
+            Log::info('Validated data:', $data);
+
             // Handle direct buy
             if (isset($data['selected_items'][0]) && strpos($data['selected_items'][0], 'direct_') === 0) {
+                Log::info('Processing direct buy');
                 $produkId = (int) str_replace('direct_', '', $data['selected_items'][0]);
                 $product = Produk::findOrFail($produkId);
                 $quantity = $request->input('quantity', 1);
@@ -160,7 +169,7 @@ class CheckoutController extends Controller
                 // Buat order baru
                 $order = Orders::create([
                     'user_id' => $user->id,
-                    'address_id' => $data['address_id'],
+                    'address_id' => $data['selected_address'],
                     'payment_method' => $data['payment_method'],
                     'notes' => $data['notes'] ?? '',
                     'status' => 'pending',
@@ -169,6 +178,17 @@ class CheckoutController extends Controller
                     'order_number' => 'ORD-' . uniqid(),
                     'payment_status' => 'unpaid'
                 ]);
+
+                Log::info('Order created:', $order->toArray());
+
+                try {
+                    // Create transaction record
+                    $transaction = $this->transactionController->createTransaction($order);
+                    Log::info('Transaction created:', $transaction->toArray());
+                } catch (\Exception $e) {
+                    Log::error('Error creating transaction: ' . $e->getMessage());
+                    throw $e;
+                }
 
                 // Create order item
                 OrderItems::create([
@@ -202,6 +222,21 @@ class CheckoutController extends Controller
                     }
                 }
 
+                // Calculate totals
+                $totalQty = 0;
+                $totalAmount = 0;
+                foreach ($cartItems as $item) {
+                    $totalQty += $item->quantity;
+                    $price = $item->product->harga * $item->quantity;
+                    $discount = ($price * $item->product->diskon) / 100;
+                    $totalAmount += $price - $discount;
+                }
+
+                // Validate total amount
+                if (abs($totalAmount - $data['total_amount']) > 0.01) {
+                    throw new \Exception('Total amount mismatch');
+                }
+
                 // Buat order baru
                 $order = Orders::create([
                     'user_id' => $user->id,
@@ -209,17 +244,28 @@ class CheckoutController extends Controller
                     'payment_method' => $data['payment_method'],
                     'notes' => $data['notes'] ?? '',
                     'status' => 'pending',
-                    'total_amount' => $data['total_amount'],
-                    'qty' => $cartItems->sum('quantity'),
+                    'total_amount' => $totalAmount,
+                    'qty' => $totalQty,
                     'order_number' => 'ORD-' . uniqid(),
                     'payment_status' => 'unpaid'
                 ]);
 
-                // Create order items
+                Log::info('Order created:', $order->toArray());
+
+                try {
+                    // Create transaction record
+                    $transaction = $this->transactionController->createTransaction($order);
+                    Log::info('Transaction created:', $transaction->toArray());
+                } catch (\Exception $e) {
+                    Log::error('Error creating transaction: ' . $e->getMessage());
+                    throw $e;
+                }
+
+                // Create order items and update stock
                 foreach ($cartItems as $item) {
                     OrderItems::create([
                         'order_id' => $order->id,
-                        'produk_id' => $item->produk_id,
+                        'produk_id' => $item->product->id,
                         'quantity' => $item->quantity,
                         'price' => $item->product->harga,
                         'discount' => $item->product->diskon,
@@ -227,19 +273,21 @@ class CheckoutController extends Controller
                             (($item->product->harga * $item->quantity * $item->product->diskon) / 100)
                     ]);
 
-                    // Update stok produk
+                    // Update stock
                     $item->product->decrement('stok', $item->quantity);
-
-                    // Delete from cart
-                    $item->delete();
                 }
+
+                // Clear cart items
+                Cart::whereIn('id', $data['selected_items'])->delete();
             }
 
-            // Apply voucher if used
+            // Handle voucher if applied
             if (!empty($data['voucher_code'])) {
-                $voucher = Voucher::where('code', $data['voucher_code'])->first();
+                $voucher = Voucher::where('code', $data['voucher_code'])
+                    ->where('is_active', true)
+                    ->first();
+
                 if ($voucher) {
-                    // Create voucher usage record
                     VoucherUser::create([
                         'user_id' => $user->id,
                         'voucher_id' => $voucher->id,
@@ -248,7 +296,6 @@ class CheckoutController extends Controller
                         'used_at' => now()
                     ]);
 
-                    // Increment used_count
                     $voucher->increment('used_count');
                 }
             }
@@ -268,11 +315,12 @@ class CheckoutController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses checkout.',
+                'error' => $e->getMessage(),
                 'alert' => [
                     'icon' => 'error',
                     'title' => 'Oops...',
-                    'text' => 'Terjadi kesalahan saat memproses checkout.',
-                    'footer' => '<a href="#">Hubungi dukungan</a>',
+                    'text' => 'Terjadi kesalahan saat memproses checkout: ' . $e->getMessage(),
+                    'footer' => '<a href="https://telegram.me/dins_ahmads">Hubungi dukungan</a>',
                     'showConfirmButton' => true,
                     'confirmButtonText' => 'OK',
                     'showCancelButton' => false,
@@ -416,7 +464,7 @@ class CheckoutController extends Controller
             Cart::where('user_id', auth()->id())->delete();
 
             DB::commit();
-            return redirect()->route('orders.show', $order->id)->with('success', 'Pesanan berhasil dibuat!');
+            return redirect()->route('orders.detail', $order->id)->with('success', 'Pesanan berhasil dibuat!');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Order processing error: ' . $e->getMessage());
@@ -435,29 +483,28 @@ class CheckoutController extends Controller
 
     public function confirmPayment(Request $request, $orderId)
     {
-        try {
-            $request->validate([
-                'payment_proof' => 'required|image|max:2048'
-            ]);
+        $order = Orders::findOrFail($orderId);
+        
+        if ($order->payment_status === 'paid') {
+            return redirect()->back()->with('error', 'Pembayaran sudah dikonfirmasi sebelumnya');
+        }
 
-            $order = Orders::where('user_id', Auth::id())->findOrFail($orderId);
-            
-            // Upload bukti pembayaran
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
-            
-            // Update order
+        DB::beginTransaction();
+        try {
+            // Update order status
             $order->update([
-                'payment_proof' => $path,
-                'payment_status' => 'pending',
+                'payment_status' => 'paid',
                 'status' => 'processing'
             ]);
 
-            return redirect()->route('orders.show', $order->id)
-                ->with('success', 'Bukti pembayaran berhasil diunggah. Mohon tunggu konfirmasi dari admin.');
+            // Update transaction status
+            $this->transactionController->updateTransactionStatus($order->id, 'paid', $order->payment_method);
 
+            DB::commit();
+            return redirect()->route('orders.show', $order->id)->with('success', 'Pembayaran berhasil dikonfirmasi');
         } catch (\Exception $e) {
-            Log::error('Payment confirmation error: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pembayaran');
         }
     }
 }

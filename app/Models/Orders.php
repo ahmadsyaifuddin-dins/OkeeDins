@@ -30,9 +30,11 @@ class Orders extends Model
         return [
             'pending' => 'Menunggu Konfirmasi Penjual',
             'awaiting payment' => 'Menunggu Pembayaran Dikonfirmasi',
+            // 'waiting_payment' => 'Menunggu Pembayaran Dikonfirmasi',
+            'payment_rejected' => 'Pembayaran Ditolak',
             'confirmed' => 'Pesanan Dikonfirmasi',
             'processing' => 'Diproses',
-            'delivered' => 'Dikirim',
+            'delivered' => 'Dalam Pengantaran',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan'
         ][$this->status] ?? ucfirst($this->status);
@@ -87,6 +89,11 @@ class Orders extends Model
     public function produk()
     {
         return $this->belongsTo(Produk::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class, 'order_id');
     }
 
     // public function shipping()
@@ -144,10 +151,25 @@ class Orders extends Model
         };
     }
 
+     // Tambahkan accessor untuk warna status
+     public function getStatusColorAttribute()
+     {
+         return [
+             'pending' => 'warning',
+             'awaiting payment' => 'warning',
+             'confirmed' => 'info',
+             'processing' => 'info',
+             'delivered' => 'primary',
+             'completed' => 'success',
+             'cancelled' => 'danger'
+         ][$this->status] ?? 'secondary';
+     }
+
     public function getPaymentStatusBadgeAttribute()
     {
         return $this->payment_status === self::PAYMENT_PAID ? 'bg-success' : 'bg-danger';
     }
+
 
     // Scopes
     public function scopePending($query)

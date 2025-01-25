@@ -49,9 +49,10 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="../pages/billing.html">
+                <a class="nav-link {{ Request::routeIs('admin.payments.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}"
+                    href="{{ route('admin.payments.index') }} ">
                     <i class="material-symbols-rounded opacity-5">payments</i>
-                    <span class="nav-link-text ms-1">Pembayaran</span>
+                    <span class="nav-link-text ms-1">Pembayaran Transfer</span>
                 </a>
             </li>
             <li class="nav-item">

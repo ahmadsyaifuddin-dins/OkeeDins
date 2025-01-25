@@ -16,10 +16,14 @@ class PelangganMiddleware
     // Menjalankan segala Proses di Market hanya bisa dilakukan ketika sudah Login sebagai pelanggan 
     public function handle($request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->role === 'Pelanggan') {
-            return $next($request);
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        return redirect()->route('home.index');
+        if (auth()->user()->role !== 'Pelanggan') {
+            return redirect()->route('home.index')->with('error', 'Akses ditolak. Anda bukan pelanggan.');
+        }
+
+        return $next($request);
     }
 }

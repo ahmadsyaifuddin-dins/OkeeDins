@@ -35,7 +35,7 @@
                     <!-- Upload Bukti Transfer -->
                     <div class="upload-section">
                         <h5 class="mb-3 fs-6">Upload Bukti Transfer</h5>
-                        <form action="{{ route('payment.confirm', $order->id) }}" method="POST" enctype="multipart/form-data" id="payment-form">
+                        <form action="{{ route('orders.upload-payment', $order->id) }}" method="POST" enctype="multipart/form-data" id="payment-form">
                             @csrf
                             <div class="mb-3">
                                 <input type="file" class="form-control form-control-sm" name="payment_proof" accept="image/*" required>

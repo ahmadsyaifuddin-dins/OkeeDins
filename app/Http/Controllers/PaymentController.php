@@ -12,11 +12,11 @@ class PaymentController extends Controller
     public function index()
     {
         $orders = Orders::where('user_id', auth()->id())
-                    ->where('payment_method', 'transfer')
-                    ->whereIn('status', ['pending'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-                    
+            ->where('payment_method', 'transfer')
+            ->whereIn('status', ['pending'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('payment.index', compact('orders'));
     }
 
@@ -44,18 +44,24 @@ class PaymentController extends Controller
 
         try {
             // Upload bukti pembayaran
-            $path = $request->file('payment_proof')->store('payment-proofs', 'public');
+            if ($request->hasFile('payment_proof')) {
+                $file = $request->file('payment_proof');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/payment_proofs'), $filename);
 
-            // Update status order
-            $order->update([
-                'payment_proof' => $path,
-                'status' => 'awaiting payment'
-            ]);
+                // Update status order
+                $order->update([
+                    'payment_proof' => $filename,
+                    'status' => 'awaiting payment',
+                    'payment_status' => 'pending'
+                ]);
 
-            return redirect()->route('orders.show', $order->id)
-                ->with('success', 'Bukti pembayaran berhasil diunggah. Mohon tunggu konfirmasi dari admin.');
+                return redirect()->route('orders.index')->with('success', 'Bukti pembayaran berhasil diunggah. Mohon tunggu konfirmasi dari admin.');
+            }
+
+            return back()->with('error', 'Terjadi kesalahan saat mengunggah bukti pembayaran.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan saat mengunggah bukti pembayaran. Silakan coba lagi.');
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

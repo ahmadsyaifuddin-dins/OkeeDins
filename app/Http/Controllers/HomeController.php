@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
-use App\Models\Category;
 use App\Models\KategoriProduk;
 use Illuminate\Http\Request;
 
@@ -37,5 +36,16 @@ class HomeController extends Controller
             'products' => $products,
             'searchQuery' => $query
         ]);
+    }
+
+
+      public function riwayatPesanan()
+    {
+        return view('home.riwayat-pesanan');
+    }
+
+    public function transaksi()
+    {
+        return view('home.transaksi');
     }
 }

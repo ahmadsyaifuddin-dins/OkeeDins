@@ -5,11 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ulasan extends Model
+class Review extends Model
 {
     use HasFactory;
+
     protected $table = 'ulasan';
-    protected $fillable = ['user_id', 'produk_id', 'ulasan', 'rating'];
+
+    protected $fillable = [
+        'user_id',
+        'produk_id',
+        'ulasan',
+        'rating'
+    ];
 
     public function user()
     {
@@ -19,10 +26,5 @@ class Ulasan extends Model
     public function produk()
     {
         return $this->belongsTo(Produk::class);
-    }
-
-    public function orders()
-    {
-        return $this->belongsTo(Orders::class);
     }
 }

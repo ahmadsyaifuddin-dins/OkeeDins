@@ -68,6 +68,7 @@ class PelangganController extends Controller
             ->with('success', 'Login berhasil! Selamat datang di Market');
     }
 
+
     public function logout(Request $request)
     {
         Auth::logout();

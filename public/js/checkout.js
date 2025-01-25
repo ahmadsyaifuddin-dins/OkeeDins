@@ -3,80 +3,61 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutForm = document.getElementById('checkout-form');
     const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
     const addressInput = document.getElementById('address_id_input');
-
-    // Set initial address value if one is checked
-    const initialAddress = document.querySelector('input[name="selected_address"]:checked');
-    if (initialAddress && addressInput) {
-        addressInput.value = initialAddress.value;
-    }
-
-    // Listen for address changes
     const addressRadios = document.querySelectorAll('input[name="selected_address"]');
+
+    // Handle address selection
     addressRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (this.checked && addressInput) {
-                addressInput.value = this.value;
-            }
+        radio.addEventListener('change', function() {
+            addressInput.value = this.value;
         });
     });
 
-    // Handle payment method changes
+    // Set initial address if one is checked
+    const checkedAddress = document.querySelector('input[name="selected_address"]:checked');
+    if (checkedAddress) {
+        addressInput.value = checkedAddress.value;
+    }
+
+    // Handle payment method selection
     paymentMethods.forEach(method => {
-        method.addEventListener('change', function () {
-            if (this.id === 'transfer' && this.checked && transferInfo) {
+        method.addEventListener('change', function() {
+            if (this.value === 'transfer') {
                 transferInfo.style.display = 'block';
-            } else if (transferInfo) {
+            } else {
                 transferInfo.style.display = 'none';
             }
         });
     });
 
-    // Handle form submission
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const btnPay = document.getElementById('btn-pay');
-            const normalState = btnPay.querySelector('.normal-state');
-            const loadingState = btnPay.querySelector('.loading-state');
-
-            // Jika tombol sudah disabled, hentikan proses
-            if (btnPay.disabled) {
-                return;
-            }
-
-            // Validate address selection
-            const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
-            const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
-
-            // Show errors if validation fails
-            if (!selectedAddress || !selectedPayment) {
-                let errorMessage = '';
-
-                if (!selectedAddress) {
-                    errorMessage = 'Silakan pilih alamat pengiriman terlebih dahulu';
-                }
-
-                if (!selectedPayment) {
-                    errorMessage = errorMessage ? errorMessage + ' dan pilih metode pembayaran' : 'Silakan pilih metode pembayaran terlebih dahulu';
-                }
-
+            // Validate address
+            if (!addressInput.value) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: errorMessage
+                    text: 'Silakan pilih alamat pengiriman',
                 });
                 return;
             }
 
-            // Tampilkan loading state
-            btnPay.disabled = true;
-            normalState.classList.add('d-none');
-            loadingState.classList.remove('d-none');
+            // Validate payment method
+            const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+            if (!selectedPayment) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Silakan pilih metode pembayaran',
+                });
+                return;
+            }
 
-            // Update hidden address_id input before submission
-            if (addressInput) {
-                addressInput.value = selectedAddress.value;
+            const btnPay = document.getElementById('btn-pay');
+            if (btnPay) {
+                btnPay.disabled = true;
+                btnPay.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...';
             }
 
             // Collect form data
@@ -87,59 +68,50 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Server Response:', data);
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server Response:', data);
 
-                    if (data.success) {
-                        // Show success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: data.message,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                if (data.payment_method === 'transfer' && data.order_id) {
-                                    window.location.href = `/payment/${data.order_id}`;
-                                } else if (data.order_id) {
-                                    window.location.href = `/orders/${data.order_id}`;
-                                }
-                            }
-                        });
-                    } else {
-                        // Show error message using the alert data from server
-                        if (data.alert) {
-                            Swal.fire(data.alert);
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: data.message || 'Terjadi kesalahan saat memproses checkout.',
-                                footer: '<a href="#">Hubungi dukungan</a>'
-                            });
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                if (data.success) {
+                    // Show success message
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan saat menghubungi server.',
-                        footer: '<a href="#">Hubungi dukungan</a>'
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (data.payment_method === 'transfer' && data.order_id) {
+                                window.location.href = `/payment/${data.order_id}`;
+                            } else if (data.order_id) {
+                                window.location.href = `/orders/${data.order_id}`;
+                            }
+                        }
                     });
-                })
-                .finally(() => {
-                    // Kembalikan tombol ke keadaan normal
-                    btnPay.disabled = false;
-                    normalState.classList.remove('d-none');
-                    loadingState.classList.add('d-none');
+                } else {
+                    // Show error message
+                    Swal.fire(data.alert);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat memproses checkout',
                 });
+            })
+            .finally(() => {
+                if (btnPay) {
+                    btnPay.disabled = false;
+                    btnPay.innerHTML = 'Bayar Sekarang';
+                }
+            });
         });
     }
 

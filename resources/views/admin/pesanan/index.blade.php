@@ -99,6 +99,48 @@
                                                         </form>
                                                     @endif
 
+                                                    @if($order->payment_method === 'transfer' && $order->status === 'pending')
+                                                        <div class="d-flex gap-2">
+                                                            <!-- Tombol Lihat Bukti Transfer -->
+                                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#proofModal{{ $order->id }}">
+                                                                <i class="bi bi-image"></i> Lihat Bukti
+                                                            </button>
+                                                            
+                                                            <!-- Form Verifikasi -->
+                                                            <form action="{{ route('orders.verify-payment', $order->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')">
+                                                                    <i class="bi bi-check-circle"></i> Verifikasi
+                                                                </button>
+                                                            </form>
+
+                                                            <!-- Form Tolak -->
+                                                            <form action="{{ route('orders.reject-payment', $order->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak pembayaran ini?')">
+                                                                    <i class="bi bi-x-circle"></i> Tolak
+                                                                </button>
+                                                            </form>
+                                                        </div>
+
+                                                        <!-- Modal Bukti Transfer -->
+                                                        <div class="modal fade" id="proofModal{{ $order->id }}" tabindex="-1" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Bukti Transfer - Order #{{ $order->id }}</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body text-center">
+                                                                        <img src="{{ asset('uploads/payment_proofs/' . $order->payment_proof) }}" 
+                                                                             class="img-fluid" 
+                                                                             alt="Bukti Transfer">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
                                                     <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
                                                         method="POST" class="mb-0">
                                                         @csrf
