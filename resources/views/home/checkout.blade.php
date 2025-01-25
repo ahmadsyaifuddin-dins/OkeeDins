@@ -71,15 +71,15 @@
                                     <div class="d-flex flex-column flex-sm-row mb-3 border-bottom pb-3">
                                         <div class="text-center text-sm-start mb-3 mb-sm-0">
                                             <img src="{{ asset('storage/' . $item->product->gambar) }}"
-                                                alt="{{ $item->product->nama_produk }}"
-                                                class="img-thumbnail me-sm-3"
+                                                alt="{{ $item->product->nama_produk }}" class="img-thumbnail me-sm-3"
                                                 style="width: 120px; height: 120px; object-fit: cover;">
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-2">{{ $item->product->nama_produk }}</h6>
                                             <div class="d-flex justify-content-between align-items-start flex-wrap">
                                                 <div>
-                                                    <p class="mb-1">{{ $item->quantity }} x Rp {{ number_format($item->product->harga, 0, ',', '.') }}</p>
+                                                    <p class="mb-1">{{ $item->quantity }} x Rp
+                                                        {{ number_format($item->product->harga, 0, ',', '.') }}</p>
                                                     @if ($item->product->diskon > 0)
                                                         <p class="mb-2 text-danger">
                                                             Diskon {{ $item->product->diskon }}%
@@ -88,7 +88,8 @@
                                                 </div>
                                                 <div class="mt-2 mt-sm-0">
                                                     <h6 class="mb-0 text-end">
-                                                        Rp {{ number_format($item->product->harga * $item->quantity - ($item->product->harga * $item->quantity * $item->product->diskon) / 100, 0, ',', '.') }}
+                                                        Rp
+                                                        {{ number_format($item->product->harga * $item->quantity - ($item->product->harga * $item->quantity * $item->product->diskon) / 100, 0, ',', '.') }}
                                                     </h6>
                                                 </div>
                                             </div>
@@ -160,6 +161,11 @@
                             </div>
 
                             <div class="border-top pt-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Harga Produk (Satuan)</span>
+                                    <span id="harga_produk">Rp
+                                        {{ number_format($item->product->harga, 0, ',', '.') }}</span>
+                                </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Subtotal</span>
                                     <span id="subtotal">Rp {{ number_format($cartTotal, 0, ',', '.') }}</span>

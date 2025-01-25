@@ -15,12 +15,12 @@ class TransactionController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         // Total pengeluaran untuk metode transfer (berhasil)
-        $totalTransferSpent = Transaction::whereHas('order', function($query) use ($user) {
+        $totalTransferSpent = Transaction::whereHas('order', function ($query) use ($user) {
             $query->where('user_id', $user->id)
-                  ->where('payment_method', 'transfer')
-                  ->whereIn('status', ['processing', 'completed']);
+                ->where('payment_method', 'transfer')
+                ->whereIn('status', ['processing', 'completed']);
         })->sum('amount');
 
         // Total pesanan transfer (semua status)
@@ -41,12 +41,12 @@ class TransactionController extends Controller
             ->count();
 
         // Get total spent this month
-        $totalSpentThisMonth = Transaction::whereHas('order', function($query) use ($user) {
+        $totalSpentThisMonth = Transaction::whereHas('order', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
-        ->whereMonth('created_at', Carbon::now()->month)
-        ->where('status', 'paid')
-        ->sum('amount');
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('status', 'paid')
+            ->sum('amount');
 
         // Get total completed orders
         $totalCompletedOrders = Orders::where('user_id', $user->id)
@@ -54,12 +54,12 @@ class TransactionController extends Controller
             ->count();
 
         // Get transactions history
-        $transactions = Transaction::whereHas('order', function($query) use ($user) {
+        $transactions = Transaction::whereHas('order', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
-        ->with('order')
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->with('order')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('home.transaksi', compact(
             'totalTransferSpent',
@@ -94,7 +94,7 @@ class TransactionController extends Controller
     {
         try {
             $transaction = Transaction::where('order_id', $orderId)->first();
-            
+
             if ($transaction) {
                 $transaction->status = $status;
                 $transaction->payment_status = $status;
