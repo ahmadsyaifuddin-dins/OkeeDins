@@ -56,18 +56,19 @@
                                         class="list-group-item list-group-item-action active">
                                         <i class="fas fa-user-circle me-2"></i>Profile Saya
                                     </a>
-                                    <a href="{{ route('orders.index') }}" class="list-group-item list-group-item-action">
-                                        <i class="fas fa-shopping-bag me-2"></i>Pesanan Saya
+                                    <a href="{{ route('home.riwayat-pesanan') }}"
+                                        class="list-group-item list-group-item-action">
+                                        <i class="fas fa-shopping-bag me-2"></i>Pesanan
                                     </a>
-                                    <a href="#" class="list-group-item list-group-item-action">
+                                    <a href="{{ route('wishlist.index') }}" class="list-group-item list-group-item-action">
                                         <i class="fas fa-heart me-2"></i>Wishlist
                                     </a>
                                     <a href="#" class="list-group-item list-group-item-action">
                                         <i class="fas fa-star me-2"></i>Review Saya
                                     </a>
-                                    <a href="#" class="list-group-item list-group-item-action">
+                                    {{-- <a href="#" class="list-group-item list-group-item-action">
                                         <i class="fas fa-cog me-2"></i>Pengaturan
-                                    </a>
+                                    </a> --}}
                                 </div>
 
                                 <!-- Action Buttons -->
