@@ -28,10 +28,10 @@ class CheckoutController extends Controller
     public function showCheckout(Request $request)
     {
         $user = auth()->user();
-        $itemIds = $request->query('items');
-        $directBuy = $request->query('direct_buy');
+        $itemIds = $request->query('items'); // Array of cart item IDs
+        $directBuy = $request->query('direct_buy'); // Flag for direct buy
         $produkId = $request->query('produk_id');
-        $quantity = $request->query('quantity', 1);
+        $quantity = $request->query('quantity', 1); // Default quantity is 1
 
         // Get user's addresses
         $addresses = Address::where('user_id', $user->id)
