@@ -64,7 +64,7 @@
                                 <h3 class="card-title mb-0">{{ $totalTransferOrders }}</h3>
                                 <div class="mt-2 small">
                                     <span class="text-success me-2">{{ $totalSuccessTransferOrders }} Berhasil</span>
-                                    <span class="text-warning">{{ $totalPendingTransferOrders }} Menunggu</span>
+                                    <span class="text-danger">{{ $totalPendingTransferOrders }} Menunggu</span>
                                 </div>
                             </div>
                         </div>
