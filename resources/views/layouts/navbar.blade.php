@@ -91,14 +91,16 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
-                                Pesanan Saya</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
+                                Pesanan Saya</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('payment.index') }}"><i
                                     class="bi bi-credit-card me-2"></i> Pembayaran
                             </a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i class="bi bi-clock-history me-2"></i> Riwayat
+                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i
+                                    class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
+                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i
+                                    class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -126,12 +128,14 @@
                     <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdownMobile">
                         <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
                                     class="bi bi-person me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i
+                        {{-- <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i
                                     class="bi bi-basket me-2"></i>
-                                Pesanan Saya</a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i class="bi bi-clock-history me-2"></i> Riwayat
+                                Pesanan Saya</a></li> --}}
+                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i
+                                    class="bi bi-clock-history me-2"></i> Riwayat
                                 Pesanan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
+                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i
+                                    class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

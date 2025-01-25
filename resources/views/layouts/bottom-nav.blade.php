@@ -39,8 +39,8 @@
         @endauth
 
         @auth
-            <a href="{{ route('orders.index') }}"
-                class="text-center text-decoration-none {{ Route::currentRouteName() == 'orders.index' ? 'text-custom' : 'text-secondary' }}">
+            <a href="{{ route('home.riwayat-pesanan') }}"
+                class="text-center text-decoration-none {{ Route::currentRouteName() == 'home.daftar-pesanan' ? 'text-custom' : 'text-secondary' }}">
                 <i class="bi bi-receipt fs-5"></i>
                 <div class="small">Pesanan</div>
             </a>

@@ -21,7 +21,7 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('orders.index', compact('orders'));
+        return view('home.riwayat-pesanan', compact('orders'));
     }
 
     public function store(Request $request)
@@ -157,7 +157,6 @@ class OrderController extends Controller
 
             Log::info('Order berhasil dikonfirmasi: ' . $order->id);
             return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan');
-
         } catch (\Exception $e) {
             Log::error('Error saat konfirmasi penerimaan COD: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pesanan');
@@ -176,8 +175,10 @@ class OrderController extends Controller
             }
 
             // Validasi status order
-            if (!in_array($order->status, ['processing', 'delivered']) || 
-                strtolower($order->payment_method) !== 'transfer') {
+            if (
+                !in_array($order->status, ['processing', 'delivered']) ||
+                strtolower($order->payment_method) !== 'transfer'
+            ) {
                 Log::warning('Status order tidak valid untuk konfirmasi: ' . $order->status);
                 return redirect()->back()->with('error', 'Status pesanan tidak valid untuk konfirmasi');
             }
@@ -191,7 +192,6 @@ class OrderController extends Controller
 
             Log::info('Order berhasil dikonfirmasi: ' . $order->id);
             return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan');
-
         } catch (\Exception $e) {
             Log::error('Error saat konfirmasi penerimaan Transfer: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pesanan');

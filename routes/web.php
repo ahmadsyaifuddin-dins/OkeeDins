@@ -18,7 +18,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\VoucherController; 
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
@@ -87,15 +87,16 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 
     // Order
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders', [OrderController::class, 'index'])->name('home.riwayat-pesanan');
     Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
     Route::get('/orders/{order}', [OrderController::class, 'detail'])->name('orders.detail');
-    
+
+
     // Konfirmasi penerimaan dan rating
     Route::post('/orders/{order}/confirm-cod', [OrderController::class, 'confirmReceiptCOD'])->name('orders.confirm-cod');
     Route::post('/orders/{order}/confirm-transfer', [OrderController::class, 'confirmReceiptTransfer'])->name('orders.confirm-transfer');
     Route::post('/orders/{order}/review', [UlasanController::class, 'store'])->name('orders.review');
-    
+
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
     // Routes untuk pembayaran transfer
@@ -165,55 +166,55 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Admin routes
     Route::middleware(['auth', 'adminOnly'])->group(function () {
-    Route::get('/beranda', [AdminController::class, 'index'])->name('dashboard'); // Ini akan menjadi admin.dashboard
-    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
-    Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
+        Route::get('/beranda', [AdminController::class, 'index'])->name('dashboard'); // Ini akan menjadi admin.dashboard
+        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+        Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
 
-    Route::prefix('')->group(function () {  // Tambahkan grup kosong untuk memastikan prefix nama benar
+        Route::prefix('')->group(function () {  // Tambahkan grup kosong untuk memastikan prefix nama benar
 
-        Route::get('/pengguna', [PenggunaController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
-        Route::get('/pengguna/create', [PenggunaController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
-        Route::post('/pengguna', [PenggunaController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
-        Route::get('/pengguna/{id}/edit', [PenggunaController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
-        Route::put('/pengguna/{id}', [PenggunaController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
-        Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
+            Route::get('/pengguna', [PenggunaController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
+            Route::get('/pengguna/create', [PenggunaController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
+            Route::post('/pengguna', [PenggunaController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
+            Route::get('/pengguna/{id}/edit', [PenggunaController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
+            Route::put('/pengguna/{id}', [PenggunaController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
+            Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
 
-        Route::get('/kategori', [KategoriProdukController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
-        Route::get('/kategori/create', [KategoriProdukController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
-        Route::post('/kategori', [KategoriProdukController::class, 'storeKategori'])->name('kategori.store'); // Proses tambah kategori
-        Route::get('/kategori/{id}/edit', [KategoriProdukController::class, 'editKategori'])->name('kategori.edit'); // Halaman form edit kategori
-        Route::put('/kategori/{id}', [KategoriProdukController::class, 'updateKategori'])->name('kategori.update'); // Proses edit kategori
-        Route::delete('/kategori/{id}', [KategoriProdukController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
+            Route::get('/kategori', [KategoriProdukController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
+            Route::get('/kategori/create', [KategoriProdukController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
+            Route::post('/kategori', [KategoriProdukController::class, 'storeKategori'])->name('kategori.store'); // Proses tambah kategori
+            Route::get('/kategori/{id}/edit', [KategoriProdukController::class, 'editKategori'])->name('kategori.edit'); // Halaman form edit kategori
+            Route::put('/kategori/{id}', [KategoriProdukController::class, 'updateKategori'])->name('kategori.update'); // Proses edit kategori
+            Route::delete('/kategori/{id}', [KategoriProdukController::class, 'destroyKategori'])->name('kategori.destroy'); // Proses hapus kategori
 
-        Route::get('/produk', [ProdukController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
-        Route::get('/produk/create', [ProdukController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
-        Route::post('/produk', [ProdukController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
-        Route::get('/produk/{id}/edit', [ProdukController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
-        Route::put('/produk/{id}', [ProdukController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
-        Route::delete('/produk/{id}', [ProdukController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
+            Route::get('/produk', [ProdukController::class, 'indexProduk'])->name('produk.index'); // Halaman daftar produk
+            Route::get('/produk/create', [ProdukController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
+            Route::post('/produk', [ProdukController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
+            Route::get('/produk/{id}/edit', [ProdukController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
+            Route::put('/produk/{id}', [ProdukController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
+            Route::delete('/produk/{id}', [ProdukController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
 
-        Route::get('/pesanan', [PesananController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
-        Route::get('/pesanan/{order_number}', [PesananController::class, 'showPesanan'])->name('pesanan.show');
-        Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
-        Route::delete('/pesanan/{id}', [PesananController::class, 'destroyPesanan'])->name('pesanan.destroy');
+            Route::get('/pesanan', [PesananController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
+            Route::get('/pesanan/{order_number}', [PesananController::class, 'showPesanan'])->name('pesanan.show');
+            Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
+            Route::delete('/pesanan/{id}', [PesananController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
-        // Voucher Management
-        Route::resource('vouchers', VoucherController::class);
+            // Voucher Management
+            Route::resource('vouchers', VoucherController::class);
 
-        Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])
-            ->name('api.vouchers.validate');
+            Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])
+                ->name('api.vouchers.validate');
 
-        // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
-        // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
-        // Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
-        // Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
-        Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
-        Route::patch('/orders/{order}/confirm-transfer', [OrderController::class, 'confirmTransfer'])->name('orders.confirm-transfer');
+            // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
+            // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');
+            // Route::post('/pesanan/{id}/delivery', [OrderController::class, 'delivery'])->name('pesanan.delivery');
+            // Route::post('/pesanan/{id}/complete', [OrderController::class, 'complete'])->name('pesanan.complete');
+            Route::patch('/orders/{order}/confirm-cod', [OrderController::class, 'confirmCOD'])->name('orders.confirm-cod');
+            Route::patch('/orders/{order}/confirm-transfer', [OrderController::class, 'confirmTransfer'])->name('orders.confirm-transfer');
 
-        // Route untuk pembayaran
-        Route::get('/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
-        Route::post('/payments/{order}/verify', [App\Http\Controllers\Admin\PaymentController::class, 'verifyPayment'])->name('payments.verify');
-        Route::post('/payments/{order}/reject', [App\Http\Controllers\Admin\PaymentController::class, 'rejectPayment'])->name('payments.reject');
+            // Route untuk pembayaran
+            Route::get('/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
+            Route::post('/payments/{order}/verify', [App\Http\Controllers\Admin\PaymentController::class, 'verifyPayment'])->name('payments.verify');
+            Route::post('/payments/{order}/reject', [App\Http\Controllers\Admin\PaymentController::class, 'rejectPayment'])->name('payments.reject');
+        });
     });
-}); 
 });
