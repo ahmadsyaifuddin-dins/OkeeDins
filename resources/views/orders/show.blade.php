@@ -32,7 +32,7 @@
                             </div>
 
                             @if ($order->payment_method === 'Cash on Delivery' && in_array($order->status, ['processing', 'delivered']))
-                                <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST" class="mt-3">
+                                {{-- <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST" class="mt-3"> --}}
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin telah menerima pesanan ini?')">
@@ -168,7 +168,7 @@
                             <h5 class="modal-title">Beri Rating dan Ulasan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST">
+                        {{-- <form action="{{ route('orders.confirm-receipt', $order) }}" method="POST"> --}}
                             @csrf
                             @method('PATCH')
                             <div class="modal-body">

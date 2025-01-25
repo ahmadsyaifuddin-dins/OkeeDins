@@ -90,7 +90,6 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
     Route::get('/orders/{order}', [OrderController::class, 'detail'])->name('orders.detail');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     
     // Konfirmasi penerimaan dan rating
     Route::post('/orders/{order}/confirm-cod', [OrderController::class, 'confirmReceiptCOD'])->name('orders.confirm-cod');

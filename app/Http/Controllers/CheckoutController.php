@@ -54,7 +54,7 @@ class CheckoutController extends Controller
         // Handle direct buy from product detail
         if ($directBuy && $produkId) {
             $product = Produk::findOrFail($produkId);
-            
+
             // Validate quantity
             if ($quantity < 1 || $quantity > $product->stok) {
                 return redirect()->route('produk.detail', $product->slug)
@@ -73,7 +73,7 @@ class CheckoutController extends Controller
 
             $price = $product->harga * $quantity;
             $discount = ($price * $product->diskon) / 100;
-            
+
             return view('home.checkout', [
                 'cartItems' => $cartItems,
                 'totalPrice' => $price,
@@ -137,7 +137,7 @@ class CheckoutController extends Controller
     {
         try {
             Log::info('Checkout request:', $request->all());
-            
+
             DB::beginTransaction();
 
             $user = auth()->user();
@@ -166,7 +166,7 @@ class CheckoutController extends Controller
                     throw new \Exception('Stok produk tidak mencukupi');
                 }
 
-                // Buat order baru
+                // Buat order baru (Transfer)
                 $order = Orders::create([
                     'user_id' => $user->id,
                     'address_id' => $data['selected_address'],
@@ -203,7 +203,6 @@ class CheckoutController extends Controller
 
                 // Update stok produk
                 $product->decrement('stok', $quantity);
-
             } else {
                 // Handle cart checkout
                 $cartItems = Cart::with('product')
@@ -237,10 +236,10 @@ class CheckoutController extends Controller
                     throw new \Exception('Total amount mismatch');
                 }
 
-                // Buat order baru
+                // Buat order baru (COD)
                 $order = Orders::create([
                     'user_id' => $user->id,
-                    'address_id' => $data['address_id'],
+                    'address_id' => $data['selected_address'],
                     'payment_method' => $data['payment_method'],
                     'notes' => $data['notes'] ?? '',
                     'status' => 'pending',
@@ -308,7 +307,6 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'payment_method' => $data['payment_method']
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Checkout error: ' . $e->getMessage());
@@ -390,7 +388,7 @@ class CheckoutController extends Controller
             }
 
             // Calculate discount
-            $discount = $voucher->type === 'fixed' 
+            $discount = $voucher->type === 'fixed'
                 ? $voucher->value
                 : ($request->subtotal * $voucher->value / 100);
 
@@ -400,7 +398,6 @@ class CheckoutController extends Controller
                 'voucher' => $voucher,
                 'discount' => $discount
             ]);
-
         } catch (\Exception $e) {
             Log::error('Voucher validation error: ' . $e->getMessage());
             return response()->json([
@@ -423,7 +420,7 @@ class CheckoutController extends Controller
             // Validate voucher if applied
             $voucherId = $request->voucher_id;
             $discountAmount = 0;
-            
+
             if ($voucherId) {
                 $voucher = Voucher::find($voucherId);
                 if ($voucher) {
@@ -433,7 +430,7 @@ class CheckoutController extends Controller
                         'user_id' => auth()->id(),
                         'used_at' => now()
                     ]);
-                    
+
                     $discountAmount = $request->discount_amount;
                 }
             }
@@ -484,7 +481,7 @@ class CheckoutController extends Controller
     public function confirmPayment(Request $request, $orderId)
     {
         $order = Orders::findOrFail($orderId);
-        
+
         if ($order->payment_status === 'paid') {
             return redirect()->back()->with('error', 'Pembayaran sudah dikonfirmasi sebelumnya');
         }
