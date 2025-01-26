@@ -41,7 +41,7 @@
                                     <h6 class="mb-1">Pembayaran Diterima</h6>
                                     <p class="text-muted mb-0 small">
                                         @if ($order->transaction && $order->payment_status === 'paid')
-                                            {{ \Carbon\Carbon::parse($order->transaction->created_at)->format('d M Y, H:i') }}
+                                            {{ \Carbon\Carbon::parse($order->transaction->payment_date)->format('d M Y, H:i') }}
                                         @else
                                             -
                                         @endif

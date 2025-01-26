@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -49,7 +51,7 @@ class OrderController extends Controller
         return back()->with('success', 'Pembayaran COD berhasil dikonfirmasi');
     }
 
-    // Method untuk admmin mengkonfirmasi pembayaran transfer
+    // Method untuk admin mengkonfirmasi pembayaran transfer
     public function confirmTransfer(Orders $order)
     {
         if (Auth::user()->role !== 'Administrator') {
@@ -132,69 +134,71 @@ class OrderController extends Controller
 
     public function confirmReceiptCOD(Orders $order)
     {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        DB::beginTransaction();
         try {
-            Log::info('Memulai proses konfirmasi penerimaan COD untuk order: ' . $order->id);
-
-            // Validasi akses
-            if ($order->user_id !== Auth::id()) {
-                Log::warning('Akses tidak sah ke order: ' . $order->id . ' oleh user: ' . Auth::id());
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses ke pesanan ini');
-            }
-
-            // Validasi status order
-            if ($order->status !== 'delivered' || strtolower($order->payment_method) !== 'cash on delivery') {
-                Log::warning('Status order tidak valid untuk konfirmasi: ' . $order->status);
-                return redirect()->back()->with('error', 'Status pesanan tidak valid untuk konfirmasi');
-            }
+            // Update order status
+            $order->update([
+                'status' => 'completed',
+                'payment_status' => 'paid'
+            ]);
 
             // Proses ulasan
             $ulasan = app(UlasanController::class)->store(request(), $order);
 
-            // Update status order
-            $order->status = 'completed';
-            $order->payment_status = 'paid';
-            $order->save();
+            // Update transaction
+            $transaction = Transaction::where('order_id', $order->id)->first();
+            if ($transaction) {
+                $transaction->status = 'completed';
+                $transaction->payment_status = 'paid';
+                $transaction->payment_date = now(); // Set payment date saat pelanggan konfirmasi terima
+                $transaction->save();
+            }
 
-            Log::info('Order berhasil dikonfirmasi: ' . $order->id);
-            return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan');
+            DB::commit();
+            return back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan.');
         } catch (\Exception $e) {
-            Log::error('Error saat konfirmasi penerimaan COD: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pesanan');
+            DB::rollBack();
+            Log::error('Error confirming COD receipt: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi penerimaan.');
         }
     }
 
     public function confirmReceiptTransfer(Orders $order)
     {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        DB::beginTransaction();
         try {
-            Log::info('Memulai proses konfirmasi penerimaan Transfer untuk order: ' . $order->id);
-
-            // Validasi akses
-            if ($order->user_id !== Auth::id()) {
-                Log::warning('Akses tidak sah ke order: ' . $order->id . ' oleh user: ' . Auth::id());
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses ke pesanan ini');
-            }
-
-            // Validasi status order
-            if (
-                !in_array($order->status, ['processing', 'delivered']) ||
-                strtolower($order->payment_method) !== 'transfer'
-            ) {
-                Log::warning('Status order tidak valid untuk konfirmasi: ' . $order->status);
-                return redirect()->back()->with('error', 'Status pesanan tidak valid untuk konfirmasi');
-            }
+            // Update order status
+            $order->update([
+                'status' => 'completed',
+                'payment_status' => 'paid'
+            ]);
 
             // Proses ulasan
             $ulasan = app(UlasanController::class)->store(request(), $order);
 
-            // Update status order
-            $order->status = 'completed';
-            $order->save();
+            // Update transaction
+            $transaction = Transaction::where('order_id', $order->id)->first();
+            if ($transaction) {
+                $transaction->status = 'completed';
+                $transaction->payment_status = 'paid';
+                $transaction->payment_date = now(); // Set payment date saat pelanggan konfirmasi terima
+                $transaction->save();
+            }
 
-            Log::info('Order berhasil dikonfirmasi: ' . $order->id);
-            return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan');
+            DB::commit();
+            return back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan.');
         } catch (\Exception $e) {
-            Log::error('Error saat konfirmasi penerimaan Transfer: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi pesanan');
+            DB::rollBack();
+            Log::error('Error confirming transfer receipt: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi penerimaan.');
         }
     }
 

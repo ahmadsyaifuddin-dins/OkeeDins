@@ -161,39 +161,42 @@
                             </div>
 
                             <div class="border-top pt-3">
+                                <!-- Detail harga per produk -->
+                                @foreach($cartItems as $item)
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Harga Produk (Satuan)</span>
-                                    <span id="harga_produk">Rp
-                                        {{ number_format($item->product->harga, 0, ',', '.') }}</span>
+                                    <span class="">{{ $item->product->nama_produk }} ({{ $item->quantity }})</span>
+                                    <span>Rp {{ number_format($item->product->harga * $item->quantity, 0, ',', '.') }}</span>
                                 </div>
+                                @endforeach
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Subtotal</span>
-                                    <span id="subtotal">Rp {{ number_format($cartTotal, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2" id="discount_row"
-                                    style="display: none !important;">
-                                    <span>Diskon Voucher</span>
-                                    <span id="discount_amount" class="text-success">-Rp 0</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Diskon Produk</span>
+                                    <span>Diskon Total Produk</span>
                                     <span id="product_discount" class="text-success">-Rp
                                         {{ number_format($totalDiscount, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Ongkos Kirim</span>
-                                    <span id="shipping_cost">Rp 0</span>
-                                </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2" id="discount_row"
+                                        style="display: none !important;">
+                                        <span>Diskon Voucher</span>
+                                        <span id="discount_amount" class="text-success">-Rp 0</span>
+                                    </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Ongkos Kirim</span>
+                                <span id="shipping_cost">Rp 0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong class="">Subtotal</strong>
+                                <strong id="subtotal">Rp {{ number_format($cartTotal, 0, ',', '.') }}</strong>
+                            </div>
                                 <div class="d-flex justify-content-between border-top pt-2 mt-2">
                                     <strong>Total</strong>
                                     <strong id="total_amount">Rp {{ number_format($cartTotal, 0, ',', '.') }}</strong>
                                 </div>
                             </div>
 
+                            <!-- Hidden inputs for voucher -->
                             <input type="hidden" id="applied_voucher_id" name="voucher_id">
                             <input type="hidden" id="applied_voucher_code" name="voucher_code">
-                            <input type="hidden" id="applied_discount_amount" name="discount_amount" value="0">
-
+                            <input type="hidden" id="applied_discount_amount" name="voucher_discount" value="0">
+                            
                             <!-- Add hidden input for cart items -->
                             @if (isset($directBuy) && $directBuy)
                                 <input type="hidden" name="direct_buy" value="1">

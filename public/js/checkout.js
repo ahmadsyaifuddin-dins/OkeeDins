@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Validate address
             if (!addressInput.value) {
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'warning',
                     title: 'Oops...',
                     text: 'Silakan pilih alamat pengiriman',
                 });
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
             if (!selectedPayment) {
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'warning',
                     title: 'Oops...',
                     text: 'Silakan pilih metode pembayaran',
                 });
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Get the current subtotal
+            // Get the current subtotal dan total discount produk
             const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
             const shippingCost = parseInt(shippingCostElement.textContent.replace(/[^0-9]/g, ''));
 
@@ -157,81 +157,86 @@ document.addEventListener('DOMContentLoaded', function () {
                     subtotal: subtotal
                 })
             })
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            throw new Error('Silakan login terlebih dahulu');
-                        }
-                        return response.json().then(data => {
-                            throw new Error(data.message || 'Terjadi kesalahan');
-                        });
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Silakan login terlebih dahulu');
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        showVoucherMessage(data.message, 'text-success');
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Terjadi kesalahan');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showVoucherMessage(data.message, 'text-success');
 
-                        // Update UI with discount
-                        const discount = data.discount;
-                        discountRow.style.display = 'flex';
-                        discountAmount.textContent = `-Rp ${formatNumber(discount)}`;
+                    // Update UI with discount
+                    const voucherDiscount = data.discount;
+                    discountRow.style.display = 'flex';
+                    discountAmount.textContent = `-Rp ${formatNumber(voucherDiscount)}`;
 
-                        // Update total
-                        const newTotal = subtotal + shippingCost - discount;
-                        totalAmount.textContent = `Rp ${formatNumber(newTotal)}`;
-                        totalAmountInput.value = newTotal;
+                    // Hitung total baru (subtotal - voucher + ongkir)
+                    const newTotal = subtotal - voucherDiscount + shippingCost;
+                    totalAmount.textContent = `Rp ${formatNumber(newTotal)}`;
+                    totalAmountInput.value = newTotal;
 
-                        // Store voucher info
-                        appliedVoucherId.value = data.voucher.id;
-                        appliedVoucherCode.value = code;
-                        appliedDiscountAmount.value = discount;
+                    // Store voucher info
+                    appliedVoucherId.value = data.voucher.id;
+                    appliedVoucherCode.value = code;
+                    appliedDiscountAmount.value = voucherDiscount;
 
-                        // Disable input and button
-                        voucherInput.disabled = true;
-                        applyVoucherBtn.disabled = true;
+                    // Disable input and button
+                    voucherInput.disabled = true;
+                    applyVoucherBtn.disabled = true;
 
-                        // Change button to remove voucher
-                        applyVoucherBtn.textContent = 'Hapus';
-                        applyVoucherBtn.classList.remove('btn-outline-primary');
-                        applyVoucherBtn.classList.add('btn-outline-danger');
-                        applyVoucherBtn.onclick = removeVoucher;
-                    } else {
-                        showVoucherMessage(data.message, 'text-danger');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showVoucherMessage(error.message || 'Terjadi kesalahan saat memvalidasi voucher', 'text-danger');
-                });
+                    // Change button to remove voucher
+                    applyVoucherBtn.textContent = 'Hapus';
+                    applyVoucherBtn.classList.remove('btn-outline-custom');
+                    applyVoucherBtn.classList.add('btn-outline-danger');
+                    applyVoucherBtn.onclick = removeVoucher;
+                } else {
+                    showVoucherMessage(data.message, 'text-danger');
+                }
+            })
+            .catch(error => {
+                showVoucherMessage(error.message, 'text-danger');
+            });
         });
     }
 
+    // Function to remove voucher
     function removeVoucher() {
-        voucherInput.value = '';
-        voucherInput.disabled = false;
-        showVoucherMessage('', '');
+        // Get the current values
+        const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
+        const shippingCost = parseInt(shippingCostElement.textContent.replace(/[^0-9]/g, ''));
+
+        // Reset voucher UI
         discountRow.style.display = 'none';
         discountAmount.textContent = '-Rp 0';
+        voucherInput.value = '';
+        voucherInput.disabled = false;
 
-        // Reset hidden inputs
+        // Reset voucher data
         appliedVoucherId.value = '';
         appliedVoucherCode.value = '';
         appliedDiscountAmount.value = '0';
 
-        // Reset button
-        applyVoucherBtn.textContent = 'Terapkan';
-        applyVoucherBtn.disabled = false;
-        applyVoucherBtn.classList.remove('btn-outline-danger');
-        applyVoucherBtn.classList.add('btn-outline-primary');
-        applyVoucherBtn.onclick = null;
-
-        // Update total
-        const subtotal = parseInt(subtotalElement.textContent.replace(/[^0-9]/g, ''));
-        const shippingCost = parseInt(shippingCostElement.textContent.replace(/[^0-9]/g, ''));
+        // Update total (subtotal + ongkir)
         const newTotal = subtotal + shippingCost;
         totalAmount.textContent = `Rp ${formatNumber(newTotal)}`;
         totalAmountInput.value = newTotal;
+
+        // Reset button
+        applyVoucherBtn.textContent = 'Terapkan';
+        applyVoucherBtn.classList.remove('btn-outline-danger');
+        applyVoucherBtn.classList.add('btn-outline-custom');
+        applyVoucherBtn.disabled = false;
+        applyVoucherBtn.onclick = null;
+
+        // Clear message
+        showVoucherMessage('', '');
     }
 
     function showVoucherMessage(message, className) {

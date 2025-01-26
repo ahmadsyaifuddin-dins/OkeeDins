@@ -28,7 +28,7 @@
                                 <span class="badge bg-{{ $order->status_color }} fs-6">{{ $order->status_label }}</span>
                             @endif
                         </div>
-                        @if(in_array($order->status, ['processing', 'delivered', 'completed']))
+                        @if(in_array($order->status, ['pending','awaiting payment','confirmed','processing', 'delivered', 'completed']))
                             <a href="{{ route('orders.track', $order->id) }}" class="btn btn-custom">
                                 <i class="bi bi-truck me-2"></i>Lacak Pesanan
                             </a>

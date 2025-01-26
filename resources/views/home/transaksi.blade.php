@@ -24,7 +24,7 @@
                                     <i class="bi bi-wallet2 text-custom me-2"></i>
                                     <h6 class="mb-0">Total Pengeluaran (Cash on Delivery)</h6>
                                 </div>
-                                <h4 class="mb-0 fw-bold">Rp{{ number_format($totalSpentThisMonth, 0, ',', '.') }}</h4>
+                                <h4 class="mb-0 fw-bold">Rp{{ number_format($totalCODSpent, 0, ',', '.') }}</h4>
                                 <small class="text-muted">Bulan ini</small>
                             </div>
                         </div>
@@ -64,7 +64,8 @@
                                 <h3 class="card-title mb-0">{{ $totalTransferOrders }}</h3>
                                 <div class="mt-2 small">
                                     <span class="text-success me-2">{{ $totalSuccessTransferOrders }} Berhasil</span>
-                                    <span class="text-danger">{{ $totalPendingTransferOrders }} Menunggu</span>
+                                    <span class="text-danger">{{ $totalPendingTransferOrders }} Menunggu Pembayaran</span>
+                                    <span class="text-primary ms-2">{{ $totalAwaitingConfirmPaymentTransferOrders }} Menunggu Konfirmasi</span>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +107,7 @@
                                         <div>
                                             <h6 class="mb-1">Pembayaran Pesanan #{{ $transaction->order->order_number }}
                                             </h6>
-                                            <h6 class="mb-1"> Nomor Pesanan : {{ $transaction->order_id }}</h6>
+                                            <h6 class="mb-1 text-muted small"> Nomor Pesanan #{{ str_pad($transaction->order_id, 6, '0', STR_PAD_LEFT) }}</h6>
                                             <p class="text-muted mb-0 small">
                                                 {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, H:i') }}
                                             </p>
@@ -115,78 +116,32 @@
                                             class="text-danger fw-bold">-Rp{{ number_format($transaction->amount, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="d-flex align-items-center">
-                                        @if ($transaction->order->payment_method === 'transfer')
-                                            @if ($transaction->order->status === 'processing' || $transaction->order->status === 'completed')
+                                        @if ($transaction->order->payment_method === 'Cash on Delivery')
+                                            @if ($transaction->order->status === 'completed')
                                                 <span class="badge bg-success me-2">Berhasil</span>
-                                            @elseif($transaction->order->status === 'awaiting payment')
-                                                <span class="badge bg-warning me-2">Menunggu Konfirmasi</span>
-                                            @elseif($transaction->order->status === 'payment_rejected')
-                                                <span class="badge bg-danger me-2">Pembayaran Ditolak</span>
                                             @else
                                                 <span class="badge bg-danger me-2">Belum Bayar</span>
                                             @endif
                                         @else
-                                            <span
-                                                class="badge bg-{{ $transaction->payment_status === 'paid' ? 'success' : 'danger' }} me-2">
-                                                {{ $transaction->payment_status === 'paid' ? 'Berhasil' : 'Belum Bayar' }}
-                                            </span>
+                                            @if ($transaction->order->status === 'completed')
+                                                <span class="badge bg-success me-2">Berhasil</span>
+                                            @elseif($transaction->order->status === 'awaiting payment')
+                                                <span class="badge bg-primary me-2">Menunggu Konfirmasi</span>
+                                            @elseif($transaction->order->status === 'payment_rejected')
+                                                <span class="badge bg-danger me-2">Pembayaran Ditolak</span>
+                                            @elseif($transaction->order->status === 'processing')
+                                                <span class="badge bg-info me-2">Sedang Diproses</span>
+                                            @elseif($transaction->order->status === 'delivered')
+                                                <span class="badge bg-info me-2">Dalam Pengantaran</span>
+                                            @elseif($transaction->order->status === 'pending')
+                                            <span class="badge bg-danger me-2">Menunggu Pembayaran</span>
+                                              
+                                            @endif
                                         @endif
-                                        <small
-                                            class="text-muted text-capitalize">{{ $transaction->order->payment_method }}</small>
-                                        @if ($transaction->order->payment_method === 'transfer' && $transaction->order->status === 'pending')
-                                            <button type="button" class="btn btn-sm btn-primary me-2 ms-2"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#uploadModal{{ $transaction->order->id }}">
-                                                Upload Bukti Transfer
-                                            </button>
-
-                                            <!-- Modal Upload Bukti Transfer -->
-                                            <div class="modal fade" id="uploadModal{{ $transaction->order->id }}"
-                                                tabindex="-1"
-                                                aria-labelledby="uploadModalLabel{{ $transaction->order->id }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="uploadModalLabel{{ $transaction->order->id }}">Upload
-                                                                Bukti Transfer</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                        </div>
-                                                        <form
-                                                            action="{{ route('orders.upload-payment', $transaction->order->id) }}"
-                                                            method="POST" enctype="multipart/form-data">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label for="payment_proof" class="form-label">Bukti
-                                                                        Transfer</label>
-                                                                    <input type="file" class="form-control"
-                                                                        id="payment_proof" name="payment_proof"
-                                                                        accept="image/*" required>
-                                                                    <small class="text-muted">Format: JPG, JPEG, PNG (Max:
-                                                                        2MB)</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Upload</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @elseif($transaction->order->payment_method === 'transfer' && $transaction->order->status === 'payment_rejected')
-                                            <span class="badge bg-danger">Pembayaran Ditolak</span>
-                                            <button type="button" class="btn btn-sm btn-primary mt-2"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#uploadModal{{ $transaction->order->id }}">
-                                                Upload Ulang Bukti Transfer
-                                            </button>
-                                        @endif
+                                
+                                        <small class="text-muted">
+                                            {{ $transaction->order->payment_method === 'transfer' ? 'Transfer Bank' : 'Cash on Delivery' }}
+                                        </small>
                                     </div>
                                 </div>
                             @endforeach

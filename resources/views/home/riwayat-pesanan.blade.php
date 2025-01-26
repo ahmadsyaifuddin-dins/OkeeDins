@@ -49,7 +49,7 @@
                                 </span>
                                 <br>
                                 <span class="small">
-                                    Order #{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}
+                                    Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
                                 </span>
                                 <span class="fw-bold"><i class="bi bi-shop me-2"></i>Food Fusion</span>
                             </div>

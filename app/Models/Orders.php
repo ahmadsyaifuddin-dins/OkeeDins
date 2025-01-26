@@ -68,6 +68,7 @@ class Orders extends Model
     const STATUS_PENDING = 'pending';
     const STATUS_CONFIRMED = 'confirmed';
     const STATUS_AWAITING_PAYMENT = 'awaiting payment';
+    const STATUS_PAYMENT_REJECTED = 'payment rejected';
     const STATUS_PROCESSING = 'processing';
     const STATUS_DELIVERED = 'delivered';
     const STATUS_COMPLETED = 'completed';
@@ -143,6 +144,7 @@ class Orders extends Model
             self::STATUS_PENDING => 'bg-warning',
             self::STATUS_CONFIRMED => 'bg-info',
             self::STATUS_AWAITING_PAYMENT => 'bg-info',
+            self::STATUS_PAYMENT_REJECTED => 'bg-danger',
             self::STATUS_PROCESSING => 'bg-info',
             self::STATUS_DELIVERED => 'bg-primary',
             self::STATUS_COMPLETED => 'bg-success',
@@ -152,18 +154,19 @@ class Orders extends Model
     }
 
      // Tambahkan accessor untuk warna status
-     public function getStatusColorAttribute()
-     {
-         return [
-             'pending' => 'warning',
-             'awaiting payment' => 'warning',
-             'confirmed' => 'info',
-             'processing' => 'info',
-             'delivered' => 'primary',
-             'completed' => 'success',
-             'cancelled' => 'danger'
-         ][$this->status] ?? 'secondary';
-     }
+         public function getStatusColorAttribute()
+    {
+        return [
+            'pending' => 'secondary',
+            'awaiting payment' => 'secondary',
+            'payment_rejected' => 'danger',
+            'confirmed' => 'info',
+            'processing' => 'info',
+            'delivered' => 'primary',
+            'completed' => 'success',
+            'cancelled' => 'danger'
+        ][$this->status] ?? 'secondary';
+    }
 
     public function getPaymentStatusBadgeAttribute()
     {
@@ -185,6 +188,11 @@ class Orders extends Model
     public function scopeAwaitingPayment($query)
     {
         return $query->where('status', self::STATUS_AWAITING_PAYMENT);
+    }
+
+    public function scopePaymentRejected($query)
+    {
+        return $query->where('status', self::STATUS_PAYMENT_REJECTED);
     }
 
     public function scopeProcess($query)
@@ -243,6 +251,11 @@ class Orders extends Model
         return $this->status === self::STATUS_AWAITING_PAYMENT;
     }
 
+    public function isPaymentRejected()
+    {
+        return $this->status === self::STATUS_PAYMENT_REJECTED;
+    }
+
     public function isProcessing()
     {
         return $this->status === self::STATUS_PROCESSING;
@@ -276,7 +289,7 @@ class Orders extends Model
     // Method to update order status
     public function updateStatus($status)
     {
-        if (in_array($status, [self::STATUS_PENDING, self::STATUS_AWAITING_PAYMENT, self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_DELIVERED, self::STATUS_COMPLETED, self::STATUS_CANCELLED])) {
+        if (in_array($status, [self::STATUS_PENDING, self::STATUS_PAYMENT_REJECTED, self::STATUS_AWAITING_PAYMENT, self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_DELIVERED, self::STATUS_COMPLETED, self::STATUS_CANCELLED])) {
             $this->update(['status' => $status]);
             return true;
         }

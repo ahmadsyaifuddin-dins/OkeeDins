@@ -96,7 +96,7 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         <span class="text-secondary text-xs font-weight-bold">
-                                            {{ $voucher->valid_until->format('d/m/Y') }}
+                                            {{ $voucher->valid_until->format('d/m/Y H:i') }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-center">

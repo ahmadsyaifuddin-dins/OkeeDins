@@ -136,8 +136,6 @@ class CheckoutController extends Controller
     public function processCheckout(Request $request)
     {
         try {
-            Log::info('Checkout request:', $request->all());
-
             DB::beginTransaction();
 
             $user = auth()->user();
@@ -152,151 +150,13 @@ class CheckoutController extends Controller
                 'quantity' => 'required_if:direct_buy,1|integer|min:1'
             ]);
 
-            Log::info('Validated data:', $data);
+            // Determine checkout type
+            $isDirectBuy = isset($data['selected_items'][0]) && strpos($data['selected_items'][0], 'direct_') === 0;
 
-            // Handle direct buy
-            if (isset($data['selected_items'][0]) && strpos($data['selected_items'][0], 'direct_') === 0) {
-                Log::info('Processing direct buy');
-                $produkId = (int) str_replace('direct_', '', $data['selected_items'][0]);
-                $product = Produk::findOrFail($produkId);
-                $quantity = $request->input('quantity', 1);
-
-                // Validate quantity
-                if ($quantity > $product->stok) {
-                    throw new \Exception('Stok produk tidak mencukupi');
-                }
-
-                // Buat order baru (Transfer)
-                $order = Orders::create([
-                    'user_id' => $user->id,
-                    'address_id' => $data['selected_address'],
-                    'payment_method' => $data['payment_method'],
-                    'notes' => $data['notes'] ?? '',
-                    'status' => 'pending',
-                    'total_amount' => $data['total_amount'],
-                    'qty' => $quantity,
-                    'order_number' => 'ORD-' . uniqid(),
-                    'payment_status' => 'unpaid'
-                ]);
-
-                Log::info('Order created:', $order->toArray());
-
-                try {
-                    // Create transaction record
-                    $transaction = $this->transactionController->createTransaction($order);
-                    Log::info('Transaction created:', $transaction->toArray());
-                } catch (\Exception $e) {
-                    Log::error('Error creating transaction: ' . $e->getMessage());
-                    throw $e;
-                }
-
-                // Create order item
-                OrderItems::create([
-                    'order_id' => $order->id,
-                    'produk_id' => $product->id,
-                    'quantity' => $quantity,
-                    'price' => $product->harga,
-                    'discount' => $product->diskon,
-                    'subtotal' => ($product->harga * $quantity) -
-                        (($product->harga * $quantity * $product->diskon) / 100)
-                ]);
-
-                // Update stok produk
-                $product->decrement('stok', $quantity);
+            if ($isDirectBuy) {
+                $checkoutData = $this->procesDirectBuyCheckout($user, $data, $request);
             } else {
-                // Handle cart checkout
-                $cartItems = Cart::with('product')
-                    ->where('user_id', $user->id)
-                    ->whereIn('id', $data['selected_items'])
-                    ->get();
-
-                if ($cartItems->isEmpty()) {
-                    throw new \Exception('Tidak ada produk yang dipilih');
-                }
-
-                // Validate stock for all items
-                foreach ($cartItems as $item) {
-                    if ($item->quantity > $item->product->stok) {
-                        throw new \Exception("Stok {$item->product->nama_produk} tidak mencukupi");
-                    }
-                }
-
-                // Calculate totals
-                $totalQty = 0;
-                $totalAmount = 0;
-                foreach ($cartItems as $item) {
-                    $totalQty += $item->quantity;
-                    $price = $item->product->harga * $item->quantity;
-                    $discount = ($price * $item->product->diskon) / 100;
-                    $totalAmount += $price - $discount;
-                }
-
-                // Validate total amount
-                if (abs($totalAmount - $data['total_amount']) > 0.01) {
-                    throw new \Exception('Total amount mismatch');
-                }
-
-                // Buat order baru (COD)
-                $order = Orders::create([
-                    'user_id' => $user->id,
-                    'address_id' => $data['selected_address'],
-                    'payment_method' => $data['payment_method'],
-                    'notes' => $data['notes'] ?? '',
-                    'status' => 'pending',
-                    'total_amount' => $totalAmount,
-                    'qty' => $totalQty,
-                    'order_number' => 'ORD-' . uniqid(),
-                    'payment_status' => 'unpaid'
-                ]);
-
-                Log::info('Order created:', $order->toArray());
-
-                try {
-                    // Create transaction record
-                    $transaction = $this->transactionController->createTransaction($order);
-                    Log::info('Transaction created:', $transaction->toArray());
-                } catch (\Exception $e) {
-                    Log::error('Error creating transaction: ' . $e->getMessage());
-                    throw $e;
-                }
-
-                // Create order items and update stock
-                foreach ($cartItems as $item) {
-                    OrderItems::create([
-                        'order_id' => $order->id,
-                        'produk_id' => $item->product->id,
-                        'quantity' => $item->quantity,
-                        'price' => $item->product->harga,
-                        'discount' => $item->product->diskon,
-                        'subtotal' => ($item->product->harga * $item->quantity) -
-                            (($item->product->harga * $item->quantity * $item->product->diskon) / 100)
-                    ]);
-
-                    // Update stock
-                    $item->product->decrement('stok', $item->quantity);
-                }
-
-                // Clear cart items
-                Cart::whereIn('id', $data['selected_items'])->delete();
-            }
-
-            // Handle voucher if applied
-            if (!empty($data['voucher_code'])) {
-                $voucher = Voucher::where('code', $data['voucher_code'])
-                    ->where('is_active', true)
-                    ->first();
-
-                if ($voucher) {
-                    VoucherUser::create([
-                        'user_id' => $user->id,
-                        'voucher_id' => $voucher->id,
-                        'discount_amount' => $voucher->value,
-                        'order_id' => $order->id,
-                        'used_at' => now()
-                    ]);
-
-                    $voucher->increment('used_count');
-                }
+                $checkoutData = $this->processCartCheckout($user, $data);
             }
 
             DB::commit();
@@ -304,27 +164,220 @@ class CheckoutController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order berhasil dibuat!',
-                'order_id' => $order->id,
+                'order_id' => $checkoutData['order']->id,
                 'payment_method' => $data['payment_method']
             ]);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Checkout error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat memproses checkout.',
-                'error' => $e->getMessage(),
-                'alert' => [
-                    'icon' => 'error',
-                    'title' => 'Oops...',
-                    'text' => 'Terjadi kesalahan saat memproses checkout: ' . $e->getMessage(),
-                    'footer' => '<a href="https://telegram.me/dins_ahmads">Hubungi dukungan</a>',
-                    'showConfirmButton' => true,
-                    'confirmButtonText' => 'OK',
-                    'showCancelButton' => false,
-                ]
-            ], 422);
+            return $this->handleCheckoutError($e);
         }
+    }
+
+    private function procesDirectBuyCheckout($user, $data, $request)
+    {
+        $produkId = (int) str_replace('direct_', '', $data['selected_items'][0]);
+        $product = Produk::findOrFail($produkId);
+        $quantity = $request->input('quantity', 1);
+
+        // Validate stock
+        if ($quantity > $product->stok) {
+            throw new \Exception('Stok produk tidak mencukupi');
+        }
+
+        // Calculate price and discount
+        $price = $product->harga * $quantity;
+        $discount = ($price * $product->diskon) / 100;
+        $totalAmount = $price - $discount;
+
+        // Handle voucher
+        $voucherResult = $this->applyVoucher($data['voucher_code'], $totalAmount);
+
+        // Create order
+        $order = Orders::create([
+            'user_id' => $user->id,
+            'address_id' => $data['selected_address'],
+            'payment_method' => $data['payment_method'],
+            'notes' => $data['notes'] ?? '',
+            'status' => 'pending',
+            'total_amount' => $voucherResult['total_amount'],
+            'qty' => $quantity,
+            'order_number' => 'ORD-' . uniqid(),
+            'payment_status' => 'unpaid',
+            'voucher_id' => $voucherResult['voucher_id'],
+            'voucher_discount' => $voucherResult['voucher_discount']
+        ]);
+
+        try {
+            // Create transaction record
+            $transaction = $this->transactionController->createTransaction($order);
+            Log::info('Transaction created:', $transaction->toArray());
+        } catch (\Exception $e) {
+            Log::error('Error creating transaction: ' . $e->getMessage());
+            throw $e;
+        }
+
+        // Create order item
+        OrderItems::create([
+            'order_id' => $order->id,
+            'produk_id' => $product->id,
+            'quantity' => $quantity,
+            'price' => $product->harga,
+            'discount' => $product->diskon,
+            'subtotal' => $price - $discount
+        ]);
+
+        // Update stock
+        $product->decrement('stok', $quantity);
+
+        // Record voucher usage if applicable
+        if ($voucherResult['voucher']) {
+            $this->recordVoucherUsage($user, $voucherResult['voucher'], $order, $voucherResult['voucher_discount']);
+        }
+
+        return ['order' => $order];
+    }
+
+    private function processCartCheckout($user, $data)
+    {
+        $cartItems = Cart::with('product')
+            ->where('user_id', $user->id)
+            ->whereIn('id', $data['selected_items'])
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            throw new \Exception('Tidak ada produk yang dipilih');
+        }
+
+        // Validate stock
+        foreach ($cartItems as $item) {
+            if ($item->quantity > $item->product->stok) {
+                throw new \Exception("Stok {$item->product->nama_produk} tidak mencukupi");
+            }
+        }
+
+        // Calculate total amount
+        $totalQty = 0;
+        $totalAmount = 0;
+        foreach ($cartItems as $item) {
+            $totalQty += $item->quantity;
+            $price = $item->product->harga * $item->quantity;
+            $discount = ($price * $item->product->diskon) / 100;
+            $totalAmount += $price - $discount;
+        }
+
+        // Handle voucher
+        $voucherResult = $this->applyVoucher($data['voucher_code'], $totalAmount);
+
+        // Create order
+        $order = Orders::create([
+            'user_id' => $user->id,
+            'address_id' => $data['selected_address'],
+            'payment_method' => $data['payment_method'],
+            'notes' => $data['notes'] ?? '',
+            'status' => 'pending',
+            'total_amount' => $voucherResult['total_amount'],
+            'qty' => $totalQty,
+            'order_number' => 'ORD-' . uniqid(),
+            'payment_status' => 'unpaid',
+            'voucher_id' => $voucherResult['voucher_id'],
+            'voucher_discount' => $voucherResult['voucher_discount']
+        ]);
+
+        try {
+            // Create transaction record
+            $transaction = $this->transactionController->createTransaction($order);
+            Log::info('Transaction created:', $transaction->toArray());
+        } catch (\Exception $e) {
+            Log::error('Error creating transaction: ' . $e->getMessage());
+            throw $e;
+        }
+
+        // Create order items and update stock
+        foreach ($cartItems as $item) {
+            OrderItems::create([
+                'order_id' => $order->id,
+                'produk_id' => $item->product->id,
+                'quantity' => $item->quantity,
+                'price' => $item->product->harga,
+                'discount' => $item->product->diskon,
+                'subtotal' => ($item->product->harga * $item->quantity) -
+                    (($item->product->harga * $item->quantity * $item->product->diskon) / 100)
+            ]);
+
+            // Update stock
+            $item->product->decrement('stok', $item->quantity);
+        }
+
+        // Clear cart items
+        Cart::whereIn('id', $data['selected_items'])->delete();
+
+        // Record voucher usage if applicable
+        if ($voucherResult['voucher']) {
+            $this->recordVoucherUsage($user, $voucherResult['voucher'], $order, $voucherResult['voucher_discount']);
+        }
+
+        return ['order' => $order];
+    }
+
+    private function applyVoucher($voucherCode, $totalAmount)
+    {
+        $voucherDiscount = 0;
+        $voucherId = null;
+        $voucher = null;
+
+        if (!empty($voucherCode)) {
+            $voucher = Voucher::where('code', $voucherCode)
+                ->where('is_active', true)
+                ->first();
+
+            if ($voucher) {
+                $voucherDiscount = $voucher->type === 'fixed'
+                    ? min($voucher->value, $totalAmount)
+                    : ($totalAmount * $voucher->value / 100);
+
+                $totalAmount -= $voucherDiscount;
+                $voucherId = $voucher->id;
+            }
+        }
+
+        return [
+            'total_amount' => $totalAmount,
+            'voucher_discount' => $voucherDiscount,
+            'voucher_id' => $voucherId,
+            'voucher' => $voucher
+        ];
+    }
+
+    private function recordVoucherUsage($user, $voucher, $order, $discountAmount)
+    {
+        VoucherUser::create([
+            'user_id' => $user->id,
+            'voucher_id' => $voucher->id,
+            'discount_amount' => $discountAmount,
+            'order_id' => $order->id,
+            'used_at' => now()
+        ]);
+
+        $voucher->increment('used_count');
+    }
+
+    private function handleCheckoutError($e)
+    {
+        Log::error('Checkout error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan saat memproses checkout.',
+            'error' => $e->getMessage(),
+            'alert' => [
+                'icon' => 'error',
+                'title' => 'Oops...',
+                'text' => 'Terjadi kesalahan saat memproses checkout: ' . $e->getMessage(),
+                'footer' => '<a href="https://telegram.me/dins_ahmads">Hubungi dukungan</a>',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'showCancelButton' => false,
+            ]
+        ], 422);
     }
 
     public function validateVoucher(Request $request)
@@ -419,31 +472,25 @@ class CheckoutController extends Controller
 
             // Validate voucher if applied
             $voucherId = $request->voucher_id;
-            $discountAmount = 0;
+            $voucherDiscount = $request->discount_amount ?? 0; // Ambil dari input form atau set 0 jika tidak ada
 
             if ($voucherId) {
                 $voucher = Voucher::find($voucherId);
-                if ($voucher) {
-                    // Create voucher usage record
-                    VoucherUser::create([
-                        'voucher_id' => $voucher->id,
-                        'user_id' => auth()->id(),
-                        'used_at' => now()
-                    ]);
-
-                    $discountAmount = $request->discount_amount;
+                if (!$voucher) {
+                    return redirect()->back()->with('error', 'Voucher tidak valid');
                 }
+                $discountAmount = $voucherDiscount;
             }
 
             // Create order
             $order = Orders::create([
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'total_amount' => $request->total_amount,
-                'shipping_address' => $request->shipping_address,
                 'shipping_cost' => $request->shipping_cost,
                 'voucher_id' => $voucherId,
                 'discount_amount' => $discountAmount,
-                'status' => 'pending'
+                'status' => 'pending',
+                'voucher_discount' => $voucherDiscount // Pastikan field ini selalu ada
             ]);
 
             // Create order items
