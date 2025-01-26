@@ -13,17 +13,17 @@
                 </a>
                 <h4 class="mb-0 fw-bold">Riwayat Pesanan</h4>
             </div>
-            
+
             <!-- Filter Status -->
             <div class="status-filter mb-4">
-                <div class="d-flex overflow-auto pb-2">
-                    <a href="{{ route('orders.history') }}" class="btn btn-sm {{ !request('status') ? 'btn-custom' : 'btn-outline-custom' }} me-2">Semua</a>
-                    <a href="{{ route('orders.history', ['status' => 'pending']) }}" class="btn btn-sm {{ request('status') === 'pending' ? 'btn-custom' : 'btn-outline-custom' }} me-2">Menunggu Konfirmasi</a>
-                    <a href="{{ route('orders.history', ['status' => 'awaiting payment']) }}" class="btn btn-sm {{ request('status') === 'awaiting payment' ? 'btn-custom' : 'btn-outline-custom' }} me-2">Belum Bayar</a>
-                    <a href="{{ route('orders.history', ['status' => 'processing']) }}" class="btn btn-sm {{ request('status') === 'processing' ? 'btn-custom' : 'btn-outline-custom' }} me-2">Diproses</a>
-                    <a href="{{ route('orders.history', ['status' => 'delivered']) }}" class="btn btn-sm {{ request('status') === 'delivered' ? 'btn-custom' : 'btn-outline-custom' }} me-2">Dikirim</a>
-                    <a href="{{ route('orders.history', ['status' => 'completed']) }}" class="btn btn-sm {{ request('status') === 'completed' ? 'btn-custom' : 'btn-outline-custom' }} me-2">Selesai</a>
-                    <a href="{{ route('orders.history', ['status' => 'cancelled']) }}" class="btn btn-sm {{ request('status') === 'cancelled' ? 'btn-custom' : 'btn-outline-custom' }}">Dibatalkan</a>
+                <div class="d-flex overflow-auto pb-2 gap-2">
+                    <a href="{{ route('orders.history') }}" class="btn btn-sm {{ !request('status') ? 'btn-custom' : 'btn-outline-custom' }}">Semua</a>
+                    <a href="{{ route('orders.history', ['status' => 'pending']) }}" class="btn btn-sm {{ request('status') === 'pending' ? 'btn-custom' : 'btn-outline-custom' }}">Menunggu</a>
+                    <a href="{{ route('orders.history', ['status' => 'awaiting payment']) }}" class="btn btn-sm {{ request('status') === 'awaiting payment' ? 'btn-custom' : 'btn-outline-custom' }}">Belum Bayar</a>
+                    <a href="{{ route('orders.history', ['status' => 'processing']) }}" class="btn btn-sm {{ request('status') === 'processing' ? 'btn-custom' : 'btn-outline-custom' }}">Diproses</a>
+                    <a href="{{ route('orders.history', ['status' => 'delivered']) }}" class="btn btn-sm {{ request('status') === 'delivered' ? 'btn-custom' : 'btn-outline-custom' }}">Dikirim</a>
+                    <a href="{{ route('orders.history', ['status' => 'completed']) }}" class="btn btn-sm {{ request('status') === 'completed' ? 'btn-custom' : 'btn-outline-custom' }}">Selesai</a>
+                    <a href="{{ route('orders.history', ['status' => 'cancelled']) }}" class="btn btn-sm {{ request('status') === 'cancelled' ? 'btn-custom' : 'btn-outline-custom' }}">Batal</a>
                 </div>
             </div>
 
@@ -55,12 +55,12 @@
                             </div>
                             <span class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span>
                         </div>
-                        
+
                         @php
                             $firstItem = $order->orderItems->first();
                             $otherItemsCount = $order->orderItems->count() - 1;
                         @endphp
-                        
+
                         <!-- Product Item -->
                         <div class="d-flex mb-3">
                             <img src="{{ asset('storage/' . $firstItem->produk->gambar) }}" alt="{{ $firstItem->produk->nama_produk }}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
@@ -135,9 +135,73 @@
         color: #D32F2F !important;
     }
     @media (max-width: 576px) {
+        /* Mengatur ukuran tombol dan padding */
         .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem !important;
+            font-size: 0.8rem !important;
+            height: 32px;
+            line-height: 1.2;
+        }
+
+        /* Mengatur filter status */
+        .status-filter {
+            margin: 0 -15px 1rem -15px !important;
+            padding: 0 15px !important;
+        }
+
+        .status-filter .btn-sm {
+            font-size: 0.75rem !important;
+            padding: 0.35rem 0.8rem !important;
+            min-width: 70px !important;
+            max-width: none !important;
+        }
+
+        .status-filter .d-flex {
+            gap: 0.5rem !important;
+            padding: 0 !important;
+        }
+
+        /* Mengatur card pesanan */
+        .card-body {
+            padding: 1rem !important;
+        }
+
+        /* Mengatur ukuran gambar produk */
+        .card-body img {
+            width: 65px !important;
+            height: 65px !important;
+        }
+
+        /* Mengatur typography */
+        .order-info {
+            font-size: 0.85rem !important;
+            line-height: 1.5;
+        }
+
+        .order-info .fw-bold {
+            font-size: 0.9rem !important;
+        }
+
+        .text-muted.small {
+            font-size: 0.75rem !important;
+        }
+
+        .small {
+            font-size: 0.8rem !important;
+        }
+
+        /* Mengatur spacing */
+        .mb-3 {
+            margin-bottom: 0.8rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.2rem !important;
+        }
+
+        /* Mengatur tombol aksi */
+        .d-flex .btn-sm {
+            min-width: 80px;
         }
     }
 </style>
