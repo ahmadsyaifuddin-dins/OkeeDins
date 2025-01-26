@@ -17,19 +17,19 @@
             <!-- Order Status -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
                         <div>
                             <p class="text-muted mb-1 small">Status Pesanan</p>
                             @if($order->status === 'delivered')
-                                <span class="badge bg-{{ $order->status_color }} fs-6">
+                                <span class="badge bg-{{ $order->status_color }} fs-6 d-inline-block mb-2 mb-sm-0">
                                     {{ $order->status_label }} <i class="bi bi-truck ms-1"></i>
                                 </span>
                             @else
-                                <span class="badge bg-{{ $order->status_color }} fs-6">{{ $order->status_label }}</span>
+                                <span class="badge bg-{{ $order->status_color }} fs-6 d-inline-block mb-2 mb-sm-0">{{ $order->status_label }}</span>
                             @endif
                         </div>
                         @if(in_array($order->status, ['pending','awaiting payment','confirmed','processing', 'delivered', 'completed']))
-                            <a href="{{ route('orders.track', $order->id) }}" class="btn btn-custom">
+                            <a href="{{ route('orders.track', $order->id) }}" class="btn btn-custom px-4" style="min-width: fit-content;">
                                 <i class="bi bi-truck me-2"></i>Lacak Pesanan
                             </a>
                         @endif
@@ -46,7 +46,7 @@
                     @foreach($order->orderItems as $item)
                     <div class="p-3 border-bottom">
                         <div class="d-flex">
-                            <img src="{{ asset('storage/' . $item->produk->gambar) }}" alt="{{ $item->produk->nama_produk }}" 
+                            <img src="{{ asset('storage/' . $item->produk->gambar) }}" alt="{{ $item->produk->nama_produk }}"
                                 class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
                             <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-1">{{ $item->produk->nama_produk }}</h6>
@@ -85,11 +85,11 @@
                         <div class="col-md-6">
                             <h6 class="mb-2">Metode Pembayaran</h6>
                             <span class="badge text-capitalize bg-dark">{{ $order->payment_method }}</span>
-                            
+
                             <p class="mb-0 mt-2">Status: <br><span class=" fw-bold {{ $order->payment_status === 'paid' ? 'text-success' : 'text-danger' }}">
                                 {{ $order->payment_status === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar' }}
                             </span></p>
-                            
+
                             @if ($order->payment_method === 'Cash on Delivery' && in_array($order->status, ['processing', 'delivered']))
                             <div class="mt-3">
                                 <div class="alert alert-info mb-0">
@@ -151,7 +151,7 @@
                     </button>
                 </div>
             @endif
-            
+
             <!-- Konfirmasi Penerimaan untuk Tranfer -->
             @if ($order->payment_method === 'transfer' && in_array(strtolower($order->status), ['delivered', 'processing']))
                 <div class="mt-4 text-center">
@@ -177,7 +177,7 @@
                                     <i class="bi bi-info-circle me-2"></i>
                                     Dengan mengkonfirmasi penerimaan, Anda menyatakan bahwa barang telah diterima dalam kondisi baik.
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label class="form-label">Rating Produk</label>
                                     <div class="star-rating">
@@ -310,8 +310,19 @@
             font-size: 0.9rem;
         }
         .badge {
-            font-size: 0.8rem;
-            white-space:
+            font-size: 0.85rem !important;
+            white-space: normal;
+            text-align: left;
+        }
+        .btn-custom {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 576px) {
+        .w-sm-auto {
+            width: auto !important;
         }
     }
 </style>
