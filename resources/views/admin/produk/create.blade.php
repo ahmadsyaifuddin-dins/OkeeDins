@@ -72,10 +72,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
+                                        <label class="form-label d-block">Gambar Produk</label>
                                         <div class="input-group input-group-outline">
-                                            <input placeholder="Gambar Produk" type="file" name="gambar" id="gambar"
-                                                class="form-control">
+                                            <input type="file" class="form-control @error('thumbnail') is-invalid @enderror"
+                                                name="thumbnail" id="thumbnail" accept="image/*" required>
                                         </div>
+                                        @error('thumbnail')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                        <small class="text-muted">Format: jpg, jpeg, png. Maksimal 2MB</small>
                                     </div>
                                 </div>
                             </div>
@@ -152,4 +157,33 @@
             }
         });
     </script>
+@endpush
+
+{{-- Script Preview Gambar --}}
+@push('scripts')
+<script>
+    // Preview untuk thumbnail
+    document.getElementById('thumbnail').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = ''; // Clear existing preview
+        
+        if (this.files && this.files[0]) {
+            const div = document.createElement('div');
+            div.className = 'col-md-4';
+            
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(this.files[0]);
+            img.className = 'img-fluid rounded';
+            img.alt = 'Thumbnail Preview';
+            
+            const label = document.createElement('p');
+            label.className = 'small text-muted mt-1';
+            label.textContent = 'Thumbnail';
+            
+            div.appendChild(img);
+            div.appendChild(label);
+            preview.appendChild(div);
+        }
+    });
+</script>
 @endpush

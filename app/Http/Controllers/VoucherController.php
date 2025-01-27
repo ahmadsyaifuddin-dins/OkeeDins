@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Voucher;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class VoucherController extends Controller
 {
@@ -12,8 +13,18 @@ class VoucherController extends Controller
      */
     public function index()
     {
-        $vouchers = Voucher::latest()->paginate(10);
-        return view('admin.vouchers.index', compact('vouchers'));
+        $vouchers = Voucher::latest()->paginate(5);
+        $voucherActivities = FacadesDB::table('voucher_user')
+            ->join('users', 'voucher_user.user_id', '=', 'users.id')
+            ->join('vouchers', 'voucher_user.voucher_id', '=', 'vouchers.id')
+            ->join('orders', 'voucher_user.order_id', '=', 'orders.id')
+            ->select('users.name as user_name', 'vouchers.code as voucher_code', 'voucher_user.discount_amount', 'voucher_user.used_at')
+            ->whereNotNull('voucher_user.used_at')
+            ->orderBy('voucher_user.used_at', 'desc')
+            ->take(5)
+            ->get();
+            
+        return view('admin.vouchers.index', compact('vouchers', 'voucherActivities'));
     }
 
     /**
@@ -50,10 +61,10 @@ class VoucherController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    // public function show(string $id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -100,6 +111,7 @@ class VoucherController extends Controller
     {
         $request->validate([
             'code' => 'required|exists:vouchers,code',
+            'max_uses' => 'nullable|integer|exists:vouchers,max_uses',
             'total_amount' => 'required|numeric|min:0'
         ]);
 
@@ -116,6 +128,13 @@ class VoucherController extends Controller
             return response()->json([
                 'valid' => false,
                 'message' => 'Total pembelian minimum tidak terpenuhi.'
+            ]);
+        }
+
+        if ($voucher->max_uses && $voucher->used_uses >= $voucher->max_uses) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Voucher sudah digunakan sebanyak maksimum.'
             ]);
         }
 

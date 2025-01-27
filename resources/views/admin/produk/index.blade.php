@@ -25,8 +25,8 @@
                                             Gambar Produk</th>
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                             Nama Produk</th>
-                                        <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Deskripsi</th>
+                                        {{-- <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Deskripsi</th> --}}
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                             Harga</th>
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
@@ -67,33 +67,31 @@
                                                 </p>
                                             </td>
 
-                                            <td>
-                                                <span class="text-secondary text-xs font-weight-bold"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="{{ $prod->deskripsi }}">
-                                                    {{ \Illuminate\Support\Str::limit($prod->deskripsi, 50, '...') }}
+                                            {{-- <td>
+                                                <span class="text-secondary text-xs font-weight-bold">
+                                                    {{ Str::limit(strip_tags($prod->deskripsi), 50) }}
                                                 </span>
-                                            </td>
+                                            </td> --}}
 
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">Rp
-                                                    {{ number_format($prod->harga, 0, ',', '.') }}
-                                                </span>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    Rp{{ number_format($prod->harga, 0, ',', '.') }}
+                                                </p>
                                             </td>
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">
+                                                <p class="text-xs font-weight-bold mb-0 {{ $prod->stok <= 10 ? 'text-danger fw-bold' : '' }}">
                                                     {{ $prod->stok }}
-                                                </span>
+                                                </p>
                                             </td>
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">
+                                                <p class="text-xs font-weight-bold mb-0">
                                                     {{ $prod->diskon }}%
-                                                </span>
+                                                </p>
                                             </td>
                                             <td>
-                                                <span class="text-secondary text-xs font-weight-bold">Rp
-                                                    {{ number_format($prod->harga_diskon, 0, ',', '.') }}
-                                                </span>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    Rp{{ number_format($prod->harga_diskon, 0, ',', '.') }}
+                                                </p>
                                             </td>
                                             <td>
                                                 <span class="text-secondary text-xs font-weight-bold">
@@ -107,19 +105,21 @@
                                             </td>
 
                                             <td class="align-middle">
-                                                <a href="{{ route('admin.produk.edit', $prod->id) }}"
-                                                    class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
-                                                    data-original-title="Edit produk">
-                                                    Edit
+                                                <a href="{{ route('admin.produk.show', $prod->id) }}"
+                                                    class="btn btn-info btn-sm me-1">
+                                                    <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">visibility</i>
                                                 </a>
-                                                <form action="{{ route('admin.produk.destroy', $prod->id) }}"
-                                                    method="POST" style="display: inline-block;">
+                                                <a href="{{ route('admin.produk.edit', $prod->id) }}"
+                                                    class="btn btn-warning btn-sm me-1">
+                                                    <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">edit</i>
+                                                </a>
+                                                <form action="{{ route('admin.produk.destroy', $prod->id) }}" method="POST"
+                                                    class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-danger font-weight-bold text-xs"
-                                                        style="border: none; background: none;"
+                                                    <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
-                                                        Hapus
+                                                        <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">delete</i>
                                                     </button>
                                                 </form>
                                             </td>

@@ -147,7 +147,7 @@ class OrderController extends Controller
             ]);
 
             // Proses ulasan
-            $ulasan = app(UlasanController::class)->store(request(), $order);
+            $rating = app(RatingController::class)->store(request(), $order);
 
             // Update transaction
             $transaction = Transaction::where('order_id', $order->id)->first();
@@ -182,7 +182,7 @@ class OrderController extends Controller
             ]);
 
             // Proses ulasan
-            $ulasan = app(UlasanController::class)->store(request(), $order);
+            $rating = app(RatingController::class)->store(request(), $order);
 
             // Update transaction
             $transaction = Transaction::where('order_id', $order->id)->first();

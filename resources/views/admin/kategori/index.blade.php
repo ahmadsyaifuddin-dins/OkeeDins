@@ -55,9 +55,8 @@
                                                 </p>
                                             </td>
 
-                                            <td class="text-wrap">
-                                                <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $kat->deskripsi }}</span>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ Str::limit(strip_tags($kat->deskripsi), 50) }}</p>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span

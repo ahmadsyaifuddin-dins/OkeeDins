@@ -3,6 +3,42 @@
 @section('content')
 <div class="container-fluid py-2">
     <div class="row">
+        <!-- Card Monitoring Aktivitas -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header p-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-0">Aktivitas Penggunaan Voucher</h6>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <button class="btn btn-outline-secondary btn-sm mb-0">Lihat Semua</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div class="timeline timeline-one-side">
+                        @forelse($voucherActivities as $activity)
+                            <div class="timeline-block mb-3">
+                                <span class="timeline-step">
+                                    <i class="material-icons text-success text-gradient">local_offer</i>
+                                </span>
+                                <div class="timeline-content">
+                                    <h6 class="text-dark text-sm font-weight-bold mb-0">{{ $activity->user_name }} menggunakan voucher {{ $activity->voucher_code }}</h6>
+                                    <p class="text-secondary font-weight-normal text-xs mt-1 mb-0">
+                                        {{ \Carbon\Carbon::parse($activity->used_at)->locale('id')->diffForHumans() }}
+                                        • Diskon: Rp {{ number_format($activity->discount_amount, 0, ',', '.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-center text-secondary text-sm mb-0">Belum ada aktivitas penggunaan voucher</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="col-12">
             <div class="card my-4">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -29,15 +65,15 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">Kode</th>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">Nama</th>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">Tipe</th>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">Nilai</th>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">Min. Pembelian</th>
-                                    <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">Penggunaan</th>
-                                    <th class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">Status</th>
-                                    <th class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">Berlaku</th>
-                                    <th class="text-center text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7">Kode</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7">Nama</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7 ps-2">Tipe Voucher</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7 ps-2">Nilai</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7 ps-2">Min. Pembelian</th>
+                                    <th class="text-uppercase text-black-th text-sm font-weight-bolder opacity-7 ps-2">Penggunaan</th>
+                                    <th class="text-center text-uppercase text-black-th text-sm font-weight-bolder opacity-7">Status</th>
+                                    <th class="text-center text-uppercase text-black-th text-sm font-weight-bolder opacity-7">Berlaku</th>
+                                    <th class="text-center text-uppercase text-black-th text-sm font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,8 +167,10 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end p-3">
-                        {{ $vouchers->links() }}
+                    <div class="d-flex justify-content-end px-4">
+                        <div class="pagination pagination-dark">
+                            {{ $vouchers->onEachSide(1)->links('vendor.pagination.material') }}
+                        </div>
                     </div>
                 </div>
             </div>

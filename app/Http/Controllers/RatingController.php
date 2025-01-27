@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class UlasanController extends Controller
+class RatingController extends Controller
 {
     public function store(Request $request, Orders $order)
     {

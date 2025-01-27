@@ -40,4 +40,13 @@ class VoucherUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Relasi ke model Orders.
+     */
+    public function order()
+    {
+        return $this->belongsTo(Orders::class);
+    }
+    
 }

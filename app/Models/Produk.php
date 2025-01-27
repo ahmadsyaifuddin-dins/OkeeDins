@@ -44,8 +44,28 @@ class Produk extends Model
         return $this->belongsTo(KategoriProduk::class, 'kategori_id', 'id');
     }
 
+    public function order_items()
+    {
+        return $this->hasMany(OrderItems::class, 'produk_id', 'id');
+    }
+
     public function cart()
     {
         return $this->hasMany(Cart::class, 'produk_id', 'id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    public function thumbnail()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_thumbnail', true);
+    }
+
+    public function ulasan()
+    {
+        return $this->hasMany(Ulasan::class, 'produk_id', 'id');
     }
 }

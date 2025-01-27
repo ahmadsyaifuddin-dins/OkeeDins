@@ -8,33 +8,42 @@
     <title>{{ $title ?? 'Food Fusion' }}</title>
     
     <style>
-        /* Loading styles */
-        #loading {
+        .spinnerContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             z-index: 9999;
+            justify-content: center;
         }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #D32F2F;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .loader {
+            width: fit-content;
+            font-weight: bold;
+            font-family: monospace;
+            white-space: pre;
+            font-size: 30px;
+            line-height: 1.2em;
+            height: 1.2em;
+            overflow: hidden;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .loader:before {
+            content: "Loading...\A⌰oading...\A⌰⍜ading...\A⌰⍜⏃ding...\A⌰⍜⏃⎅ing...\A⌰⍜⏃⎅⟟ng...\A⌰⍜⏃⎅⟟⋏g...\A⌰⍜⏃⎅⟟⋏☌...\A⌰⍜⏃⎅⟟⋏☌⟒..\A⌰⍜⏃⎅⟟⋏☌⟒⏁.\A⌰⍜⏃⎅⟟⋏☌⟒⏁⋔";
+            white-space: pre;
+            display: inline-block;
+            animation: l39 1s infinite steps(11) alternate;
         }
-        #content {
-            display: none;
+
+        @keyframes l39 {
+            100% {
+                transform: translateY(-100%)
+            }
         }
 
         /* Prevent horizontal scroll */
@@ -189,8 +198,8 @@
 </head>
 
 <body>
-    <div id="loading">
-        <div class="spinner"></div>
+    <div class="spinnerContainer" id="loading">
+        <div class="loader"></div>
     </div>
 
     <div id="content">

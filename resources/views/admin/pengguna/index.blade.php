@@ -118,20 +118,22 @@
                                                 <span
                                                     class="badge badge-sm bg-gradient-{{ $user->role == 'Administrator' ? 'success' : 'secondary' }}">{{ $user->role == 'Administrator' ? 'Online' : 'Offline' }}</span>
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle text-center">
+                                                <a href="{{ route('admin.pengguna.show', $user->id) }}"
+                                                    class="btn btn-info btn-sm me-1">
+                                                    <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">visibility</i>
+                                                </a>
                                                 <a href="{{ route('admin.pengguna.edit', $user->id) }}"
-                                                    class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
-                                                    data-original-title="Edit user">
-                                                    Edit
+                                                    class="btn btn-warning btn-sm me-1">
+                                                    <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">edit</i>
                                                 </a>
                                                 <form action="{{ route('admin.pengguna.destroy', $user->id) }}"
                                                     method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-danger font-weight-bold text-xs"
-                                                        style="border: none; background: none;"
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
                                                         onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                                        Hapus
+                                                        <i class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle;">delete</i>
                                                     </button>
                                                 </form>
                                             </td>

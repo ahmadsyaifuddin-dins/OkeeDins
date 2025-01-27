@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Voucher extends Model
 {
+
+    protected $table = 'vouchers';
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

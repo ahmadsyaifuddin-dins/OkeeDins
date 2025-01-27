@@ -24,12 +24,12 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order ID</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pelanggan</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Order</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bukti Transfer</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Aksi</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7">Order ID</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7 ps-2">Pelanggan</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7 ps-2">Total</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7 ps-2">Tanggal Order</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7 ps-2">Bukti Transfer</th>
+                                    <th class="text-uppercase text-black-th text-xs font-weight-bolder opacity-7 ps-2">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,7 +53,7 @@
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#proofModal{{ $order->id }}">
-                                                <i class="material-icons">image</i> Lihat Bukti
+                                                <i class="material-icons" style="font-size: 20px; vertical-align: middle;">image</i> Lihat Bukti
                                             </button>
 
                                             <!-- Modal Bukti Transfer -->
@@ -62,7 +62,9 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Bukti Transfer - Order #{{ $order->id }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <button type="button" class="btn-close p-3" data-bs-dismiss="modal" aria-label="Close">
+                                                                <i class="material-icons text-dark" style="font-size: 30px;">close</i>
+                                                            </button>
                                                         </div>
                                                         <div class="modal-body text-center">
                                                             <img src="{{ asset('uploads/payment_proofs/' . $order->payment_proof) }}" 
@@ -73,14 +75,14 @@
                                                             <form action="{{ route('admin.payments.verify', $order->id) }}" method="POST" class="d-inline">
                                                                 @csrf
                                                                 <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')">
-                                                                    <i class="material-icons">check_circle</i> Verifikasi
+                                                                    <i class="material-icons" style="font-size: 20px; vertical-align: middle;" >check_circle</i> Verifikasi
                                                                 </button>
                                                             </form>
 
                                                             <form action="{{ route('admin.payments.reject', $order->id) }}" method="POST" class="d-inline">
                                                                 @csrf
                                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak pembayaran ini?')">
-                                                                    <i class="material-icons">cancel</i> Tolak
+                                                                    <i class="material-icons" style="font-size: 20px; vertical-align: middle;">cancel</i> Tolak
                                                                 </button>
                                                             </form>
                                                         </div>
@@ -93,14 +95,14 @@
                                                 <form action="{{ route('admin.payments.verify', $order->id) }}" method="POST" class="me-2">
                                                     @csrf
                                                     <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')">
-                                                        <i class="material-icons">check_circle</i>
+                                                        <i class="material-icons" style="font-size: 20px; vertical-align: middle;">check_circle</i>
                                                     </button>
                                                 </form>
 
                                                 <form action="{{ route('admin.payments.reject', $order->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menolak pembayaran ini?')">
-                                                        <i class="material-icons">cancel</i>
+                                                        <i class="material-icons" style="font-size: 20px; vertical-align: middle;">cancel</i>
                                                     </button>
                                                 </form>
                                             </div>

@@ -3,206 +3,157 @@
 @section('title', 'Riwayat Pesanan')
 
 @section('content')
-<div class="container mb-5">
-    <div class="row">
-        <div class="col-12">
-            <!-- Back Button & Title -->
-            <div class="d-flex align-items-center mb-4">
-                <a href="{{ url()->previous() }}" class="btn btn-link text-dark p-0 me-3">
-                    <i class="bi bi-arrow-left fs-5"></i>
-                </a>
-                <h4 class="mb-0 fw-bold">Riwayat Pesanan</h4>
-            </div>
-
-            <!-- Filter Status -->
-            <div class="status-filter mb-4">
-                <div class="d-flex overflow-auto pb-2 gap-2">
-                    <a href="{{ route('orders.history') }}" class="btn btn-sm {{ !request('status') ? 'btn-custom' : 'btn-outline-custom' }}">Semua</a>
-                    <a href="{{ route('orders.history', ['status' => 'pending']) }}" class="btn btn-sm {{ request('status') === 'pending' ? 'btn-custom' : 'btn-outline-custom' }}">Menunggu</a>
-                    <a href="{{ route('orders.history', ['status' => 'awaiting payment']) }}" class="btn btn-sm {{ request('status') === 'awaiting payment' ? 'btn-custom' : 'btn-outline-custom' }}">Belum Bayar</a>
-                    <a href="{{ route('orders.history', ['status' => 'processing']) }}" class="btn btn-sm {{ request('status') === 'processing' ? 'btn-custom' : 'btn-outline-custom' }}">Diproses</a>
-                    <a href="{{ route('orders.history', ['status' => 'delivered']) }}" class="btn btn-sm {{ request('status') === 'delivered' ? 'btn-custom' : 'btn-outline-custom' }}">Dikirim</a>
-                    <a href="{{ route('orders.history', ['status' => 'completed']) }}" class="btn btn-sm {{ request('status') === 'completed' ? 'btn-custom' : 'btn-outline-custom' }}">Selesai</a>
-                    <a href="{{ route('orders.history', ['status' => 'cancelled']) }}" class="btn btn-sm {{ request('status') === 'cancelled' ? 'btn-custom' : 'btn-outline-custom' }}">Batal</a>
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-12">
+                <!-- Back Button & Title -->
+                <div class="d-flex align-items-center mb-4">
+                    <a href="{{ url()->previous() }}" class="btn btn-link text-dark p-0 me-3">
+                        <i class="bi bi-arrow-left fs-5"></i>
+                    </a>
+                    <h4 class="mb-0 fw-bold">Riwayat Pesanan</h4>
                 </div>
-            </div>
 
-            <!-- Empty State -->
-            @if($orders->isEmpty())
-            <div class="text-center py-5">
-                <i class="bi bi-bag-x display-1 text-muted mb-3"></i>
-                <h5 class="fw-bold mb-2">Belum Ada Pesanan</h5>
-                <p class="text-muted mb-4">Anda belum memiliki riwayat pesanan</p>
-                <a href="{{ route('home.index') }}" class="btn btn-custom">Mulai Belanja</a>
-            </div>
-            @else
-            <!-- Order List -->
-            <div class="order-list">
-                @foreach($orders as $order)
-                <!-- Order Item -->
-                <div class="card mb-3 border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="row align-items-center">
-                                <span class="text-muted small">
-                                    {{ $order->created_at->format('d M Y H:i') }}
-                                </span>
-                                <br>
-                                <span class="small">
-                                    Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
-                                </span>
-                                <span class="fw-bold"><i class="bi bi-shop me-2"></i>Food Fusion</span>
-                            </div>
-                            <span class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span>
-                        </div>
+                <!-- Filter Status -->
+                <div class="status-filter mb-4">
+                    <div class="status-filter-desktop">
+                        <a href="{{ route('orders.history') }}" class="btn btn-sm {{ !request('status') ? 'btn-custom' : 'btn-outline-custom' }}">Semua</a>
+                        <a href="{{ route('orders.history', ['status' => 'pending']) }}" class="btn btn-sm {{ request('status') === 'pending' ? 'btn-custom' : 'btn-outline-custom' }}">Menunggu</a>
+                        <a href="{{ route('orders.history', ['status' => 'awaiting payment']) }}" class="btn btn-sm {{ request('status') === 'awaiting payment' ? 'btn-custom' : 'btn-outline-custom' }}">Belum Bayar</a>
+                        <a href="{{ route('orders.history', ['status' => 'processing']) }}" class="btn btn-sm {{ request('status') === 'processing' ? 'btn-custom' : 'btn-outline-custom' }}">Diproses</a>
+                        <a href="{{ route('orders.history', ['status' => 'delivered']) }}" class="btn btn-sm {{ request('status') === 'delivered' ? 'btn-custom' : 'btn-outline-custom' }}">Dikirim</a>
+                        <a href="{{ route('orders.history', ['status' => 'completed']) }}" class="btn btn-sm {{ request('status') === 'completed' ? 'btn-custom' : 'btn-outline-custom' }}">Selesai</a>
+                        <a href="{{ route('orders.history', ['status' => 'cancelled']) }}" class="btn btn-sm {{ request('status') === 'cancelled' ? 'btn-custom' : 'btn-outline-custom' }}">Dibatalkan</a>
+                    </div>
+                </div>
 
-                        @php
-                            $firstItem = $order->orderItems->first();
-                            $otherItemsCount = $order->orderItems->count() - 1;
-                        @endphp
+                <!-- Empty State -->
+                @if ($orders->isEmpty())
+                    <div class="text-center py-5">
+                        <i class="bi bi-bag-x display-1 text-muted mb-3"></i>
+                        <h5 class="fw-bold mb-2">Belum Ada Pesanan</h5>
+                        <p class="text-muted mb-4">Anda belum memiliki riwayat pesanan</p>
+                        <a href="{{ route('home.index') }}" class="btn btn-custom">Mulai Belanja</a>
+                    </div>
+                @else
+                    <!-- Order List -->
+                    <div class="order-list">
+                        @foreach ($orders as $order)
+                            <!-- Order Item -->
+                            <div class="card mb-3 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="row align-items-center">
+                                            <span class="text-muted small">
+                                                {{ $order->created_at->format('d M Y H:i') }}
+                                            </span>
+                                            <br>
+                                            <span class="small">
+                                                Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
+                                            </span>
+                                            <span class="fw-bold"><i class="bi bi-shop me-2"></i>Food Fusion</span>
+                                        </div>
+                                        <span
+                                            class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span>
+                                    </div>
 
-                        <!-- Product Item -->
-                        <div class="d-flex mb-3">
-                            <img src="{{ asset('storage/' . $firstItem->produk->gambar) }}" alt="{{ $firstItem->produk->nama_produk }}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
-                            <div class="ms-3 flex-grow-1">
-                                <h6 class="mb-1">{{ $firstItem->produk->nama_produk }}</h6>
-                                <p class="text-muted mb-1 small">{{ $firstItem->quantity }} x Rp{{ number_format($firstItem->price, 0, ',', '.') }}</p>
-                                @if($otherItemsCount > 0)
-                                    <p class="mb-0 small">+ {{ $otherItemsCount }} produk lainnya</p>
-                                @endif
-                            </div>
-                        </div>
+                                    @php
+                                        $firstItem = $order->orderItems->first();
+                                        $otherItemsCount = $order->orderItems->count() - 1;
+                                    @endphp
 
-                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <div>
-                                <p class="text-muted mb-0 small">Total Pesanan</p>
-                                <p class="fw-bold mb-0">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                            </div>
-                            <div class="d-flex">
-                                @if(in_array($order->status, ['processing', 'delivered']))
-                                    <a href="{{ route('orders.track', $order->id) }}" class="btn btn-sm btn-outline-custom me-2">Lacak</a>
-                                @endif
-                                @if ($order->status === 'pending')
+                                    <!-- Product Item -->
+                                    <div class="d-flex mb-3">
+                                        <img src="{{ asset('storage/' . $firstItem->produk->gambar) }}"
+                                            alt="{{ $firstItem->produk->nama_produk }}" class="rounded"
+                                            style="width: 80px; height: 80px; object-fit: cover;">
+                                        <div class="ms-3 flex-grow-1">
+                                            <h6 class="mb-1">{{ $firstItem->produk->nama_produk }}</h6>
+                                            <p class="text-muted mb-1 small">{{ $firstItem->quantity }} x
+                                                Rp{{ number_format($firstItem->price, 0, ',', '.') }}</p>
+                                            @if ($otherItemsCount > 0)
+                                                <p class="mb-0 small">+ {{ $otherItemsCount }} produk lainnya</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                                        <div>
+                                            <p class="text-muted mb-0 small">Total Pesanan</p>
+                                            <p class="fw-bold mb-0">
+                                                Rp{{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                                        </div>
+                                        <div class="d-flex">
+                                            @if (in_array($order->status, ['processing', 'delivered']))
+                                                <a href="{{ route('orders.track', $order->id) }}"
+                                                    class="btn btn-sm btn-outline-custom me-2">Lacak</a>
+                                            @endif
+                                            @if ($order->status === 'pending')
                                                 <form action="{{ route('orders.cancel', $order) }}" method="POST"
                                                     class="d-inline"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit"
-                                                        class="btn btn-outline-custom btn-sm me-2">
+                                                    <button type="submit" class="btn btn-outline-custom btn-sm me-2">
                                                         Batalkan
                                                     </button>
                                                 </form>
-                                @endif
-                                <a href="{{ route('orders.detail', $order->id) }}" class="btn btn-sm btn-custom">Detail</a>
+                                            @endif
+                                            <a href="{{ route('orders.detail', $order->id) }}"
+                                                class="btn btn-sm btn-custom">Detail</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
-                </div>
-                @endforeach
+                @endif
             </div>
-            @endif
         </div>
     </div>
-</div>
 @endsection
 
 @push('styles')
-<style>
-    .status-filter {
-        -webkit-overflow-scrolling: touch;
-    }
-    .status-filter::-webkit-scrollbar {
-        display: none;
-    }
-    .btn-custom {
-        background-color: #D32F2F;
-        color: white;
-    }
-    .btn-outline-custom {
-        border-color: #D32F2F;
-        color: #D32F2F;
-    }
-    .btn-outline-custom:hover {
-        background-color: #D32F2F;
-        color: white;
-    }
-    .badge.bg-warning {
-        background-color: #FFA726 !important;
-        color: white;
-    }
-    .btn-link:hover {
-        color: #D32F2F !important;
-    }
-    @media (max-width: 576px) {
-        /* Mengatur ukuran tombol dan padding */
-        .btn-sm {
-            padding: 0.3rem 0.8rem !important;
-            font-size: 0.8rem !important;
-            height: 32px;
-            line-height: 1.2;
+    <style>
+
+        .btn-custom {
+            background-color: #D32F2F;
+            color: white;
         }
 
-        /* Mengatur filter status */
-        .status-filter {
-            margin: 0 -15px 1rem -15px !important;
-            padding: 0 15px !important;
+        .btn-outline-custom {
+            border-color: #D32F2F;
+            color: #D32F2F;
         }
 
-        .status-filter .btn-sm {
-            font-size: 0.75rem !important;
-            padding: 0.35rem 0.8rem !important;
-            min-width: 70px !important;
-            max-width: none !important;
+        .btn-outline-custom:hover {
+            background-color: #D32F2F;
+            color: white;
         }
 
-        .status-filter .d-flex {
-            gap: 0.5rem !important;
-            padding: 0 !important;
+        .status-filter .btn {
+            white-space: nowrap;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            flex: 0 0 auto;
         }
 
-        /* Mengatur card pesanan */
-        .card-body {
-            padding: 1rem !important;
-        }
+        @media (max-width: 576px) {
+            .status-filter {
+                margin: 0 -15px 1rem -15px;
+                padding: 0 15px;
+            }
 
-        /* Mengatur ukuran gambar produk */
-        .card-body img {
-            width: 65px !important;
-            height: 65px !important;
-        }
+            .status-filter-desktop {
+                gap: 0.35rem;
+            }
 
-        /* Mengatur typography */
-        .order-info {
-            font-size: 0.85rem !important;
-            line-height: 1.5;
+            .status-filter .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+                height: 32px;
+                line-height: 1.2;
+            }
         }
-
-        .order-info .fw-bold {
-            font-size: 0.9rem !important;
-        }
-
-        .text-muted.small {
-            font-size: 0.75rem !important;
-        }
-
-        .small {
-            font-size: 0.8rem !important;
-        }
-
-        /* Mengatur spacing */
-        .mb-3 {
-            margin-bottom: 0.8rem !important;
-        }
-
-        .mb-4 {
-            margin-bottom: 1.2rem !important;
-        }
-
-        /* Mengatur tombol aksi */
-        .d-flex .btn-sm {
-            min-width: 80px;
-        }
-    }
-</style>
+    </style>
 @endpush

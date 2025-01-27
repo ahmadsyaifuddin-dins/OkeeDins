@@ -56,13 +56,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="../pages/billing.html">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.laporan.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.laporan.index') }}">
                     <i class="material-symbols-rounded opacity-5">Summarize</i>
                     <span class="nav-link-text ms-1">Laporan</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="../pages/billing.html">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.ulasan.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.ulasan.index') }}">
                     <i class="material-symbols-rounded opacity-5">rate_review</i>
                     <span class="nav-link-text ms-1">Ulasan Produk</span>
                 </a>
@@ -71,7 +71,7 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" href="../pages/notifications.html">
                     <i class="material-symbols-rounded opacity-5">notifications</i>
-                    <span class="nav-link-text ms-1">Notifications</span>
+                    <span class="nav-link-text ms-1">Notifikasi</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
@@ -79,17 +79,23 @@
                 </h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('admin.vouchers.index') }}">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.vouchers.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.vouchers.index') }}">
                     <i class="material-symbols-rounded opacity-5">redeem</i>
                     <span class="nav-link-text ms-1">Vouchers</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.setting.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.vouchers.index') }}">
+                    <i class="material-symbols-rounded opacity-5">settings</i>
+                    <span class="nav-link-text ms-1">Pengaturan</span>
+                </a>
+            </li>
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages
+                <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Pengaturan Akun
                 </h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('admin.pengguna.profile') }}">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.pengguna.profile') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.pengguna.profile') }}">
                     <i class="material-symbols-rounded opacity-5">person</i>
                     <span class="nav-link-text ms-1">Profile Administrator</span>
                 </a>

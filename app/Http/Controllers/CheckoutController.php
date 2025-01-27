@@ -390,6 +390,19 @@ class CheckoutController extends Controller
                     'message' => 'Silakan login terlebih dahulu'
                 ], 401);
             }
+            
+            $request->validate([
+                'code' => [
+                    'required', 
+                    'string', 
+                    function ($attribute, $value, $fail) {
+                        if ($value !== strtoupper($value)) {
+                            $fail('Kode voucher harus dalam huruf kapital.');
+                        }
+                    }
+                ],
+                'subtotal' => 'required|numeric|min:0'
+            ]);
 
             $request->validate([
                 'code' => 'required|string',

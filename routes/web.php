@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\KategoriProdukController;
 use App\Http\Controllers\Admin\ProdukController;
+use App\Http\Controllers\Admin\UlasanController;
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -15,7 +17,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VoucherController;
@@ -95,7 +97,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     // Konfirmasi penerimaan dan rating
     Route::post('/orders/{order}/confirm-cod', [OrderController::class, 'confirmReceiptCOD'])->name('orders.confirm-cod');
     Route::post('/orders/{order}/confirm-transfer', [OrderController::class, 'confirmReceiptTransfer'])->name('orders.confirm-transfer');
-    Route::post('/orders/{order}/review', [UlasanController::class, 'store'])->name('orders.review');
+    Route::post('/orders/{order}/review', [RatingController::class, 'store'])->name('orders.review');
 
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
@@ -104,7 +106,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::post('/orders/{order}/verify-payment', [OrderController::class, 'verifyPayment'])->name('orders.verify-payment');
     Route::post('/orders/{order}/reject-payment', [OrderController::class, 'rejectPayment'])->name('orders.reject-payment');
 
-    Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::post('/ulasan', [RatingController::class, 'store'])->name('ulasan.store');
 
     // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -166,7 +168,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Admin routes
     Route::middleware(['auth', 'adminOnly'])->group(function () {
-        Route::get('/beranda', [AdminController::class, 'index'])->name('dashboard'); // Ini akan menjadi admin.dashboard
+        Route::get('/beranda', [DashboardController::class, 'index'])->name('dashboard'); // Ini akan menjadi admin.dashboard
         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
         Route::get('/pengguna/profile', [AdminController::class, 'profilePengguna'])->name('pengguna.profile'); // Halaman profile pengguna
 
@@ -175,9 +177,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/pengguna', [PenggunaController::class, 'indexPengguna'])->name('pengguna.index'); // Halaman daftar pengguna
             Route::get('/pengguna/create', [PenggunaController::class, 'createPengguna'])->name('pengguna.create'); // Halaman form tambah pengguna
             Route::post('/pengguna', [PenggunaController::class, 'storePengguna'])->name('pengguna.store'); // Proses tambah pengguna
+            Route::get('/pengguna/{id}', [PenggunaController::class, 'showPengguna'])->name('pengguna.show'); // Detail pengguna
             Route::get('/pengguna/{id}/edit', [PenggunaController::class, 'editPengguna'])->name('pengguna.edit'); // Halaman form edit pengguna
             Route::put('/pengguna/{id}', [PenggunaController::class, 'updatePengguna'])->name('pengguna.update'); // Proses edit pengguna
             Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroyPengguna'])->name('pengguna.destroy'); // Proses hapus pengguna
+
+            // Route untuk ulasan
+            Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
+            Route::get('/ulasan/{id}', [UlasanController::class, 'show'])->name('ulasan.show');
+            Route::delete('/ulasan/{id}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
 
             Route::get('/kategori', [KategoriProdukController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
             Route::get('/kategori/create', [KategoriProdukController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori
@@ -190,6 +198,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/produk/create', [ProdukController::class, 'createProduk'])->name('produk.create'); // Halaman form tambah produk
             Route::post('/produk', [ProdukController::class, 'storeProduk'])->name('produk.store'); // Proses tambah produk
             Route::get('/produk/{id}/edit', [ProdukController::class, 'editProduk'])->name('produk.edit'); // Halaman form edit produk
+            Route::get('/produk/{id}', [ProdukController::class, 'showProduk'])->name('produk.show'); // Detail produk
             Route::put('/produk/{id}', [ProdukController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
             Route::delete('/produk/{id}', [ProdukController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
 
@@ -215,6 +224,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
             Route::post('/payments/{order}/verify', [App\Http\Controllers\Admin\PaymentController::class, 'verifyPayment'])->name('payments.verify');
             Route::post('/payments/{order}/reject', [App\Http\Controllers\Admin\PaymentController::class, 'rejectPayment'])->name('payments.reject');
+
+            Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
+            Route::get('/laporan/export-excel', [App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('laporan.export-excel');
+            Route::get('/laporan/export-pdf', [App\Http\Controllers\Admin\LaporanController::class, 'exportPDF'])->name('laporan.export-pdf');
         });
     });
 });

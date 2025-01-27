@@ -143,6 +143,68 @@ class PenggunaController extends Controller
         DB::table('users')->where('id', $id)->delete();
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus.');
     }
+
+    public function showPengguna($id)
+    {
+        // Ambil data pengguna
+        $pengguna = DB::table('users')
+            ->where('id', $id)
+            ->first();
+
+        if (!$pengguna) {
+            abort(404);
+        }
+
+        // Ambil jumlah transaksi
+        $totalTransaksi = DB::table('orders')
+            ->where('user_id', $id)
+            ->count();
+
+        // Ambil total pembelian (sum total amount)
+        $totalPembelian = DB::table('orders')
+            ->where('user_id', $id)
+            ->where('status', 'completed')
+            ->sum('total_amount');
+
+        // Ambil produk yang paling sering dibeli
+        $produkFavorit = DB::table('order_items')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->join('produk', 'produk.id', '=', 'order_items.produk_id')
+            ->where('orders.user_id', $id)
+            ->select('produk.nama_produk', DB::raw('COUNT(*) as total_beli'))
+            ->groupBy('produk.id', 'produk.nama_produk')
+            ->orderByDesc('total_beli')
+            ->limit(5)
+            ->get();
+
+        // Ambil voucher yang pernah digunakan
+        $voucherDigunakan = DB::table('orders')
+            ->join('vouchers', 'vouchers.id', '=', 'orders.voucher_id')
+            ->where('orders.user_id', $id)
+            ->where('orders.voucher_id', '!=', null)
+            ->select('vouchers.*', 'orders.created_at as tanggal_pakai')
+            ->get();
+
+        // Ambil riwayat transaksi terakhir
+        $riwayatTransaksi = DB::table('orders')
+            ->where('user_id', $id)
+            ->orderByDesc('created_at')
+            ->limit(10)
+            ->get();
+
+        // Hitung rata-rata nilai transaksi
+        $rataRataTransaksi = $totalTransaksi > 0 ? $totalPembelian / $totalTransaksi : 0;
+
+        return view('admin.pengguna.show', compact(
+            'pengguna',
+            'totalTransaksi',
+            'totalPembelian',
+            'produkFavorit',
+            'voucherDigunakan',
+            'riwayatTransaksi',
+            'rataRataTransaksi'
+        ));
+    }
     // End CRUD Pengguna 
 
 }
