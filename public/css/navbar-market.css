@@ -54,7 +54,7 @@ body {
 /* Posisi dropdown tetap di tengah */
 .dropdown-menu[data-bs-popper] {
     top: 100%;
-    left: 50%;
+    left: 50% !important;
     transform: translateX(-50%);
     margin-top: var(--bs-dropdown-spacer);
     opacity: 0;

@@ -82,7 +82,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::get('/riwayat-pesanan', [OrderController::class, 'history'])->name('orders.history');
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
-    Route::get('/orders/{order}/detail', [OrderController::class, 'detail'])->name('orders.detail');
+    Route::get('/orders/detail/{order}', [OrderController::class, 'detail'])->name('orders.detail');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
@@ -91,7 +91,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     // Order
     Route::get('/orders', [OrderController::class, 'index'])->name('home.riwayat-pesanan');
     Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
-    Route::get('/orders/{order}', [OrderController::class, 'detail'])->name('orders.detail');
+    // Route::get('/orders/detail/{order}', [OrderController::class, 'detail'])->name('orders.detail');
 
 
     // Konfirmasi penerimaan dan rating

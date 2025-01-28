@@ -10,13 +10,13 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id', 10);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('label')->nullable(); // e.g., "Home", "Office"
             $table->string('receiver_name');
             $table->string('phone_number');
             $table->text('full_address');
-            $table->boolean('is_primary')->default(false);
+            $table->boolean('is_primary')->default(0);
             $table->timestamps();
         });
     }

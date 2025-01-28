@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('cart', function (Blueprint $table) {
+        Schema::create('carts', function (Blueprint $table) {
             $table->bigIncrements('id'); // id Primary Key, UNSIGNED, AUTO_INCREMENT
             $table->unsignedInteger('user_id'); // user_id Index, UNSIGNED
             $table->unsignedBigInteger('produk_id'); // produk_id Index, UNSIGNED
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('cart');
+        Schema::dropIfExists('carts');
     }
 };

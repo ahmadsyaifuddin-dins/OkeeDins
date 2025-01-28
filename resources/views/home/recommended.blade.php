@@ -1,10 +1,10 @@
 <div class="row">
-    @if($recommendedProducts->count() > 0)
+    @if ($recommendedProducts->count() > 0)
         @foreach ($recommendedProducts as $recom)
-            <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="col-lg-3 col-md-4 col-6 mb-2 mb-md-4">
                 <a href="{{ route('produk.detail', $recom->slug) }}" class="text-decoration-none">
                     {{-- <a href="#" class="text-decoration-none"> --}}
-                    <div class="card h-100 product-card shadow-sm position-relative">
+                    <div class="card product-card shadow-sm position-relative d-flex flex-column">
                         <!-- Wishlist Button -->
                         @auth
                             @if (Auth::user()->wishlist->contains('produk_id', $recom->id))
@@ -42,12 +42,12 @@
                         @endif
 
                         <!-- Product Image -->
-                        <img loading="lazy" src="{{ asset('storage/' . $recom->gambar) }}" class="card-img-top img-fluslug"
-                            alt="{{ $recom->nama_produk }}">
+                        <img loading="lazy" src="{{ asset('storage/' . $recom->gambar) }}"
+                            class="card-img-top img-fluslug" alt="{{ $recom->nama_produk }}">
 
                         <!-- Product Content -->
-                        <div class="card-body">
-                            <h5 class="card-title h6 text-dark">{{ $recom->nama_produk }}</h5>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title h6 text-dark mb-2">{{ $recom->nama_produk }}</h5>
 
                             <!-- Price Section -->
                             <div class="price-section mt-1 mb-1">
@@ -81,7 +81,8 @@
     @else
         <div class="col-12 text-center py-5">
             <i class="bi bi-box-seam text-muted" style="font-size: 4rem;"></i>
-            <h5 class="text-muted mt-3">Belum ada produk tersedia{{ request()->query('kategori') ? ' untuk kategori ini' : '' }}</h5>
+            <h5 class="text-muted mt-3">Belum ada produk
+                tersedia{{ request()->query('kategori') ? ' untuk kategori ini' : '' }}</h5>
         </div>
     @endif
 </div>
