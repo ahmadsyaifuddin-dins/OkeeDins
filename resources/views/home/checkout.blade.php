@@ -184,10 +184,10 @@
                                 </div>
 
                                 <!-- Transfer Info -->
-                                <div id="transfer-info" class="mt-4 p-4 bg-blue-50 rounded-lg hidden">
-                                    <h3 class="text-sm font-medium text-blue-800 mb-2">Informasi Transfer:</h3>
-                                    <p class="text-sm text-blue-700">
-                                        Setelah checkout, Anda akan diarahkan ke halaman pembayaran untuk melihat
+                                <div id="transfer-info" class="mt-4 p-4 bg-red-50 rounded-lg hidden">
+                                    <h3 class="text-sm font-medium text-red-800 mb-2">Informasi Transfer:</h3>
+                                    <p class="text-sm text-custom">
+                                        Setelah checkout, Kamu akan diarahkan ke halaman pembayaran untuk melihat
                                         nomor rekening dan mengunggah bukti transfer.
                                     </p>
                                 </div>

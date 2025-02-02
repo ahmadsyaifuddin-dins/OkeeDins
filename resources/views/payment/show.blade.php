@@ -52,7 +52,7 @@
                         <div class="space-y-1 mb-4 sm:mb-0">
                             <h3 class="font-semibold text-gray-900">Seabank</h3>
                             <p class="text-gray-600">No. Rekening: <span class="font-medium text-gray-900">901139597160</span></p>
-                            <p class="text-gray-600">a.n <span class="font-medium text-gray-900">Ahmad Syaifuddin (CEO Food Fusion Indonesia)</span></p>
+                            <p class="text-gray-600">a.n <span class="font-medium text-gray-900">Ahmad Syaifuddin <br> (CEO OkeeDins Indonesia)</span></p>
                         </div>
                         <img src="{{ asset('images/SeaBank.png') }}" alt="seabank" class="h-8 w-auto mt-2 sm:mt-0">
                     </div>
