@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'FoodFusion') }}</title>
+    <title>{{ config('app.name', 'OkeeDins') }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}" type="image/x-icon">
 
-    {{-- @extends('layouts.scripts') --}}
-    {{-- <script src="{{ asset('js/market.js') }}"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -35,12 +37,19 @@
             theme: {
                 extend: {
                     colors: {
-                        // 'custom': '#D32F2F', // Default
+                        // 'custom': '#FF6F00', // Oranye cerah Primary
+                        'custom-secondary': '#004AAD', // Biru tua Secondary                   
+                        'custom-accent': '#FDCB6E', // kuning tua Accent
+                        'bg-primary': '#ffffff', // Putih
+
+                        'custom': '#D32F2F', // Default
+                        'custom-secondary': '#102863' // Biru malam
+
                         // 'custom': '#006400', // hijau tua
                         // 'custom': '#4B89DC', // biru muda
 
                         // 'custom': '#FF6B35', // Oranye : Primary
-                        'custom': '#D63031', // merah tua : Secondary
+                        // 'custom': '#D63031', // merah tua : Secondary
                         // 'custom': '#FDCB6E', // kuning tua : Accent
                     }
                 }
@@ -51,7 +60,7 @@
     <!-- Custom Styles -->
     <style>
         :root {
-            --customColor: #D63031;
+            --customColor: #D32F2F;
         }
 
         /* Custom Radio Button */

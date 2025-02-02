@@ -86,6 +86,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
         Route::get('/', [GameController::class, 'index'])->name('index');
         Route::get('/ping-pong', [GameController::class, 'pingPong'])->name('ping-pong');
         Route::get('/rock-paper-scissors', [GameController::class, 'rockPaperScissors'])->name('rock-paper-scissors');
+        Route::get('/get-random-voucher', [GameController::class, 'getRandomVoucher'])->name('get-random-voucher');
     });
 
     // Checkout dan Voucher
@@ -263,6 +264,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
             Route::get('/laporan/export-excel', [App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('laporan.export-excel');
             Route::get('/laporan/export-pdf', [App\Http\Controllers\Admin\LaporanController::class, 'exportPDF'])->name('laporan.export-pdf');
+
+            // Route Pengaturan
+            Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+            Route::put('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+
         });
     });
 });

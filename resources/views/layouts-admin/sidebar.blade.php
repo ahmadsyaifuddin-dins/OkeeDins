@@ -5,9 +5,8 @@
         <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand px-4 py-3 m-0" href=" {{ route('admin.dashboard') }} " target="_blank">
-            <img src="{{ asset('material-dashboard/assets/img/logo-ct-dark.png') }}" class="navbar-brand-img"
-                width="26" height="26" alt="main_logo">
-            <span class="ms-1 text-sm text-dark">Food Fusion</span>
+            <img src="{{ asset('storage/' . ($appSettings['app_logo'] ?? 'default-logo.png')) }}" class="navbar-brand-img" alt="{{ $appSettings['app_name'] ?? 'main_logo' }}">
+            <span class="ms-1 text-sm text-dark">{{ $appSettings['app_name'] }}</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -85,7 +84,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark {{ Request::routeIs('admin.setting.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.vouchers.index') }}">
+                <a class="nav-link text-dark {{ Request::routeIs('admin.settings.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.settings.index') }}">
                     <i class="material-symbols-rounded opacity-5">settings</i>
                     <span class="nav-link-text ms-1">Pengaturan</span>
                 </a>

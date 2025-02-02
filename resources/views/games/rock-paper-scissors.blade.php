@@ -39,7 +39,7 @@
                     <h3 class="text-lg font-medium text-green-900 mb-2">Cara Bermain:</h3>
                     <ul class="list-disc list-inside text-green-800 space-y-1">
                         <li>Pilih salah satu: Gunting (✌️), Batu (🗿), atau Kertas (📄)</li>
-                        <li>Menangkan 5 ronde untuk mendapatkan voucher!</li>
+                        <li>Menangkan 10 ronde untuk mendapatkan voucher!</li>
                         <li>Gunting mengalahkan Kertas</li>
                         <li>Batu mengalahkan Gunting</li>
                         <li>Kertas mengalahkan Batu</li>
@@ -69,6 +69,9 @@
             resultElement.className = "text-center text-2xl font-bold text-gray-800 mb-8";
         } else if (result === "Kamu Menang! 🎉") {
             resultElement.className = "text-center text-2xl font-bold text-green-600 mb-8";
+            if (playerScore === 10) {
+                getRandomVoucher();
+            }
         } else {
             resultElement.className = "text-center text-2xl font-bold text-red-600 mb-8";
         }
@@ -96,29 +99,69 @@
     function updateScores() {
         document.getElementById('playerScore').textContent = playerScore;
         document.getElementById('computerScore').textContent = computerScore;
-        
-        if (playerScore === 5) {
-            setTimeout(() => {
-                Swal.fire({
-                    title: 'Selamat!',
-                    text: 'Kamu mendapatkan voucher diskon!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#10B981'
-                }).then(() => {
-                    resetGame();
-                });
-            }, 500);
-        }
     }
-    
-    function resetGame() {
-        playerScore = 0;
-        computerScore = 0;
-        document.getElementById('playerChoice').textContent = '?';
-        document.getElementById('computerChoice').textContent = '?';
-        document.getElementById('result').textContent = '';
-        updateScores();
+
+    function getRandomVoucher() {
+        fetch('/games/get-random-voucher')
+        .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const voucher = data.voucher;
+                    const voucherValue = voucher.type === 'percentage' ? 
+                        `${voucher.value}%` : 
+                        `Rp ${new Intl.NumberFormat('id-ID').format(voucher.value)}`;
+                    
+                    Swal.fire({
+                        title: 'Selamat! 🎉',
+                        html: `
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-lg mb-2">Kamu mendapatkan voucher:</p>
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <p class="text-green-600 font-bold text-2xl mb-1">${voucherValue}</p>
+                                    <p class="text-sm text-gray-600">Kode: <span class="font-mono bg-gray-100 px-2 py-1 rounded">${voucher.code}</span></p>
+                                    <p class="text-xs text-gray-500 mt-2">Berlaku sampai: ${voucher.valid_until}</p>
+                                </div>
+                            </div>
+                        `,
+                        confirmButtonText: 'Salin Kode',
+                        showCancelButton: true,
+                        cancelButtonText: 'Tutup',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigator.clipboard.writeText(voucher.code);
+                            Swal.fire({
+                                title: 'Kode Tersalin!',
+                                text: 'Kode voucher telah disalin ke clipboard.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: data.message,
+                        icon: 'info'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Terjadi kesalahan saat mengambil voucher.',
+                    icon: 'error'
+                });
+            });
     }
 </script>
 @endpush

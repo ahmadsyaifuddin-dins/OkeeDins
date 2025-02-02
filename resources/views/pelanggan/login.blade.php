@@ -19,10 +19,12 @@
     <div class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#f8f4f3]">
             <div>
-                <a href="#">
-                    <h2 class="font-bold text-3xl">Food<box-icon name='bowl-hot'></box-icon> <span
-                            class="bg-[#f84525] text-white px-2 rounded-md">Fusion</span> </h2>
-                </a>
+                <div class="text-center">
+                    <div class="flex justify-center items-center mb-4">
+                        <img src="{{ asset('storage/' . ($appSettings['app_logo'] ?? 'default-logo.png')) }}" alt="{{ $appSettings['app_name'] ?? 'App Logo' }}" class=" h-24 w-auto">
+                    </div>
+                    <p class="text-lg font-semibold">Cepat, Lengkap, <span class="text-[#102863]">Okee</span><span class="text-[#D32F2F]">Dins</span> Solusinya!</p>
+                </div>
             </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
@@ -34,7 +36,7 @@
 
                 <!-- Menampilkan error jika ada -->
                 @if ($errors->any())
-                    <div class="bg-red-500 text-white p-4 rounded mb-4">
+                    <div class="bg-red-700 text-white p-4 rounded mb-4">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -54,7 +56,7 @@
                     <div>
                         <label class="block font-medium text-sm text-gray-700" for="email">Email</label>
                         <input type="email" name="email" placeholder="Email"
-                            class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#f84525]" required />
+                            class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#D32F2F]" required />
 
                     </div>
 
@@ -63,7 +65,7 @@
                         <div class="relative">
                             <input id="password" type="password" name="password" placeholder="Password" required
                                 autocomplete="current-password"
-                                class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#f84525]" />
+                                class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#D32F2F]" />
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
                                 <button type="button" id="togglePassword"
                                     class="text-gray-500 focus:outline-none focus:text-gray-600 hover:text-gray-600">
@@ -76,7 +78,7 @@
                     <div class="block mt-4">
                         <label for="remember_me" class="flex items-center">
                             <input type="checkbox" id="remember_me" name="remember"
-                                class="rounded border-gray-300 text-[#f84525] shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
+                                class="rounded border-gray-300 text-[#D32F2F] shadow-sm focus:border-[#D32F2F] focus:ring focus:ring-[#D32F2F] focus:ring-opacity-50">
                             <span class="ms-2 text-sm text-gray-600">Remember Me</span>
                         </label>
                     </div>
@@ -85,12 +87,12 @@
                     <!-- Button and Register Link in a Flex Container -->
                     <div class="flex justify-between items-center">
                         <button
-                            class="ms-4 inline-flex items-center px-4 py-2 bg-[#f84525] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-800 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            class="ms-4 inline-flex items-center px-4 py-2 bg-[#D32F2F] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-800 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Masuk
                         </button>
 
                         <p class="text-sm">
-                            Belum Punya Akun? <a href="{{ route('register') }}" class="text-[#f84525]">Daftar!</a>
+                            Belum Punya Akun? <a href="{{ route('register') }}" class="text-[#D32F2F]">Daftar!</a>
                         </p>
                     </div>
                 </form>

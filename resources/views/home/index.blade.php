@@ -2,6 +2,8 @@
 
 @section('content')
     <div class="min-h-screen">
+
+        @include('home.tagline')
         <!-- Banner -->
         @include('home.banner')
 

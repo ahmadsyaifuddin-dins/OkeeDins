@@ -850,7 +850,7 @@ $(document).ready(function () {
                             // Show success message
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Registrasi Berhasil! 🎉',
+                                title: 'Registrasi Berhasil!',
                                 html: `
                                     <div class="success-wrapper">
                                         <div>Anda akan diarahkan ke halaman login...</div>

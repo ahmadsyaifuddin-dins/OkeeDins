@@ -73,7 +73,7 @@ body {
 }
 
 .formbold-steps li.active span {
-    background: #F44424;
+    background: #D32F2F;
     color: #FFFFFF;
 }
 
@@ -108,7 +108,7 @@ body {
 }
 
 .formbold-form-input:focus {
-    border-color: #F44424;
+    border-color: #D32F2F;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -169,7 +169,7 @@ body {
 }
 
 .formbold-confirm-btn.active {
-    background: #F44424;
+    background: #D32F2F;
     color: #FFFFFF;
 }
 
@@ -215,7 +215,7 @@ body {
     padding: 10px 20px;
     border: none;
     font-weight: 500;
-    background-color: #F44424;
+    background-color: #D32F2F;
     color: white;
     cursor: pointer;
 }
@@ -227,7 +227,7 @@ body {
 /* Login link styles */
 .login-link {
     text-decoration: none;
-    color: #F44424;
+    color: #D32F2F;
     font-size: 16px;
     padding: 10px 0;
 }
@@ -376,7 +376,7 @@ body {
 /*! Styling Untuk Radio Button Kustom (Jenis Kelamin) */
 :focus {
     outline: 0;
-    border-color: #F44424;
+    border-color: #D32F2F;
     /* box-shadow: 0 0 0 4px #b5c9fc; */
 }
 
@@ -407,10 +407,10 @@ body {
 
 .mydict input[type="radio"]:checked+span {
     transition: all .3s ease-in-out;
-    box-shadow: 0 0 0 0.0625em #F44424;
+    box-shadow: 0 0 0 0.0625em #D32F2F;
     background-color: #fff0ed;
     z-index: 1;
-    color: #F44424;
+    color: #D32F2F;
 }
 
 label span {
@@ -517,7 +517,7 @@ label:last-child span {
 }
 
 .character-card.selected {
-    border-color: #4B49AC;
+    border-color: #D32F2F;
     box-shadow: 0 0 20px rgba(75, 73, 172, 0.3);
 }
 

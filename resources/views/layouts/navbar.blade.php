@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a href="{{ route('home.index') }}" class="flex items-center">
-                <span class="text-xl font-bold">Oke<span class="text-custom">Dins</span></span>
+                <img src="{{ asset('storage/' . ($appSettings['app_logo'] ?? 'default-logo.png')) }}" alt="{{ $appSettings['app_name'] ?? 'App Logo' }}" class="h-16 md:h-20 w-auto">
             </a>
 
             <!-- Search Bar (Desktop) -->

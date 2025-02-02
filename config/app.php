@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Udins E-Commerce'),
+    'name' => env('APP_NAME', 'OkeeDins'),
 
     /*
     |--------------------------------------------------------------------------
@@ -169,6 +169,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
+        App\Providers\SettingServiceProvider::class,
         // Barryvdh\Debugbar\ServiceProvider::class,
     ])->toArray(),
 
