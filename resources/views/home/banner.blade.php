@@ -1,62 +1,92 @@
 <!-- Banner Slider -->
-<div class="banner-slider my-4">
-    <div class="swiper main-swiper">
+<div class="relative overflow-hidden bg-gray-100 mt-16 md:mt-20 my-4">
+    <div class="swiper bannerSwiper h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide">
-                <div class="row align-items-center p-5">
-                    <div class="col-lg-7">
-                        <h2 class="fw-bold mb-3">Flash Sale</h2>
-                        <p class="mb-4">Diskon hingga <span class="fw-bold">70%</span> untuk produk tertentu. Jangan
-                            lewatkan!</p>
-                        <a href="#" class="btn btn-outline-custom btn-light btn-hover-warning fw-bold">Belanja
-                            Sekarang</a>
-
-                    </div>
-                    <div class="col-lg-5 text-center">
-                        <img src="{{ asset('images/banner-kecap-bango.png') }}" class="img-fluid" alt="Flash Sale">
+                <div class="container mx-auto px-4 h-full">
+                    <div class="flex flex-col md:flex-row items-center justify-center h-full py-2 md:py-12">
+                        <div class="w-full md:w-1/2 space-y-2 md:space-y-4 text-center md:text-left">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Flash Sale!</h2>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600">
+                                Diskon hingga <span class="font-bold text-custom">70%</span> untuk produk tertentu.
+                                Jangan lewatkan!
+                            </p>
+                            <a href="#flash-sale"
+                                class="inline-block px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-custom text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                Belanja Sekarang
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
+                            <img src="{{ asset('images/banner-kecap-bango.png') }}"
+                                class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
+                                alt="Flash Sale">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Slide 2 -->
             <div class="swiper-slide">
-                <div class="row align-items-center p-5">
-                    <div class="col-lg-7">
-                        <h3 class="display-4">Produk Pilihan Terbaik</h3>
-                        <p>Temukan berbagai produk berkualitas dengan harga terbaik untuk Anda.</p>
-                        <a href="#"
-                            class="btn btn-outline-custom btn-lg text-uppercase rounded-1 btn-hover-warning px-4 py-2 mt-3">Belanja
-                            Sekarang</a>
-                    </div>
-                    <div class="col-lg-5 text-center">
-                        <img src="{{ asset('images/banner.jpg') }}" class="img-fluid py-3" alt="Banner 1">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 3 -->
-            <div class="swiper-slide">
-                <div class="row align-items-center p-5">
-                    <div class="col-lg-7">
-                        <h3 class="display-4">Produk Unggulan</h3>
-                        <p>Dapatkan penawaran spesial untuk produk-produk pilihan kami.</p>
-                        <a href="#"
-                            class="btn btn-outline-custom btn-lg text-uppercase rounded-1 btn-hover-warning">Lihat
-                            Koleksi</a>
-                    </div>
-                    <div class="col-lg-5 text-center">
-                        <img src="{{ asset('images/banner-default.jpg') }}" class="img-fluid py-3" alt="Banner 2">
+                <div class="container mx-auto px-4 h-full">
+                    <div class="flex flex-col md:flex-row items-center justify-center h-full py-2 md:py-12">
+                        <div class="w-full md:w-1/2 space-y-2 md:space-y-4 text-center md:text-left">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Produk Pilihan Terbaik
+                            </h2>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600">
+                                Temukan berbagai produk berkualitas dengan harga terbaik untuk Anda.
+                            </p>
+                            <a href="#recommended"
+                                class="inline-block px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-custom text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                Belanja Sekarang
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
+                            <img src="{{ asset('images/banner-default-2.jpg') }}"
+                                class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
+                                alt="Produk Pilihan">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Navigation -->
+        <div class="swiper-button-next after:content-['']">
+            <i class="bi bi-chevron-right text-2xl text-custom"></i>
+        </div>
+        <div class="swiper-button-prev after:content-['']">
+            <i class="bi bi-chevron-left text-2xl text-custom"></i>
+        </div>
+
         <!-- Pagination -->
         <div class="swiper-pagination"></div>
-
-        <!-- Navigation Buttons -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        // Initialize Swiper
+        document.addEventListener('DOMContentLoaded', function() {
+            const bannerSwiper = new Swiper('.bannerSwiper', {
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        });
+    </script>
+@endpush

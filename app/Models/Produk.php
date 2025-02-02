@@ -54,15 +54,15 @@ class Produk extends Model
         return $this->hasMany(Cart::class, 'produk_id', 'id');
     }
 
-    public function images()
+    public function productImages()
     {
-        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+        return $this->hasMany(ProductImage::class, 'produk_id');
     }
 
-    public function thumbnail()
-    {
-        return $this->hasOne(ProductImage::class)->where('is_thumbnail', true);
-    }
+    // public function thumbnail()
+    // {
+    //     return $this->hasOne(ProductImage::class)->where('is_thumbnail', true);
+    // }
 
     public function ulasan()
     {

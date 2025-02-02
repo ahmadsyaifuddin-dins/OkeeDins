@@ -9,9 +9,11 @@ use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\KategoriProdukController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\UlasanController;
+use App\Http\Controllers\Admin\VoucherController;
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutControllerOld;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PelangganController;
@@ -19,11 +21,12 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AddressControllerOld;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\GameController;
 
 use App\Http\Controllers\HomeController;
 use App\Models\KategoriProduk;
@@ -78,6 +81,17 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::post('/logout', [PelangganController::class, 'logout'])->name('logout');
 
+    // Games Routes
+    Route::prefix('games')->name('games.')->group(function () {
+        Route::get('/', [GameController::class, 'index'])->name('index');
+        Route::get('/ping-pong', [GameController::class, 'pingPong'])->name('ping-pong');
+        Route::get('/rock-paper-scissors', [GameController::class, 'rockPaperScissors'])->name('rock-paper-scissors');
+    });
+
+    // Checkout dan Voucher
+    // Route::post('/checkout/validate-voucher', [CheckoutController::class, 'validateVoucher'])->name('checkout.validate-voucher');
+    Route::post('/checkout/validate-voucher', [CheckoutControllerOld::class, 'validateVoucher'])->name('checkout.validate-voucher');
+
     // Riwayat dan Transaksi
     Route::get('/riwayat-pesanan', [OrderController::class, 'history'])->name('orders.history');
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transactions.index');
@@ -85,12 +99,14 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::get('/orders/detail/{order}', [OrderController::class, 'detail'])->name('orders.detail');
 
     // Checkout
-    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
-    Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+    // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::get('/checkout', [CheckoutControllerOld::class, 'showCheckout'])->name('checkout.index');
+    // Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/checkout/process', [CheckoutControllerOld::class, 'processCheckout'])->name('checkout.process');
 
     // Order
     Route::get('/orders', [OrderController::class, 'index'])->name('home.riwayat-pesanan');
-    Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
+    Route::get('/orders/confirmation/{order}', [OrderController::class, 'confirmation'])->name('orders.confirmation');
     // Route::get('/orders/detail/{order}', [OrderController::class, 'detail'])->name('orders.detail');
 
 
@@ -115,7 +131,8 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     // Voucher routes
-    Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])->name('vouchers.validate');
+    // Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])->name('vouchers.validate');
+    Route::post('/vouchers/validate', [CheckoutControllerOld::class, 'validateVoucher'])->name('vouchers.validate');
 
     // Payment Routes
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
@@ -123,11 +140,27 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::post('/payment/{order}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
 
     // Address Routes
-    Route::get('/addresses/list', [AddressController::class, 'getList'])->name('addresses.list');
-    Route::get('/addresses/{address}', [AddressController::class, 'show'])->name('addresses.show');
-    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
-    Route::match(['PUT', 'PATCH'], '/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
-    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+    // Route::prefix('addresses')->group(function () {
+    //     Route::get('/list', [AddressController::class, 'getList'])->name('addresses.list');
+    //     Route::get('/checkout-list', [AddressController::class, 'getCheckoutList'])->name('addresses.checkout-list');
+    //     Route::get('/{address}', [AddressController::class, 'show'])->name('addresses.show');
+    //     Route::get('/{address}/edit', [AddressController::class, 'edit'])->name('addresses.edit');
+    //     Route::post('/', [AddressController::class, 'store'])->name('addresses.store');
+    //     Route::put('/{address}', [AddressController::class, 'update'])->name('addresses.update');
+    //     Route::delete('/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+    //     Route::post('/{address}/make-primary', [AddressController::class, 'setPrimary'])->name('addresses.make-primary');
+    // });
+    
+    Route::prefix('addresses')->group(function () {
+        Route::get('/list', [AddressControllerOld::class, 'getList'])->name('addresses.list');
+        Route::get('/checkout-list', [AddressControllerOld::class, 'getCheckoutList'])->name('addresses.checkout-list');
+        Route::get('/{address}', [AddressControllerOld::class, 'show'])->name('addresses.show');
+        Route::get('/{address}/edit', [AddressControllerOld::class, 'edit'])->name('addresses.edit');
+        Route::post('/', [AddressControllerOld::class, 'store'])->name('addresses.store');
+        Route::put('/{address}', [AddressControllerOld::class, 'update'])->name('addresses.update');
+        Route::delete('/{address}', [AddressControllerOld::class, 'destroy'])->name('addresses.destroy');
+        Route::post('/{address}/make-primary', [AddressControllerOld::class, 'setPrimary'])->name('addresses.make-primary');
+    });
 
     // Review routes
     Route::get('/reviews/create/{order}', [ReviewController::class, 'create'])->name('reviews.create');
@@ -137,6 +170,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::patch('/profile', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
     });
 });
 
@@ -201,17 +235,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/produk/{id}', [ProdukController::class, 'showProduk'])->name('produk.show'); // Detail produk
             Route::put('/produk/{id}', [ProdukController::class, 'updateProduk'])->name('produk.update'); // Proses edit produk
             Route::delete('/produk/{id}', [ProdukController::class, 'destroyProduk'])->name('produk.destroy'); // Proses hapus produk
+            Route::delete('/produk/hapus-foto/{id}', [ProdukController::class, 'hapusFoto'])->name('produk.hapus-foto');
 
             Route::get('/pesanan', [PesananController::class, 'indexPesanan'])->name('pesanan.index'); // Halaman daftar produk
             Route::get('/pesanan/{order_number}', [PesananController::class, 'showPesanan'])->name('pesanan.show');
             Route::put('/pesanan/{id}/update-status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
             Route::delete('/pesanan/{id}', [PesananController::class, 'destroyPesanan'])->name('pesanan.destroy');
 
-            // Voucher Management
+            // Voucher Management sisi admin
             Route::resource('vouchers', VoucherController::class);
 
-            Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])
-                ->name('api.vouchers.validate');
+            // Route::post('/vouchers/validate', [CheckoutController::class, 'validateVoucher'])->name('api.vouchers.validate');
+            Route::post('/vouchers/validate', [CheckoutControllerOld::class, 'validateVoucher'])->name('api.vouchers.validate');
 
             // Route::post('/pesanan/{id}/confirm', [OrderController::class, 'confirm'])->name('pesanan.confirm');
             // Route::post('/pesanan/{id}/process', [OrderController::class, 'processing'])->name('pesanan.process');

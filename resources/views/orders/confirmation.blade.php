@@ -1,113 +1,119 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-3">
-                        <!-- Status Banner -->
-                        <div class="text-center mb-4">
-                            <div class="bg-success bg-opacity-10 text-success rounded-pill py-2 px-4 d-inline-block mb-3">
-                                <i class="bi bi-check-circle me-2"></i>Pesanan Berhasil Dibuat
-                            </div>
-                            <h4 class="mb-1">Terima Kasih, {{ $order->user->name }}!</h4>
-                            <p class="text-muted mb-0">Nomor Pesanan: #{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}</p>
-                        </div>
-
-                        <!-- Order Details -->
-                        <div class="border rounded-3 p-3 mb-4">
-                            <h5 class="mb-3">Detail Pesanan</h5>
-
-                            <!-- Order Items -->
-                            @foreach ($order->orderItems as $item)
-                                <div class="d-flex flex-column flex-sm-row align-items-center mb-3 pb-3 border-bottom">
-                                    <img src="{{ asset('storage/' . $item->produk->gambar) }}"
-                                        alt="{{ $item->produk->nama_produk }}" class="rounded mb-2 mb-sm-0" width="100" height="100"
-                                        style="object-fit: cover;">
-                                    <div class="ms-sm-3 flex-grow-1 text-center text-sm-start">
-                                        <h6 class="mb-1">{{ $item->produk->nama_produk }}</h6>
-                                        <div class="text-muted small">
-                                            {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
-                                            @if ($item->discount > 0)
-                                                <span class="text-danger">(Diskon {{ intval($item->discount) }}%)</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-
-                            <!-- Order Summary -->
-                            <div class="bg-light rounded p-3">
-                                <div class="d-flex flex-wrap justify-content-between mb-2">
-                                    <span class="text-muted mb-1 mb-sm-0">Total Item</span>
-                                    <span>{{ $order->qty }} barang</span>
-                                </div>
-                                <div class="d-flex flex-wrap justify-content-between mb-2">
-                                    <span class="text-muted mb-1 mb-sm-0">Harga Awal</span>
-                                    <span>Rp{{ number_format($order->total_original_price, 0, ',', '.') }}</span>
-                                </div>
-                                @if ($order->total_discount > 0)
-                                    <div class="d-flex flex-wrap justify-content-between mb-2">
-                                        <span class="text-muted mb-1 mb-sm-0">Total Diskon</span>
-                                        <span class="text-danger">-Rp{{ number_format($order->total_discount, 0, ',', '.') }}</span>
-                                    </div>
-                                @endif
-                                <hr class="my-2">
-                                <div class="d-flex flex-wrap justify-content-between">
-                                    <strong class="mb-1 mb-sm-0">Total Pembayaran</strong>
-                                    <strong class="text-danger">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Info -->
-                        <div class="border rounded-3 p-3 mb-4">
-                            <h5 class="mb-3">Informasi Pembayaran</h5>
-                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
-                                <span class="text-muted mb-1 mb-sm-0">Metode Pembayaran</span>
-                                <span class="text-capitalize">{{ $order->payment_method }}</span>
-                            </div>
-                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
-                                <span class="text-muted mb-1 mb-sm-0">Status Pembayaran</span>
-                                <span class="badge {{ $order->status === 'pending' ? 'bg-warning' : 'bg-info' }}">
-                                    {{ ucfirst($order->status_label) }}
-                                </span>
-                            </div>
-                            @if ($order->payment_method === 'transfer' && $order->payment_proof)
-                                <div class="mt-3">
-                                    <label class="form-label">Bukti Transfer</label>
-                                    <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer"
-                                        class="img-fluid rounded" style="max-height: 200px">
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Customer Info -->
-                        <div class="border rounded-3 p-3">
-                            <h5 class="mb-3">Informasi Penerima</h5>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Nama</span>
-                                <span>{{ $order->address->receiver_name }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span class="text-muted">Alamat</span>
-                                <span class="text-end" style="max-width: 60%">{{ $order->address->full_address }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="text-center mt-4 me-3 mb-3 d-flex flex-column flex-md-row">
-                            <a href="{{ route('home.index') }}" class="btn btn-outline-custom w-100 mb-2 mb-md-0 me-md-2">
-                                Kembali ke Beranda
-                            </a>
-                            <a href="{{ route('orders.index') }}" class="btn btn-custom w-100">
-                                Lihat Pesanan Saya
-                            </a>
-                        </div>
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <!-- Card Konfirmasi -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <!-- Icon Success -->
+                <div class="flex justify-center mb-6">
+                    <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                        <i class="bi bi-check-lg text-4xl text-green-500"></i>
                     </div>
                 </div>
+
+                <!-- Pesan Sukses -->
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+                        Pesanan Berhasil Dibuat!
+                    </h1>
+                    <p class="text-gray-600">
+                        Terima kasih <span class="font-bold">{{ explode(' ', Auth::user()->name)[0] }}</span> telah berbelanja di FoodFusion. Pesanan Anda sedang diproses.
+                    </p>
+                </div>
+
+                <!-- Detail Pesanan -->
+                <div class="space-y-6">
+                    <!-- Detail Pesanan -->
+                    <div class="space-y-4">
+                        <!-- Nomor Pesanan -->
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <span class="text-gray-600 mb-1 sm:mb-0">Nomor Pesanan:</span>
+                                <span class="font-semibold text-gray-800">#{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Tanggal Pesanan -->
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <span class="text-gray-600 mb-1 sm:mb-0">Tanggal Pesanan:</span>
+                                <span class="font-semibold text-gray-800">{{ $order->created_at->format('d F Y H:i') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Total Pembayaran -->
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <span class="text-gray-600 mb-1 sm:mb-0">Total Pembayaran:</span>
+                                <span class="font-bold text-lg sm:text-xl text-custom">
+                                    Rp{{ number_format($order->total_amount, 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Metode Pembayaran -->
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <span class="text-gray-600 mb-1 sm:mb-0">Metode Pembayaran:</span>
+                                <span class="font-semibold text-gray-800">
+                                    @if($order->payment_method === 'transfer')
+                                        Transfer Bank
+                                    @elseif($order->payment_method === 'Cash on Delivery')
+                                        Cash on Delivery (COD)
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Pesanan -->
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                            <span class="text-gray-600 mb-2 sm:mb-0">Status:</span>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium self-start sm:self-auto
+                                @if($order->status === 'pending')
+                                    bg-yellow-100 text-yellow-800
+                                @elseif($order->status === 'processing')
+                                    bg-blue-100 text-blue-800
+                                @elseif($order->status === 'completed')
+                                    bg-green-100 text-green-800
+                                @elseif($order->status === 'cancelled')
+                                    bg-red-100 text-red-800
+                                @endif">
+                                {{ ucfirst($order->status_label) }}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="mt-8 space-y-4 sm:space-y-0 sm:flex sm:space-x-4">
+                    <a href="{{ route('home.index') }}" 
+                        class="w-full sm:w-1/2 block text-center px-6 py-3 border-2 border-custom text-custom font-semibold rounded-lg hover:bg-red-50 transition duration-200">
+                        <i class="bi bi-house-door mr-2"></i>Kembali ke Beranda
+                    </a>
+                    <a href="{{ route('orders.detail', $order->id) }}" 
+                        class="w-full sm:w-1/2 block text-center px-6 py-3 bg-custom text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200">
+                        <i class="bi bi-box-seam mr-2"></i>Lihat Detail Pesanan
+                    </a>
+                </div>
             </div>
+
+            <!-- Informasi Tambahan -->
+            @if($order->payment_method === 'transfer')
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div class="flex items-center space-x-3 text-blue-700">
+                    <i class="bi bi-info-circle text-xl"></i>
+                    <p class="text-sm">
+                        Silakan lakukan pembayaran sesuai dengan instruksi yang telah dikirimkan ke email Anda.
+                    </p>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
+</div>
 @endsection

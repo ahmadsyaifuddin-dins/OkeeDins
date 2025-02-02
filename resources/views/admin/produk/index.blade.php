@@ -25,8 +25,6 @@
                                             Gambar Produk</th>
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7">
                                             Nama Produk</th>
-                                        {{-- <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Deskripsi</th> --}}
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
                                             Harga</th>
                                         <th class="text-uppercase text-black-th text-xxs font-weight-bolder opacity-7 ps-2">
@@ -51,7 +49,7 @@
                                             <td>
                                                 <div class="d-flex px-3 py-2">
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6>
+                                                        <h6 class="mb-0 text-sm">{{ $produk->firstItem() + $index }}</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -63,16 +61,10 @@
                                             </td>
 
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $prod->nama_produk }}
+                                                <p class="text-xs font-weight-bold mb-0" title="{{ $prod->nama_produk }}">
+                                                    {{ Str::limit($prod->nama_produk, 30, '...') }}
                                                 </p>
                                             </td>
-
-                                            {{-- <td>
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    {{ Str::limit(strip_tags($prod->deskripsi), 50) }}
-                                                </span>
-                                            </td> --}}
-
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     Rp{{ number_format($prod->harga, 0, ',', '.') }}
@@ -128,7 +120,9 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        <div class="d-flex justify-content-center">
+                        {{ $produk->appends(['page' => $produk->currentPage()])->links('vendor.pagination.material') }}
+                        </div>
                     </div>
                 </div>
             </div>

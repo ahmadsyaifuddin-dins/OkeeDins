@@ -12,52 +12,55 @@ class CartController extends Controller
     public function getCartCount()
     {
         return $this->getCartQuery()->count();
+
     }
 
     public function add(Request $request)
-    {
-        $request->validate([
-            'produk_id' => 'required|exists:produk,id', // Memastikan produk_id ada di tabel produk dengan kolom id
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric',
-            'amount' => 'required|numeric',
-        ]);
+{
+    $request->validate([
+        'produk_id' => 'required|exists:produk,id',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric',
+        'amount' => 'required|numeric',
+    ]);
 
-        try {
-            Log::info('Request Data:', $request->all());
+    try {
+        Log::info('Request Data:', $request->all());
 
-            $existingCart = $this->getCartQuery()
-                ->where('produk_id', $request->produk_id)
-                ->first();
+        $existingCart = $this->getCartQuery()
+            ->where('produk_id', $request->produk_id)
+            ->first();
 
-            if ($existingCart) {
-                $newQuantity = $existingCart->quantity + $request->quantity;
-                $this->updateExistingCart($existingCart, $newQuantity);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Quantity produk berhasil diperbarui',
-                    'cartCount' => $this->getCartCount()
-                ]);
-            }
-
-            $this->createNewCart($request);
+        if ($existingCart) {
+            $newQuantity = $existingCart->quantity + $request->quantity;
+            $this->updateExistingCart($existingCart, $newQuantity);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Produk berhasil ditambahkan ke keranjang',
                 'cartCount' => $this->getCartCount()
             ]);
-        } catch (\Exception $e) {
-            Log::error('Cart Error: ' . $e->getMessage());
-            Log::error('Error Stack Trace: ' . $e->getTraceAsString());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menambahkan produk ke keranjang: ' . $e->getMessage()
-            ], 500);
         }
+
+        $this->createNewCart($request);
+        
+        // Add this return statement
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil ditambahkan ke keranjang',
+            'cartCount' => $this->getCartCount()
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Cart Error: ' . $e->getMessage());
+        Log::error('Error Stack Trace: ' . $e->getTraceAsString());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menambahkan produk ke keranjang: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     public function index()
     {
@@ -76,7 +79,7 @@ class CartController extends Controller
 
         $grandTotal = $totalPrice - $totalDiscount;
 
-        return view('home.cart', compact('cartItems', 'totalPrice', 'totalDiscount', 'grandTotal'));
+        return view('cart.index', compact('cartItems', 'totalPrice', 'totalDiscount', 'grandTotal'));
     }
 
 

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Voucher;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use App\Http\Controllers\Controller;
+
 
 class VoucherController extends Controller
 {

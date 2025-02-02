@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,15 @@ class PaymentController extends Controller
                 'status' => 'processing',
                 'payment_status' => 'paid'
             ]);
+
+            // Update transaction
+            $transaction =  Transaction::where('order_id', $order->id)->first();
+            if ($transaction) {
+                $transaction->status = 'completed';
+                $transaction->payment_status = 'paid';
+                $transaction->payment_date = now(); // Set payment date saat pelanggan konfirmasi terima
+                $transaction->save();
+            }
 
             return back()->with('success', 'Pembayaran berhasil diverifikasi');
         } catch (\Exception $e) {

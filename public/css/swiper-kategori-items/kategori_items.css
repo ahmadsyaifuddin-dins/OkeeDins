@@ -1,0 +1,37 @@
+/* Override default Swiper styles */
+.kategoriSwiper {
+    width: 100%;
+    overflow: visible;
+}
+
+.kategoriSwiper .swiper-wrapper {
+    display: flex;
+    align-items: center;
+    /* Prevent flex-wrap */
+    flex-wrap: nowrap;
+}
+
+.kategoriSwiper .swiper-slide {
+    width: auto !important;
+    opacity: 1 !important;
+    /* Reset margin */
+    margin-right: 8px;
+}
+
+/* Ensure proper spacing between slides */
+.kategoriSwiper .swiper-slide:last-child {
+    margin-right: 0;
+}
+
+/* Make sure container allows horizontal scroll */
+.kategoriSwiper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar for clean look */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.kategoriSwiper::-webkit-scrollbar {
+    display: none;
+}

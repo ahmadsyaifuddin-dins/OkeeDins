@@ -1,17 +1,38 @@
 {
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "axios": "^1.6.4",
-        "laravel-mix": "^6.0.49",
-        "laravel-vite-plugin": "^1.0.0",
-        "vite": "^5.0.0"
-    },
-    "dependencies": {
-        "pace-js": "^1.2.4"
-    }
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "aos": "^2.3.4",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.6.4",
+    "laravel-mix": "^6.0.49",
+    "laravel-vite-plugin": "^1.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "pace-js": "^1.2.4"
+  },
+  "name": "foodfusion",
+  "description": "![GitHub repo size](https://img.shields.io/github/repo-size/ahmadsyaifuddin-dins/FoodFusion) ![GitHub last commit](https://img.shields.io/github/last-commit/ahmadsyaifuddin-dins/FoodFusion) ![GitHub issues](https://img.shields.io/github/issues/ahmadsyaifuddin-dins/FoodFusion)",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmadsyaifuddin-dins/FoodFusion.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmadsyaifuddin-dins/FoodFusion/issues"
+  },
+  "homepage": "https://github.com/ahmadsyaifuddin-dins/FoodFusion#readme"
 }

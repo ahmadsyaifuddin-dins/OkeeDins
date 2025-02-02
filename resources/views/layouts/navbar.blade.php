@@ -1,165 +1,232 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
-    <div class="container">
-
-        <a class="text-decoration-none h5 fw-bold text-custom" href="{{ route('home.index') }}">
-            Food <span class="text-primary">Fusion</span>
-        </a>
-
-        <!-- Mobile Icons -->
-        <div class="d-lg-none d-flex align-items-center ms-auto me-2">
-
-            <a class="btn" href="#">
-                <i class="bi bi-bell"></i>
+<nav x-data="{ mobileMenu: false }" class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <a href="{{ route('home.index') }}" class="flex items-center">
+                <span class="text-xl font-bold">Oke<span class="text-custom">Dins</span></span>
             </a>
 
-            <a class="btn" href="#">
-                <i class="bi bi-envelope"></i>
-            </a>
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-xl mx-8">
+                <form action="{{ route('home.search') }}" method="GET" class="w-full">
+                    <div class="relative">
+                        <input type="text" name="query"
+                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-custom"
+                            placeholder="Cari produk favoritmu..." value="{{ request('query') }}">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="bi bi-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-            <a class="btn position-relative" id="cartBadgeMobile" href="{{ route('cart.index') }}">
-                <i class="bi bi-cart"></i>
+            <!-- Mobile Search Bar (Centered) -->
+            <div class="flex-1 md:hidden mx-4">
+                <form action="{{ route('home.search') }}" method="GET">
+                    <div class="relative flex items-center">
+                        <input type="text" name="query" 
+                            class="w-full pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
+                            placeholder="Cari Produk favoritmu..."
+                            value="{{ request('query') }}">
+                        <button type="submit" class="absolute left-3 text-gray-400">
+                            <i class="bi bi-search text-lg"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mobile Icons (Right-aligned) -->
+            <div class="flex items-center gap-2 md:hidden flex-shrink-0">
+                <a href="{{ route('cart.index') }}" class="p-2 text-gray-600 hover:text-custom relative">
+                    <i class="bi bi-cart text-xl"></i>
+                    @auth
+                        @if (Auth::user()->cart->count() > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {{ Auth::user()->cart->count() }}
+                            </span>
+                        @endif
+                    @endauth
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button type="button" class="p-2 text-gray-600 hover:text-custom" @click="mobileMenu = !mobileMenu">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="{{ route('wishlist.index') }}" class="text-gray-600 hover:text-custom relative">
+                    <i class="bi bi-heart text-xl"></i>
+                    @auth
+                        @if (Auth::user()->wishlist->count() > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {{ Auth::user()->wishlist->count() }}
+                            </span>
+                        @endif
+                    @endauth
+                </a>
+
+                <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-custom relative">
+                    <i class="bi bi-cart text-xl"></i>
+                    @auth
+                        @if (Auth::user()->cart->count() > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {{ Auth::user()->cart->count() }}
+                            </span>
+                        @endif
+                    @endauth
+                </a>
+
+                <a href="{{ route('payment.index') }}" class="text-gray-600 hover:text-custom relative">
+                    <i class="bi bi-credit-card text-xl"></i>
+                    @auth
+                        @if ($bayarCount > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {{ $bayarCount }}
+                            </span>
+                        @endif
+                    @endauth
+                </a>
+
                 @auth
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $cartCount }}
-                    </span>
+                    <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                        <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-custom">
+                            <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
+                                alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                            <span>Hi, {{ explode(' ', Auth::user()->name)[0] }}</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-100">
+                            <a href="{{ route('pelanggan.profile') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                                <i class="bi bi-person-circle mr-2"></i>
+                                Profile
+                            </a>
+                            <a href="{{ route('home.riwayat-pesanan') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                                <i class="bi bi-bag mr-2"></i>
+                                Pesanan
+                            </a>
+
+                            <a href="{{ route('transactions.index') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                                <i class="bi bi-receipt mr-2"></i>
+                                Riwayat Transaksi
+                            </a>
+                            <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                                <i class="bi bi-controller mr-2"></i>
+                                Games
+                            </a>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:text-custom ">
+                                    <i class="bi bi-box-arrow-right mr-2"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-custom">
+                        <i class="bi bi-person-circle text-xl"></i>
+                    </a>
                 @endauth
-            </a>
+            </div>
+
+             <!-- Mobile Search - Moved outside flex container but still inside main container -->
+        {{-- <div class="block md:hidden border-t border-gray-100">
+            <div class="py-2">
+                <form action="{{ route('home.search') }}" method="GET">
+                    <div class="relative flex items-center">
+                        <input type="text" name="query" 
+                            class="w-full pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
+                            placeholder="Cari Produk favoritmu..."
+                            value="{{ request('query') }}">
+                        <button type="submit" class="absolute left-3 text-gray-400">
+                            <i class="bi bi-search text-lg"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div> --}}
+
         </div>
 
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" class="md:hidden fixed inset-0 z-50 bg-white">
+            <div class="flex flex-col h-full">
+                @auth
+                    <!-- Mobile Header -->
+                    <div class="flex items-center justify-between p-4 border-b">
+                        <div class="flex items-center gap-2">
+                            <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
+                                alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium">Hi, {{ explode(' ', Auth::user()->name)[0] }}</span>
+                        </div>
+                        <button @click="mobileMenu = false" class="text-gray-500 hover:text-gray-700">
+                            <i class="bi bi-x-lg text-2xl"></i>
+                        </button>
+                    </div>
+                @else
+                    <!-- Guest Mobile Header -->
+                    <div class="flex items-center justify-between p-4 border-b">
+                        <div class="flex items-center gap-2">
+                            <img src="{{ asset('images/user.svg') }}" alt="Guest User"
+                                class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium">Guest</span>
+                        </div>
+                        <button @click="mobileMenu = false" class="text-gray-500 hover:text-gray-700">
+                            <i class="bi bi-x-lg text-2xl"></i>
+                        </button>
+                    </div>
+                @endauth
+                <div class="py-2">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Desktop Icons -->
-                <li class="nav-item d-none d-lg-block">
-                    {{-- <a class="btn btn-outline-custom me-2" href="{{ route('market.notifications') }}"> --}}
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-bell me-1"></i> Notifikasi
+                    <a href="{{ route('transactions.index') }}"
+                        class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50">
+                        <i class="bi bi-receipt"></i>
+                        <span>Riwayat Transaksi</span>
                     </a>
-                </li>
-                <li class="nav-item d-none d-lg-block">
-                    {{-- <a class="nav-link" href="{{ route('market.messages') }}"> --}}
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-envelope me-1"></i> Pesan
+                    <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                        <i class="bi bi-controller mr-2"></i>
+                        Games
                     </a>
-                </li>
-                <li class="nav-item d-none d-lg-block">
-                    <a class="nav-link position-relative" href="{{ route('wishlist.index') }}">
-                        <i class="bi bi-heart me-1"></i> Favorit
-                        @auth
-                            <span class="position-absolute translate-middle badge rounded-pill bg-danger"
-                                style="top: 0px; right: -15px;">
-                                {{ $wishlistCount }}
-                            </span>
-                        @endauth
-                    </a>
-                </li>
-                <li class="nav-item d-none d-lg-block position-relative">
-                    <a class="nav-link" id="cartBadge" href="{{ route('cart.index') }}">
-                        <i class="bi bi-cart me-1"></i> Keranjang
-                        @auth
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ $cartCount }}
-                            </span>
-                        @endauth
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Search Form -->
-            <form action="{{ route('home.search') }}" method="GET" class="d-flex align-items-center me-3">
-                <input class="form-control me-2" type="search" name="query" placeholder="Cari produk..."
-                    aria-label="Search" value="{{ request('query') }}">
-                <button class="btn btn-outline-custom d-flex align-items-center justify-content-center" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </form>
-
-            @auth
-                <!-- User Menu for Desktop -->
-                <div class="dropdown d-none d-lg-block">
-                    <button class="btn btn-outline-custom dropdown-toggle d-flex align-items-center" type="button"
-                        id="userDropdown" data-bs-toggle="dropdown">
-                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
-                            alt="Foto Profil" class="rounded-circle me-2 img-fluid"
-                            style="width: 35px; height: 35px; object-fit: cover; min-width: 35px;">
-                        <span>{{ Auth::user()->name }}</span>
-                    </button>
-                    <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
-                                    class="bi bi-person me-2"></i> Profil</a></li>
-                        {{-- <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-basket me-2"></i>
-                                Pesanan Saya</a></li> --}}
-                        <li><a class="dropdown-item" href="{{ route('payment.index') }}"><i
-                                    class="bi bi-credit-card me-2"></i> Pembayaran
-                            </a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i
-                                    class="bi bi-clock-history me-2"></i> Riwayat
-                                Pesanan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i
-                                    class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Keluar
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
+                    @auth
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:text-custom">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Keluar</span>
+                            </button>
+                        </form>
+                    @else
+                        <div class="px-4 py-3 space-y-2">
+                            <a href="{{ route('login') }}"
+                                class="block w-full text-center px-4 py-2 border border-custom text-custom rounded-lg hover:bg-red-50">
+                                Masuk
+                            </a>
+                            <a href="{{ route('register') }}"
+                                class="block w-full text-center px-4 py-2 bg-custom text-white rounded-lg hover:bg-red-600">
+                                Daftar
+                            </a>
+                        </div>
+                    @endauth
                 </div>
-
-                <!-- User Menu for Mobile -->
-                <div class="dropdown d-lg-none py-3 d-flex justify-content-center">
-                    <button class="btn btn-outline-custom dropdown-toggle d-flex align-items-center" type="button"
-                        id="userDropdownMobile" data-bs-toggle="dropdown">
-                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('images/user.svg') }}"
-                            alt="Foto Profil" class="rounded-circle me-2 img-fluid"
-                            style="width: 30px; height: 30px; object-fit: cover; min-width: 30px;"
-                            onchange="updateNavbarProfilePhoto(this.src)">
-                        <span>{{ Auth::user()->name }}</span>
-                    </button>
-                    <ul class="dropdown-menu mx-auto" aria-labelledby="userDropdownMobile">
-                        <li><a class="dropdown-item" href="{{ route('pelanggan.profile') }}"><i
-                                    class="bi bi-person me-2"></i> Profil</a></li>
-                        {{-- <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i
-                                    class="bi bi-basket me-2"></i>
-                                Pesanan Saya</a></li> --}}
-                        <li><a class="dropdown-item" href="{{ route('orders.history') }}"><i
-                                    class="bi bi-clock-history me-2"></i> Riwayat
-                                Pesanan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('transactions.index') }}"><i
-                                    class="bi bi-wallet2 me-2"></i> Transaksi</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Keluar
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            @else
-                <div class="d-flex align-items-center">
-                    <a href="{{ route('login') }}" class="btn btn-outline-custom me-2">Masuk</a>
-                    <a href="{{ route('register') }}" class="btn btn-custom">Daftar</a>
-                </div>
-            @endauth
+            </div>
         </div>
     </div>
 </nav>
-
-<!-- Script untuk perubahan profil realtime pada navbar nya -->
-@push('scripts')
-    <script src="{{ asset('js/profile-pelanggan.js') }}"></script>
-@endpush

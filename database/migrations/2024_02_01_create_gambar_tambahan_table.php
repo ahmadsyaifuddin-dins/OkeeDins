@@ -8,18 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('product_images', function (Blueprint $table) {
+        Schema::create('gambar_tambahan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('produk_id')->constrained('produk')->onDelete('cascade');
             $table->string('image_path');
             $table->boolean('is_thumbnail')->default(false);
-            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('product_images');
+        Schema::dropIfExists('gambar_tambahan');
     }
 };

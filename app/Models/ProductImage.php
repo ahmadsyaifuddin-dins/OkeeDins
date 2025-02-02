@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductImage extends Model
 {
+    protected $table = 'gambar_tambahan';
+    
     protected $fillable = [
         'produk_id',
         'image_path',
-        'is_thumbnail',
-        'sort_order'
+        'is_thumbnail'
     ];
 
     protected $casts = [
@@ -19,6 +20,6 @@ class ProductImage extends Model
 
     public function produk()
     {
-        return $this->belongsTo(Produk::class);
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
 }

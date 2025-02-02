@@ -147,7 +147,7 @@ class OrderController extends Controller
             ]);
 
             // Proses ulasan
-            $rating = app(RatingController::class)->store(request(), $order);
+            app(RatingController::class)->store(request(), $order);
 
             // Update transaction
             $transaction = Transaction::where('order_id', $order->id)->first();
@@ -182,16 +182,7 @@ class OrderController extends Controller
             ]);
 
             // Proses ulasan
-            $rating = app(RatingController::class)->store(request(), $order);
-
-            // Update transaction
-            $transaction = Transaction::where('order_id', $order->id)->first();
-            if ($transaction) {
-                $transaction->status = 'completed';
-                $transaction->payment_status = 'paid';
-                $transaction->payment_date = now(); // Set payment date saat pelanggan konfirmasi terima
-                $transaction->save();
-            }
+            app(RatingController::class)->store(request(), $order);
 
             DB::commit();
             return back()->with('success', 'Pesanan berhasil dikonfirmasi dan ulasan telah disimpan.');
@@ -301,6 +292,16 @@ class OrderController extends Controller
                 'status' => 'awaiting payment'
             ]);
 
+             // Update terkait transaksi
+             $transaction = Transaction::where('order_id', $order->id)->first();
+             if ($transaction) {
+                 $transaction->update([
+                     'status' => 'awaiting payment',
+                     'payment_status' => 'unpaid',
+                     'payment_date' => now()
+                 ]);
+             }
+
             return redirect()->route('orders.detail', $order->id)->with('success', 'Bukti pembayaran berhasil diunggah');
         }
 
@@ -309,18 +310,39 @@ class OrderController extends Controller
 
     // Method untuk admin memverifikasi pembayaran
     public function verifyPayment(Orders $order)
-    {
-        if (Auth::user()->role !== 'Administrator') {
-            abort(403);
+{
+    if (Auth::user()->role !== 'Administrator') {
+        abort(403);
+    }
+
+    DB::beginTransaction();
+    try {
+        if ($order->payment_method === 'transfer') {
+            // Update order status dan payment status
+            $order->update([
+                'status' => 'processing',
+                'payment_status' => 'paid'
+            ]);
+
+            // Update terkait transaksi
+            $transaction = Transaction::where('order_id', $order->id)->first();
+            if ($transaction) {
+                $transaction->update([
+                    'status' => 'processing',
+                    'payment_status' => 'paid',
+                    'payment_date' => now()
+                ]);
+            }
         }
 
-        $order->update([
-            'status' => 'processing',
-            'payment_status' => 'paid'
-        ]);
-
+        DB::commit();
         return back()->with('success', 'Pembayaran berhasil diverifikasi');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error verifying payment: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat memverifikasi pembayaran');
     }
+}
 
     // Method untuk menolak pembayaran
     public function rejectPayment(Orders $order)

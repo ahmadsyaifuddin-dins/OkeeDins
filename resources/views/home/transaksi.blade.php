@@ -1,267 +1,268 @@
 @extends('layouts.app')
 
-@section('title', 'Transaksi')
+@section('title', 'Riwayat Transaksi')
 
 @section('content')
-    <div class="container mb-5">
-        <div class="row">
-            <div class="col-12">
-                <!-- Back Button & Title -->
-                <div class="d-flex align-items-center mb-4">
-                    <a href="{{ url()->previous() }}" class="btn btn-link text-dark p-0 me-3">
-                        <i class="bi bi-arrow-left fs-5"></i>
-                    </a>
-                    <h4 class="mb-0 fw-bold">Transaksi</h4>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Back Button & Title -->
+        <div class="flex items-center mb-8">
+            <a href="{{ url()->previous() }}"
+                class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                <i class="bi bi-arrow-left text-xl mr-2"></i>
+                <span class="text-sm font-medium">Kembali</span>
+            </a>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 ml-4">Riwayat Transaksi</h1>
+        </div>
+
+        <!-- Transaction Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <!-- Total Pengeluaran COD -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center mb-2">
+                    <i class="bi bi-wallet2 text-custom text-xl mr-2"></i>
+                    <h6 class="text-gray-700 font-medium">Total Pengeluaran (COD)</h6>
                 </div>
-
-                <!-- Transaction Summary Cards -->
-                <div class="row g-3 mb-4">
-                    <!-- Total Spent -->
-                    <div class="col-12 col-sm-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-wallet2 text-custom me-2"></i>
-                                    <h6 class="mb-0 fs-mobile">Total Pengeluaran (Cash on Delivery)</h6>
-                                </div>
-                                <h4 class="mb-0 fw-bold fs-mobile-lg">Rp{{ number_format($totalCODSpent, 0, ',', '.') }}</h4>
-                                <small class="text-muted">Bulan ini</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Orders -->
-                    <div class="col-12 col-sm-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-box-seam text-custom me-2"></i>
-                                    <h6 class="mb-0">Total Pesanan</h6>
-                                </div>
-                                <h4 class="mb-0 fw-bold">{{ $totalCompletedOrders }}</h4>
-                                <small class="text-muted">Pesanan selesai</small>
-                            </div>
-                        </div>
-                    </div>
+                <div class="mt-2">
+                    <h4 class="text-2xl font-bold text-gray-900">Rp{{ number_format($totalCODSpent, 0, ',', '.') }}</h4>
+                    <span class="text-sm text-gray-500">Bulan ini</span>
                 </div>
+            </div>
 
-                <div class="row mb-4">
-                    <!-- Total Pengeluaran Transfer -->
-                    <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">Total Pengeluaran (Transfer)</h6>
-                                <h3 class="card-title mb-0">Rp{{ number_format($totalTransferSpent, 0, ',', '.') }}</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Pesanan Transfer -->
-                    <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">Total Pesanan Transfer</h6>
-                                <h3 class="card-title mb-0">{{ $totalTransferOrders }}</h3>
-                                <div class="mt-2 small d-flex flex-wrap gap-2">
-                                    <span class="text-success">{{ $totalSuccessTransferOrders }} Berhasil</span>
-                                    <span class="text-danger">{{ $totalPendingTransferOrders }} Menunggu Pembayaran</span>
-                                    <span class="text-primary">{{ $totalAwaitingConfirmPaymentTransferOrders }} Menunggu Konfirmasi</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Total Pesanan -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center mb-2">
+                    <i class="bi bi-box-seam text-custom text-xl mr-2"></i>
+                    <h6 class="text-gray-700 font-medium">Total Pesanan COD</h6>
                 </div>
+                <div class="mt-2">
+                    <h4 class="text-2xl font-bold text-gray-900">{{ $totalCompletedOrders }}</h4>
+                    <span class="text-sm text-gray-500">Pesanan selesai</span>
+                </div>
+            </div>
 
-                <!-- Transaction History -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Riwayat Transaksi</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-custom dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown">
-                                    Bulan Ini
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#">Bulan Ini</a></li>
-                                    <li><a class="dropdown-item" href="#">3 Bulan Terakhir</a></li>
-                                    <li><a class="dropdown-item" href="#">6 Bulan Terakhir</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <!-- Empty State -->
-                        @if ($transactions->isEmpty())
-                            <div class="text-center py-5">
-                                <i class="bi bi-receipt-cutoff display-1 text-muted mb-3"></i>
-                                <h5 class="fw-bold mb-2">Belum Ada Transaksi</h5>
-                                <p class="text-muted mb-4">Anda belum memiliki riwayat transaksi</p>
-                                <a href="{{ route('home.index') }}" class="btn btn-custom">Mulai Belanja</a>
-                            </div>
-                        @else
-                            @foreach ($transactions as $transaction)
-                                <!-- Transaction Item -->
-                                <div class="p-3 border-bottom transaction-item">
-                                    <div class="d-flex flex-column">
-                                        <div class="d-flex justify-content-between align-items-start mb-1">
-                                            <div class="transaction-info">
-                                                <h6 class="mb-0 transaction-title">Pembayaran Pesanan #{{ $transaction->order->order_number }}</h6>
-                                                <h6 class="mb-1 text-muted transaction-number">Nomor Pesanan #{{ str_pad($transaction->order_id, 6, '0', STR_PAD_LEFT) }}</h6>
-                                                <p class="text-muted mb-2 transaction-date">
-                                                    {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, H:i') }}
-                                                </p>
-                                            </div>
-                                            <span class="text-danger fw-bold transaction-amount d-none d-sm-block">-Rp{{ number_format($transaction->amount, 0, ',', '.') }}</span>
-                                        </div>
-                                        <span class="text-danger fw-bold transaction-amount d-block d-sm-none">-Rp{{ number_format($transaction->amount, 0, ',', '.') }}</span>
-                                        <br>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        @if ($transaction->order->payment_method === 'Cash on Delivery')
-                                            @if ($transaction->order->status === 'completed')
-                                                <span class="badge bg-success me-2">Berhasil</span>
-                                            @else
-                                                <span class="badge bg-danger me-2">Belum Bayar</span>
-                                            @endif
-                                        @else
-                                            @if ($transaction->order->status === 'completed')
-                                                <span class="badge bg-success me-2">Berhasil</span>
-                                            @elseif($transaction->order->status === 'awaiting payment')
-                                                <span class="badge bg-primary me-2">Menunggu Konfirmasi</span>
-                                            @elseif($transaction->order->status === 'payment_rejected')
-                                                <span class="badge bg-danger me-2">Pembayaran Ditolak</span>
-                                            @elseif($transaction->order->status === 'processing')
-                                                <span class="badge bg-info me-2">Sedang Diproses</span>
-                                            @elseif($transaction->order->status === 'delivered')
-                                                <span class="badge bg-info me-2">Dalam Pengantaran</span>
-                                            @elseif($transaction->order->status === 'pending')
-                                            <span class="badge bg-danger me-2">Menunggu Pembayaran</span>
+            <!-- Total Pengeluaran Transfer -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center mb-2">
+                    <i class="bi bi-credit-card text-custom text-xl mr-2"></i>
+                    <h6 class="text-gray-700 font-medium">Total Pengeluaran (Transfer)</h6>
+                </div>
+                <div class="mt-2">
+                    <h4 class="text-2xl font-bold text-gray-900">Rp{{ number_format($totalTransferSpent, 0, ',', '.') }}
+                    </h4>
+                    <span class="text-sm text-gray-500">Bulan ini</span>
+                </div>
+            </div>
 
-                                            @endif
-                                        @endif
-
-                                        <small class="text-muted">
-                                            {{ $transaction->order->payment_method === 'transfer' ? 'Transfer Bank' : 'Cash on Delivery' }}
-                                        </small>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+            <!-- Total Pesanan Transfer -->
+            <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <div class="flex items-center mb-3">
+                    <i class="bi bi-arrow-left-right text-custom text-xl sm:text-2xl mr-2"></i>
+                    <h6 class="text-gray-700 font-medium text-sm sm:text-base">Total Pesanan Transfer</h6>
+                </div>
+                <div class="mt-2">
+                    <h4 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $totalTransferOrders }}</h4>
+                    <div class="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">{{ $totalSuccessTransferOrders }}
+                            Berhasil</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">{{ $totalPendingTransferOrders }}
+                            Menunggu</span>
+                        <span
+                            class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{{ $totalAwaitingConfirmPaymentTransferOrders }}
+                            Konfirmasi</span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Filter Status transaksi-->
+        <div class="mb-6">
+            <div class="flex overflow-x-auto pb-2 gap-2 md:gap-3 no-scrollbar">
+                <a href="{{ route('transactions.index') }}"
+                    class="inline-flex items-center justify-center min-w-[200px] h-10 px-4 rounded-full text-sm font-medium whitespace-nowrap {{ !request('status') ? 'bg-custom text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition duration-200">
+                    Semua
+                </a>
+                <a href="{{ route('transactions.index', ['status' => 'pending']) }}"
+                    class="inline-flex items-center justify-center min-w-[200px] h-10 px-4 rounded-full text-sm font-medium whitespace-nowrap {{ request('status') === 'pending' ? 'bg-custom text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition duration-200">
+                    Menunggu Pembayaran
+                </a>
+                <a href="{{ route('transactions.index', ['status' => 'awaiting payment']) }}"
+                    class="inline-flex items-center justify-center min-w-[200px] h-10 px-4 rounded-full text-sm font-medium whitespace-nowrap {{ request('status') === 'awaiting payment' ? 'bg-custom text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition duration-200">
+                    Menunggu Konfirmasi
+                </a>
+                <a href="{{ route('transactions.index', ['status' => 'completed']) }}"
+                    class="inline-flex items-center justify-center min-w-[200px] h-10 px-4 rounded-full text-sm font-medium whitespace-nowrap {{ request('status') === 'completed' ? 'bg-custom text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition duration-200">
+                    Berhasil
+                </a>
+                <a href="{{ route('transactions.index', ['status' => 'cancelled']) }}"
+                    class="inline-flex items-center justify-center min-w-[200px] h-10 px-4 rounded-full text-sm font-medium whitespace-nowrap {{ request('status') === 'cancelled' ? 'bg-custom text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition duration-200">
+                    Dibatalkan
+                </a>
+            </div>
+        </div>
+
+        <style>
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                /* IE and Edge */
+                scrollbar-width: none;
+                /* Firefox */
+            }
+        </style>
+
+        <!-- Empty State -->
+        @if ($transactions->isEmpty())
+            <div class="text-center py-16">
+                <i class="bi bi-receipt text-6xl text-gray-400 mb-4"></i>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Transaksi</h2>
+                <p class="text-gray-500 mb-8">Anda belum memiliki riwayat transaksi</p>
+                <a href="{{ route('home.index') }}"
+                    class="inline-flex items-center px-6 py-3 bg-custom text-white font-medium rounded-lg hover:bg-red-700 transition duration-200">
+                    <i class="bi bi-cart-plus mr-2"></i>
+                    Mulai Belanja
+                </a>
+            </div>
+        @else
+            <!-- Transaction List -->
+            <div class="space-y-4">
+                @foreach ($transactions as $transaction)
+                    <!-- Transaction Item -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="p-6">
+                            <!-- Transaction Header -->
+                            <div class="bg-white rounded-xl shadow-sm overflow-hidden p-4 sm:p-6">
+                                <div class="flex flex-col space-y-4">
+                                    <!-- Transaction Header -->
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                        <div class="mb-2 sm:mb-0">
+                                            <div class="flex items-center text-gray-500 text-sm mb-1">
+                                                <i class="bi bi-calendar2 mr-2"></i>
+                                                {{ $transaction->created_at->format('d M Y H:i') }}
+                                            </div>
+                                            <div
+                                                class="flex flex-col sm:flex-row items-start sm:items-center text-gray-900">
+                                                <span class="font-medium mb-1 sm:mb-0">
+                                                    Transaksi #{{ str_pad($transaction->id, 6, '0', STR_PAD_LEFT) }}
+                                                </span>
+                                                <span class="hidden sm:inline mx-2">•</span>
+                                                <span class="text-blue-950 font-medium flex items-center">
+                                                    <i
+                                                        class="{{ $transaction->payment_method === 'Cash on Delivery' ? 'bi-wallet2' : 'bi-credit-card' }} mr-1"></i>
+                                                    {{ ucfirst($transaction->payment_method) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 sm:mt-0">
+                                            @if ($transaction->payment_method === 'transfer')
+                                                <span
+                                                    class="px-3 py-1 rounded-full text-sm font-medium inline-block
+                                                        {{ $transaction->status === 'completed' ? 'bg-green-100 text-green-800' : ($transaction->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($transaction->status === 'awaiting payment' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800')) }}">
+                                                    {{ $transaction->status === 'completed'
+                                                        ? 'Berhasil'
+                                                        : ($transaction->status === 'pending'
+                                                            ? 'Menunggu Pembayaran'
+                                                            : ($transaction->status === 'awaiting payment'
+                                                                ? 'Menunggu Konfirmasi'
+                                                                : 'Dibatalkan')) }}
+                                                </span>
+                                            @else
+                                                @if (in_array($transaction->status, ['completed', 'cancelled']))
+                                                    <span
+                                                        class="px-3 py-1 rounded-full text-sm font-medium inline-block
+                                                        {{ $transaction->status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                        {{ $transaction->status === 'completed' ? 'Berhasil' : 'Dibatalkan' }}
+                                                    </span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Transaction Details -->
+                                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg">
+                                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                            <span class="text-sm text-gray-600 mb-1 sm:mb-0">Total Pembayaran</span>
+                                            <span
+                                                class="text-base md:text-lg font-semibold text-gray-900">Rp{{ number_format($transaction->amount, 0, ',', '.') }}</span>
+                                        </div>
+                                        @if ($transaction->payment_date)
+                                            <div
+                                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                                <span class="text-sm text-gray-600 mb-1 sm:mb-0">Tanggal Pembayaran</span>
+                                                <span
+                                                    class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($transaction->payment_date)->format('d M Y H:i') }}</span>
+                                            </div>
+                                        @endif
+                                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                            <span class="text-sm text-gray-600 mb-1 sm:mb-0">Metode Pembayaran</span>
+                                            <span
+                                                class="text-sm text-gray-900">{{ ucfirst($transaction->payment_method) }}</span>
+                                        </div>
+                                        @if ($transaction->payment_proof)
+                                            <div
+                                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                                <span class="text-sm text-gray-600 mb-1 sm:mb-0">Bukti Pembayaran</span>
+                                                <a href="{{ asset('storage/' . $transaction->payment_proof) }}"
+                                                    target="_blank"
+                                                    class="inline-flex items-center text-sm text-custom hover:text-red-700 transition-colors duration-200">
+                                                    <i class="bi bi-image mr-1"></i>
+                                                    Lihat Bukti
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Transaction Footer -->
+                                    <div
+                                        class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-4 pt-4 border-t border-gray-200">
+                                        @if ($transaction->status === 'pending' && $transaction->payment_method === 'transfer')
+                                            <a href="{{ route('payment.show', $transaction->order_id) }}"
+                                                class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-custom text-white font-medium rounded-lg hover:bg-red-700 transition duration-200">
+                                                <i class="bi bi-credit-card mr-2"></i>
+                                                Bayar Sekarang
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('orders.detail', $transaction->order_id) }}"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-custom text-custom font-medium rounded-lg hover:bg-red-50 transition duration-200">
+                                            <i class="bi bi-eye mr-2"></i>
+                                            Detail Pesanan
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            @if (method_exists($transactions, 'links'))
+                <div class="mt-6">
+                    {{ $transactions->links() }}
+                </div>
+            @endif
+        @endif
     </div>
+
+    @push('styles')
+        <style>
+            .bg-custom {
+                background-color: #D32F2F;
+            }
+
+            .text-custom {
+                color: #D32F2F;
+            }
+
+            .border-custom {
+                border-color: #D32F2F;
+            }
+        </style>
+    @endpush
+
 @endsection
-
-@push('styles')
-    <style>
-        .text-custom {
-            color: #D32F2F;
-        }
-
-        .btn-custom {
-            background-color: #D32F2F;
-            color: white;
-        }
-
-        .btn-outline-custom {
-            border-color: #D32F2F;
-            color: #D32F2F;
-        }
-
-        .btn-outline-custom:hover {
-            background-color: #D32F2F;
-            color: white;
-        }
-
-        .card {
-            border-radius: 10px;
-        }
-
-        .badge.bg-success {
-            background-color: #4CAF50 !important;
-        }
-
-        .btn-link:hover {
-            color: #D32F2F !important;
-        }
-
-        @media (max-width: 576px) {
-            .card-body {
-                padding: 0.75rem;
-            }
-
-            .fs-mobile {
-                font-size: 0.85rem !important;
-            }
-
-            .fs-mobile-lg {
-                font-size: 1.25rem !important;
-            }
-
-            .col-6 {
-                width: 100%;
-            }
-
-            .row.g-3 {
-                --bs-gutter-y: 0.75rem;
-            }
-
-            .mb-4 {
-                margin-bottom: 1rem !important;
-            }
-
-            .card-subtitle {
-                font-size: 0.85rem;
-            }
-
-            .card-title {
-                font-size: 1.25rem;
-            }
-
-            .badge {
-                font-size: 0.7rem;
-            }
-
-            .transaction-amount {
-                font-size: 1rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            .small {
-                font-size: 0.75rem !important;
-            }
-
-            .gap-2 {
-                gap: 0.5rem !important;
-            }
-
-            .transaction-item {
-                padding: 0.875rem !important;
-            }
-
-            .transaction-title {
-                font-size: 0.9rem;
-                line-height: 1.3;
-                flex: 1;
-            }
-
-            .transaction-number {
-                font-size: 0.8rem !important;
-            }
-
-            .transaction-date {
-                font-size: 0.75rem !important;
-                margin-bottom: 0.5rem !important;
-            }
-
-            .badge {
-                padding: 0.35em 0.65em;
-                font-size: 0.7rem;
-            }
-        }
-    </style>
-@endpush

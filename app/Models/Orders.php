@@ -28,16 +28,25 @@ class Orders extends Model
     public function getStatusLabelAttribute()
     {
         return [
-            'pending' => 'Menunggu Konfirmasi Penjual',
-            'awaiting payment' => 'Menunggu Pembayaran Dikonfirmasi',
+            'pending' => 'Menunggu konfirmasi penjual',
+            'awaiting payment' => 'Menunggu Pembayaran diverifikasi',
             // 'waiting_payment' => 'Menunggu Pembayaran Dikonfirmasi',
-            'payment_rejected' => 'Pembayaran Ditolak',
-            'confirmed' => 'Pesanan Dikonfirmasi',
+            'payment_rejected' => 'Pembayaran ditolak',
+            'confirmed' => 'Pesanan dikonfirmasi',
             'processing' => 'Diproses',
-            'delivered' => 'Dalam Pengantaran',
+            'delivered' => 'Dalam pengantaran',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan'
         ][$this->status] ?? ucfirst($this->status);
+    }
+
+    // Tambahkan accessor untuk format payment_status yang lebih mudah dibaca
+    public function getPaymentStatusLabelAttribute()
+    {
+        return [
+            'paid' => 'Lunas',
+            'unpaid' => 'Belum Lunas'
+        ][$this->payment_status] ?? ucfirst($this->payment_status);
     }
 
     protected $casts = [
@@ -138,41 +147,72 @@ class Orders extends Model
         return $this->coupon ? 'Rp ' . number_format($this->coupon, 0, ',', '.') : '-';
     }
 
+    // Sisi User
     public function getStatusBadgeAttribute()
     {
         return match ($this->status) {
-            self::STATUS_PENDING => 'bg-warning',
-            self::STATUS_CONFIRMED => 'bg-info',
-            self::STATUS_AWAITING_PAYMENT => 'bg-info',
-            self::STATUS_PAYMENT_REJECTED => 'bg-danger',
-            self::STATUS_PROCESSING => 'bg-info',
-            self::STATUS_DELIVERED => 'bg-primary',
-            self::STATUS_COMPLETED => 'bg-success',
-            self::STATUS_CANCELLED => 'bg-danger',
-            default => 'bg-secondary'
+            self::STATUS_PENDING => 'bg-yellow-100 text-yellow-800',
+            self::STATUS_CONFIRMED => 'bg-blue-100 text-blue-800',
+            self::STATUS_AWAITING_PAYMENT => 'bg-blue-100 text-blue-800',
+            self::STATUS_PAYMENT_REJECTED => 'bg-red-100 text-red-800',
+            self::STATUS_PROCESSING => 'bg-blue-100 text-blue-800',
+            self::STATUS_DELIVERED => 'bg-indigo-100 text-indigo-800',
+            self::STATUS_COMPLETED => 'bg-green-100 text-green-800',
+            self::STATUS_CANCELLED => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800'
         };
     }
 
-     // Tambahkan accessor untuk warna status
-         public function getStatusColorAttribute()
+    public function getStatusColorAttribute()
     {
         return [
-            'pending' => 'secondary',
-            'awaiting payment' => 'secondary',
-            'payment_rejected' => 'danger',
-            'confirmed' => 'info',
-            'processing' => 'info',
-            'delivered' => 'primary',
-            'completed' => 'success',
-            'cancelled' => 'danger'
-        ][$this->status] ?? 'secondary';
+            'pending' => 'text-yellow-600',
+            'awaiting payment' => 'text-blue-600',
+            'payment_rejected' => 'text-red-600',
+            'confirmed' => 'text-blue-600',
+            'processing' => 'text-blue-600',
+            'delivered' => 'text-indigo-600',
+            'completed' => 'text-green-600',
+            'cancelled' => 'text-red-600'
+        ][$this->status] ?? 'text-gray-600';
     }
 
     public function getPaymentStatusBadgeAttribute()
     {
-        return $this->payment_status === self::PAYMENT_PAID ? 'bg-success' : 'bg-danger';
+        return $this->payment_status === self::PAYMENT_PAID 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800';
     }
 
+    // Sisi Admin
+    public function getStatusBadgeAdminAttribute()
+    {
+        return match ($this->status) {
+            self::STATUS_PENDING, self::STATUS_AWAITING_PAYMENT => 'bg-warning',
+            self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_DELIVERED => 'bg-info',
+            self::STATUS_COMPLETED => 'bg-success',
+            self::STATUS_PAYMENT_REJECTED, self::STATUS_CANCELLED => 'bg-danger',
+            default => 'bg-secondary'
+        };
+    }
+
+         // Tambahkan accessor untuk warna status
+    public function getStatusColorAdminAttribute()
+    {
+        return match ($this->status) {
+            'pending', 'awaiting payment' => 'secondary',
+            'confirmed', 'processing', 'delivered' => 'primary',
+            'completed' => 'success',
+            default => 'danger',
+        };
+    }
+
+    public function getPaymentStatusBadgeAdminAttribute()
+    {
+        return $this->payment_status === self::PAYMENT_PAID 
+            ? 'bg-success' 
+            : 'bg-danger';
+    }
 
     // Scopes
     public function scopePending($query)

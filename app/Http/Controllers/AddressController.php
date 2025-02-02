@@ -17,29 +17,34 @@ class AddressController extends Controller
                 'receiver_name' => 'required|string|max:255',
                 'phone_number' => 'required|string|max:20',
                 'full_address' => 'required|string',
-                'is_primary' => 'required|in:0,1'
+                'is_primary' => 'nullable|boolean'
             ]);
 
-            // Convert is_primary to boolean
-            $validated['is_primary'] = (bool)$validated['is_primary'];
+            // Set is_primary berdasarkan apakah ini alamat pertama
+            $isFirstAddress = Address::where('user_id', auth()->id())->count() === 0;
+            $validated['is_primary'] = $isFirstAddress ? true : ($validated['is_primary'] ?? false);
             $validated['user_id'] = auth()->id();
             
             DB::beginTransaction();
             try {
-                // Jika ini alamat pertama atau diminta sebagai primary
-                if (Address::where('user_id', auth()->id())->count() === 0 || $validated['is_primary']) {
+                // Jika ini akan jadi alamat primary
+                if ($validated['is_primary']) {
                     // Set semua alamat lain menjadi non-primary
                     Address::where('user_id', auth()->id())->update(['is_primary' => false]);
-                    $validated['is_primary'] = true;
                 }
 
                 $address = Address::create($validated);
                 DB::commit();
 
+                // Ambil HTML baru untuk list alamat
+                $addresses = Address::where('user_id', auth()->id())->get();
+                $html = view('components.address-list', compact('addresses'))->render();
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Alamat berhasil ditambahkan',
-                    'address' => $address
+                    'address' => $address,
+                    'html' => $html
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -58,7 +63,10 @@ class AddressController extends Controller
     {
         try {
             if ($address->user_id !== auth()->id()) {
-                throw new \Exception('Anda tidak memiliki akses ke alamat ini');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki akses ke alamat ini'
+                ], 403);
             }
 
             $validated = $request->validate([
@@ -66,11 +74,11 @@ class AddressController extends Controller
                 'receiver_name' => 'required|string|max:255',
                 'phone_number' => 'required|string|max:20',
                 'full_address' => 'required|string',
-                'is_primary' => 'required|in:0,1'
+                'is_primary' => 'nullable|boolean'
             ]);
 
-            // Convert is_primary to boolean
-            $validated['is_primary'] = (bool)$validated['is_primary'];
+            // Convert is_primary to boolean if present
+            $validated['is_primary'] = $validated['is_primary'] ?? false;
 
             DB::beginTransaction();
             try {
@@ -80,20 +88,24 @@ class AddressController extends Controller
                     Address::where('user_id', auth()->id())
                           ->where('id', '!=', $address->id)
                           ->update(['is_primary' => false]);
-                    $validated['is_primary'] = true;
                 }
-                // Jika mencoba mengubah alamat primary menjadi non-primary
-                elseif ($address->is_primary && !$validated['is_primary']) {
-                    throw new \Exception('Alamat utama tidak dapat diubah menjadi non-utama');
+                // Jika mencoba mengubah alamat primary menjadi non-primary dan ini satu-satunya alamat
+                elseif ($address->is_primary && Address::where('user_id', auth()->id())->count() === 1) {
+                    $validated['is_primary'] = true; // Paksa tetap primary
                 }
 
                 $address->update($validated);
                 DB::commit();
 
+                // Ambil HTML baru untuk list alamat
+                $addresses = Address::where('user_id', auth()->id())->get();
+                $html = view('components.address-list', compact('addresses'))->render();
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Alamat berhasil diperbarui',
-                    'address' => $address
+                    'address' => $address,
+                    'html' => $html
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -138,13 +150,16 @@ class AddressController extends Controller
     {
         try {
             if ($address->user_id !== auth()->id()) {
-                throw new \Exception('Anda tidak memiliki akses ke alamat ini');
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses ke alamat ini'
+                ], 403);
             }
 
             return response()->json($address);
+
         } catch (\Exception $e) {
+            Log::error('Get address data error: ' . $e->getMessage());
             return response()->json([
-                'success' => false,
                 'message' => 'Gagal mengambil data alamat: ' . $e->getMessage()
             ], 500);
         }
@@ -193,6 +208,45 @@ class AddressController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Get address list error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil daftar alamat: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function edit(Address $address)
+    {
+        try {
+            if ($address->user_id !== auth()->id()) {
+                throw new \Exception('Anda tidak memiliki akses ke alamat ini');
+            }
+
+            return response()->json([
+                'success' => true,
+                'address' => $address
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Get address data error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data alamat: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCheckoutList()
+    {
+        try {
+            $addresses = Address::where('user_id', auth()->id())->get();
+            $html = view('components.checkout-address-list', compact('addresses'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Get checkout address list error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengambil daftar alamat: ' . $e->getMessage()

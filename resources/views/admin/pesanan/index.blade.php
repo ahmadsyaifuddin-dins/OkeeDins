@@ -19,6 +19,7 @@
                                         <th class="text-black-th">Nama Pelanggan</th>
                                         <th class="text-black-th">Tanggal</th>
                                         <th class="text-black-th">Total</th>
+                                        <th class="text-black-th">Metode Pembayaran</th>
                                         <th class="text-black-th">Status</th>
                                         <th class="text-black-th">Aksi</th>
                                     </tr>
@@ -31,9 +32,12 @@
                                             <td>{{ $order->user->name ?? 'Guest' }}</td>
                                             <td>{{ $order->created_at->format('d M Y') }}</td>
                                             <td>{{ $order->formatted_total }}</td>
+                                            <td class="text-capitalize">{{ $order->payment_method }}
+                                                
+                                            </td>
                                             <td>
-                                                <span class="badge {{ $order->status_badge }}">
-                                                    {{ ucfirst($order->status) }}
+                                                <span class="badge {{ $order->status_badgeAdmin }}">
+                                                    {{ $order->status_label }}
                                                 </span>
                                             </td>
                                             <td class="d-flex align-items-center justify-content-center gap-2"
@@ -79,7 +83,7 @@
                                                             <select name="status"
                                                                 class="form-select form-select-sm status-select status-{{ $order->status }}"
                                                                 onchange="if(confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')) { this.form.submit(); }">
-                                                                <option value="awaiting-payment"
+                                                                <option value="awaiting payment"
                                                                     {{ $order->status === 'awaiting payment' ? 'selected' : '' }}
                                                                     class="status-bg-pending">Pending</option>
                                                                 <option value="confirmed"
@@ -99,7 +103,7 @@
                                                         </form>
                                                     @endif
 
-                                                    @if($order->payment_method === 'transfer' && $order->status === 'pending')
+                                                    {{-- @if($order->payment_method === 'transfer' && $order->status === 'pending')
                                                         <div class="d-flex gap-2">
                                                             <!-- Tombol Lihat Bukti Transfer -->
                                                             <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#proofModal{{ $order->id }}">
@@ -139,7 +143,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endif
+                                                    @endif --}}
 
                                                     <form action="{{ route('admin.pesanan.destroy', $order->id) }}"
                                                         method="POST" class="mb-0">
@@ -218,28 +222,6 @@
     }
 
 
-    .pagination {
-        margin-bottom: 0;
-    }
-
-    .page-link {
-        padding: 0.5rem 0.75rem;
-        margin-left: -1px;
-        color: #344767;
-        background-color: #fff;
-        border: 1px solid #dee2e6;
-    }
-
-    .page-item.active .page-link {
-        color: #fff;
-        background-color: #344767;
-        border-color: #344767;
-    }
-
-    .page-link:hover {
-        color: #344767;
-        background-color: #e9ecef;
-    }
 
     .card-footer {
         background-color: #fff;

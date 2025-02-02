@@ -25,62 +25,114 @@ class CheckoutController extends Controller
         $this->transactionController = new TransactionController();
     }
 
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+
+        // Handle direct buy
+        if ($request->has('direct_buy') && $request->has('produk_id') && $request->has('quantity')) {
+            $product = Produk::findOrFail($request->produk_id);
+            $quantity = (int) $request->quantity;
+
+            if ($quantity < 1) {
+                return redirect()->back()->with('error', 'Jumlah produk tidak valid');
+            }
+
+            // Hitung total
+            $itemTotal = $product->harga * $quantity;
+            $itemDiscount = ($itemTotal * $product->diskon) / 100;
+            $finalPrice = $itemTotal - $itemDiscount;
+
+            // Buat array untuk ditampilkan di view
+            $directBuyItem = (object) [
+                'product' => $product,
+                'quantity' => $quantity,
+                'subtotal' => $itemTotal,
+                'discount' => $itemDiscount,
+                'final_price' => $finalPrice
+            ];
+
+            return view('home.checkout', [
+                'directBuyItem' => $directBuyItem,
+                'cartItems' => collect(), // Kirim empty collection untuk cartItems
+                'addresses' => $user->addresses,
+                'subTotal' => $itemTotal,
+                'totalDiscount' => $itemDiscount,
+                'grandTotal' => $finalPrice,
+                'isDirect' => true
+            ]);
+        }
+
+        // Handle cart checkout
+        if (!$request->has('items')) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Pilih minimal satu produk untuk checkout');
+        }
+
+        $items = $request->input('items');
+
+        // Jika items adalah string dengan koma, pecah menjadi array
+        if (is_string($items)) {
+            $items = explode(',', $items);
+        }
+        // Jika items sudah array, gunakan langsung
+        else if (!is_array($items)) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Format data tidak valid');
+        }
+
+        // Get cart items that were selected
+        $cartItems = Cart::with('product')
+            ->where('user_id', auth()->id())
+            ->whereIn('id', $items)
+            ->get();
+
+        // Log untuk debugging
+        Log::info('Selected items:', ['items' => $items]);
+        Log::info('Cart items:', ['cartItems' => $cartItems]);
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Produk yang dipilih tidak ditemukan');
+        }
+
+        // Calculate totals
+        $subTotal = 0;
+        $totalDiscount = 0;
+        $totalQty = 0;
+
+        foreach ($cartItems as $item) {
+            $itemTotal = $item->product->harga * $item->quantity;
+            $itemDiscount = ($itemTotal * $item->product->diskon) / 100;
+
+            $subTotal += $itemTotal;
+            $totalDiscount += $itemDiscount;
+            $totalQty += $item->quantity;
+        }
+
+        $grandTotal = $subTotal - $totalDiscount;
+
+        return view('home.checkout', compact('cartItems', 'subTotal', 'totalDiscount', 'grandTotal', 'totalQty'));
+    }
+
     public function showCheckout(Request $request)
     {
         $user = auth()->user();
-        $itemIds = $request->query('items'); // Array of cart item IDs
-        $directBuy = $request->query('direct_buy'); // Flag for direct buy
-        $produkId = $request->query('produk_id');
-        $quantity = $request->query('quantity', 1); // Default quantity is 1
+        $itemIds = $request->query('itemIds');
 
-        // Get user's addresses
-        $addresses = Address::where('user_id', $user->id)
-            ->orderBy('is_primary', 'desc')
-            ->get();
-
-        // If no addresses exist, create default one
-        if ($addresses->isEmpty()) {
-            $defaultAddress = Address::create([
-                'user_id' => $user->id,
-                'label' => 'Alamat',
-                'receiver_name' => $user->name,
-                'phone_number' => $user->telepon,
-                'full_address' => $user->alamat,
-                'is_primary' => true
-            ]);
-            $addresses = collect([$defaultAddress]);
-        }
-
-        // Handle direct buy from product detail
-        if ($directBuy && $produkId) {
-            $product = Produk::findOrFail($produkId);
-
-            // Validate quantity
-            if ($quantity < 1 || $quantity > $product->stok) {
-                return redirect()->route('produk.detail', $product->slug)
-                    ->with('error', 'Jumlah produk tidak valid');
-            }
-
-            // Create virtual cart item
-            $cartItems = collect([
-                (object)[
-                    'id' => 'direct_' . $product->id,
-                    'product' => $product,
-                    'quantity' => $quantity,
-                    'produk_id' => $product->id
-                ]
-            ]);
-
-            $price = $product->harga * $quantity;
-            $discount = ($price * $product->diskon) / 100;
+        // Handle direct buy
+        if ($request->has('product_id')) {
+            $product = Produk::findOrFail($request->product_id);
+            $quantity = $request->quantity ?? 1;
 
             return view('home.checkout', [
-                'cartItems' => $cartItems,
-                'totalPrice' => $price,
-                'totalDiscount' => $discount,
-                'grandTotal' => $price - $discount,
-                'cartTotal' => $price - $discount,
-                'addresses' => $addresses,
+                'cartItems' => collect([
+                    (object)[
+                        'product' => $product,
+                        'quantity' => $quantity
+                    ]
+                ]),
+                'addresses' => $user->addresses,
                 'directBuy' => true
             ]);
         }
@@ -91,15 +143,12 @@ class CheckoutController extends Controller
                 ->with('error', 'Tidak ada produk yang dipilih untuk checkout');
         }
 
+        // Convert comma-separated string to array
         $itemIds = explode(',', $itemIds);
-        if (empty($itemIds)) {
-            return redirect()->route('cart.index')
-                ->with('error', 'Tidak ada produk yang dipilih untuk checkout');
-        }
 
         // Ambil data cart items berdasarkan ID yang dipilih
         $cartItems = Cart::with('product')
-            ->where('user_id', Auth::id())
+            ->where('user_id', auth()->id())
             ->whereIn('id', $itemIds)
             ->get();
 
@@ -109,29 +158,302 @@ class CheckoutController extends Controller
         }
 
         // Hitung total
-        $totalPrice = 0;
+        $subTotal = 0;
         $totalDiscount = 0;
+        $totalQty = 0;
 
         foreach ($cartItems as $item) {
-            $price = $item->product->harga * $item->quantity;
-            $discount = ($price * $item->product->diskon) / 100;
+            $itemTotal = $item->product->harga * $item->quantity;
+            $itemDiscount = ($itemTotal * $item->product->diskon) / 100;
 
-            $totalPrice += $price;
-            $totalDiscount += $discount;
+            $subTotal += $itemTotal;
+            $totalDiscount += $itemDiscount;
         }
 
-        $grandTotal = $totalPrice - $totalDiscount;
+        $grandTotal = $subTotal - $totalDiscount;
 
         return view('home.checkout', [
             'cartItems' => $cartItems,
-            'totalPrice' => $totalPrice,
+            'addresses' => $user->addresses,
+            'subTotal' => $subTotal,
             'totalDiscount' => $totalDiscount,
             'grandTotal' => $grandTotal,
-            'cartTotal' => $grandTotal,
-            'addresses' => $addresses,
-            'directBuy' => false
+            'totalQty' => $totalQty
         ]);
     }
+
+    public function process(Request $request)
+    {
+        try {
+            // Validate request
+            $validated = $request->validate([
+                'address_id' => 'required|exists:addresses,id',
+                'payment_method' => 'required|in:transfer,Cash on Delivery',
+                'notes' => 'nullable|string|max:500',
+                'voucher_code' => 'nullable|string|exists:vouchers,code',
+                'direct_buy' => 'nullable|boolean',
+                'produk_id' => 'required_if:direct_buy,true|exists:produk,id',
+                'quantity' => 'required_if:direct_buy,true|integer|min:1'
+            ]);
+
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $orderNumber = 'ORD-' . uniqid();
+
+            // Create order
+            $order = Orders::create([
+                'user_id' => $user->id,
+                'order_number' => $orderNumber,
+                'address_id' => $validated['address_id'],
+                'total_amount' => $request->grand_total,
+                'qty' => $request->total_qty,
+                'payment_method' => $validated['payment_method'],
+                'notes' => $validated['notes'] ?? null,
+                'status' => 'pending'
+            ]);
+
+            $subTotal = 0;
+            $totalDiscount = 0;
+            $totalQty = 0;
+
+            if ($request->direct_buy) {
+                // Process direct buy
+                $product = Produk::findOrFail($request->produk_id);
+                $quantity = $request->quantity;
+
+                $itemTotal = $product->harga * $quantity;
+                $itemDiscount = ($itemTotal * $product->diskon) / 100;
+                $finalPrice = $itemTotal - $itemDiscount;
+
+                // Create order item
+                OrderItems::create([
+                    'order_id' => $order->id,
+                    'produk_id' => $product->id,
+                    'quantity' => $quantity,
+                    'price' => $product->harga,
+                    'discount' => $product->diskon,
+                    'subtotal' => $finalPrice
+                ]);
+
+                $subTotal = $itemTotal;
+                $totalDiscount = $itemDiscount;
+                $totalQty = $quantity;
+            } else {
+                // Process cart items
+                $cartItems = Cart::with('product')
+                    ->where('user_id', $user->id)
+                    ->get();
+
+                if ($cartItems->isEmpty()) {
+                    throw new \Exception('Tidak ada produk di keranjang');
+                }
+
+                foreach ($cartItems as $item) {
+                    $product = $item->product;
+                    $itemTotal = $product->harga * $item->quantity;
+                    $itemDiscount = ($itemTotal * $product->diskon) / 100;
+                    $finalPrice = $itemTotal - $itemDiscount;
+
+                    // Create order item
+                    OrderItems::create([
+                        'order_id' => $order->id,
+                        'produk_id' => $product->id,
+                        'quantity' => $item->quantity,
+                        'price' => $product->harga,
+                        'discount' => $product->diskon,
+                        'subtotal' => $finalPrice
+                    ]);
+
+                    $subTotal += $itemTotal;
+                    $totalDiscount += $itemDiscount;
+                    $totalQty += $item->quantity;
+
+                    // Remove from cart
+                    $item->delete();
+                }
+            }
+
+            // Apply voucher if exists
+            $voucherDiscount = 0;
+            if (!empty($validated['voucher_code'])) {
+                $voucher = Voucher::where('code', $validated['voucher_code'])->first();
+                if ($voucher) {
+                    $voucherDiscount = $this->applyVoucher($voucher, $subTotal);
+                }
+            }
+
+            // Update order totals
+            $order->update([
+                'subtotal' => $subTotal,
+                'discount' => $totalDiscount,
+                'voucher_discount' => $voucherDiscount,
+                'total_amount' => $subTotal - $totalDiscount - $voucherDiscount,
+                'qty' => $totalQty
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesanan berhasil dibuat',
+                'redirect' => route('orders.detail', $order->id)
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Checkout Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses checkout: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // public function procesDirectBuyCheckout($user, $data, $request)
+    // {
+    //     $produkId = (int) str_replace('direct_', '', $data['selected_items'][0]);
+    //     $product = Produk::findOrFail($produkId);
+    //     $quantity = $request->input('quantity', 1);
+
+    //     // Validate stock
+    //     if ($quantity > $product->stok) {
+    //         throw new \Exception('Stok produk tidak mencukupi');
+    //     }
+
+    //     // Calculate price and discount
+    //     $price = $product->harga * $quantity;
+    //     $discount = ($price * $product->diskon) / 100;
+    //     $totalAmount = $price - $discount;
+
+    //     // Handle voucher
+    //     $voucherResult = $this->applyVoucher($data['voucher_code'], $totalAmount);
+
+    //     // Create order
+    //     $order = Orders::create([
+    //         'user_id' => $user->id,
+    //         'address_id' => $data['selected_address'],
+    //         'payment_method' => $data['payment_method'],
+    //         'notes' => $data['notes'] ?? '',
+    //         'status' => 'pending',
+    //         'total_amount' => $voucherResult['total_amount'],
+    //         'qty' => $quantity,
+    //         'order_number' => 'ORD-' . uniqid(),
+    //         'payment_status' => 'unpaid',
+    //         'voucher_id' => $voucherResult['voucher_id'],
+    //         'voucher_discount' => $voucherResult['voucher_discount']
+    //     ]);
+
+    //     try {
+    //         // Create transaction record
+    //         $transaction = $this->transactionController->createTransaction($order);
+    //         Log::info('Transaction created:', $transaction->toArray());
+    //     } catch (\Exception $e) {
+    //         Log::error('Error creating transaction: ' . $e->getMessage());
+    //         throw $e;
+    //     }
+
+    //     // Create order item
+    //     OrderItems::create([
+    //         'order_id' => $order->id,
+    //         'produk_id' => $product->id,
+    //         'quantity' => $quantity,
+    //         'price' => $product->harga,
+    //         'discount' => $product->diskon,
+    //         'subtotal' => $price - $discount
+    //     ]);
+
+    //     // Update stock
+    //     $product->decrement('stok', $quantity);
+
+    //     // Record voucher usage if applicable
+    //     if ($voucherResult['voucher']) {
+    //         $this->recordVoucherUsage($user, $voucherResult['voucher'], $order, $voucherResult['voucher_discount']);
+    //     }
+
+    //     return ['order' => $order];
+    // }
+
+    // public function processCartCheckout($user, $data)
+    // {
+    //     $cartItems = Cart::with('product')
+    //         ->where('user_id', $user->id)
+    //         ->whereIn('id', $data['selected_items'])
+    //         ->get();
+
+    //     if ($cartItems->isEmpty()) {
+    //         throw new \Exception('Tidak ada produk yang dipilih');
+    //     }
+
+    //     // Validate stock
+    //     foreach ($cartItems as $item) {
+    //         if ($item->quantity > $item->product->stok) {
+    //             throw new \Exception("Stok {$item->product->nama_produk} tidak mencukupi");
+    //         }
+    //     }
+
+    //     // Calculate total amount
+    //     $totalQty = 0;
+    //     $totalAmount = 0;
+    //     foreach ($cartItems as $item) {
+    //         $totalQty += $item->quantity;
+    //         $price = $item->product->harga * $item->quantity;
+    //         $discount = ($price * $item->product->diskon) / 100;
+    //         $totalAmount += $price - $discount;
+    //     }
+
+    //     // Handle voucher
+    //     $voucherResult = $this->applyVoucher($data['voucher_code'], $totalAmount);
+
+    //     // Create order
+    //     $order = Orders::create([
+    //         'user_id' => $user->id,
+    //         'address_id' => $data['selected_address'],
+    //         'payment_method' => $data['payment_method'],
+    //         'notes' => $data['notes'] ?? '',
+    //         'status' => 'pending',
+    //         'total_amount' => $voucherResult['total_amount'],
+    //         'qty' => $totalQty,
+    //         'order_number' => 'ORD-' . uniqid(),
+    //         'payment_status' => 'unpaid',
+    //         'voucher_id' => $voucherResult['voucher_id'],
+    //         'voucher_discount' => $voucherResult['voucher_discount']
+    //     ]);
+
+    //     try {
+    //         // Create transaction record
+    //         $transaction = $this->transactionController->createTransaction($order);
+    //         Log::info('Transaction created:', $transaction->toArray());
+    //     } catch (\Exception $e) {
+    //         Log::error('Error creating transaction: ' . $e->getMessage());
+    //         throw $e;
+    //     }
+
+    //     // Create order items and update stock
+    //     foreach ($cartItems as $item) {
+    //         OrderItems::create([
+    //             'order_id' => $order->id,
+    //             'produk_id' => $item->product->id,
+    //             'quantity' => $item->quantity,
+    //             'price' => $item->product->harga,
+    //             'discount' => $item->product->diskon,
+    //             'subtotal' => ($item->product->harga * $item->quantity) -
+    //                 (($item->product->harga * $item->quantity * $item->product->diskon) / 100)
+    //         ]);
+
+    //         // Update stock
+    //         $item->product->decrement('stok', $item->quantity);
+    //     }
+
+    //     // Clear cart items
+    //     Cart::whereIn('id', $data['selected_items'])->delete();
+
+    //     // Record voucher usage if applicable
+    //     if ($voucherResult['voucher']) {
+    //         $this->recordVoucherUsage($user, $voucherResult['voucher'], $order, $voucherResult['voucher_discount']);
+    //     }
+
+    //     return ['order' => $order];
+    // }
 
     public function processCheckout(Request $request)
     {
@@ -143,7 +465,7 @@ class CheckoutController extends Controller
                 'selected_address' => 'required|exists:addresses,id',
                 'payment_method' => 'required|in:transfer,Cash on Delivery',
                 'notes' => 'nullable|string',
-                'voucher_code' => 'nullable|exists:vouchers,code',
+                'voucher_code' => 'nullable|string|exists:vouchers,code',
                 'total_amount' => 'required|numeric|min:0',
                 'selected_items' => 'required|array',
                 'selected_items.*' => 'required|string',
@@ -172,6 +494,7 @@ class CheckoutController extends Controller
             return $this->handleCheckoutError($e);
         }
     }
+
 
     private function procesDirectBuyCheckout($user, $data, $request)
     {
@@ -248,7 +571,11 @@ class CheckoutController extends Controller
             throw new \Exception('Tidak ada produk yang dipilih');
         }
 
-        // Validate stock
+        // Calculate totals
+        $subTotal = 0;
+        $totalDiscount = 0;
+        $totalQty = 0;
+
         foreach ($cartItems as $item) {
             if ($item->quantity > $item->product->stok) {
                 throw new \Exception("Stok {$item->product->nama_produk} tidak mencukupi");
@@ -265,43 +592,35 @@ class CheckoutController extends Controller
             $totalAmount += $price - $discount;
         }
 
-        // Handle voucher
-        $voucherResult = $this->applyVoucher($data['voucher_code'], $totalAmount);
+        $finalAmount = $subTotal - $totalDiscount;
 
         // Create order
         $order = Orders::create([
             'user_id' => $user->id,
+            'order_number' => 'ORD-' . uniqid(),
             'address_id' => $data['selected_address'],
             'payment_method' => $data['payment_method'],
-            'notes' => $data['notes'] ?? '',
+            'notes' => $data['notes'] ?? null,
             'status' => 'pending',
-            'total_amount' => $voucherResult['total_amount'],
-            'qty' => $totalQty,
-            'order_number' => 'ORD-' . uniqid(),
-            'payment_status' => 'unpaid',
-            'voucher_id' => $voucherResult['voucher_id'],
-            'voucher_discount' => $voucherResult['voucher_discount']
+            'subtotal' => $subTotal,
+            'discount' => $totalDiscount,
+            'total_amount' => $finalAmount,
+            'qty' => $totalQty
         ]);
-
-        try {
-            // Create transaction record
-            $transaction = $this->transactionController->createTransaction($order);
-            Log::info('Transaction created:', $transaction->toArray());
-        } catch (\Exception $e) {
-            Log::error('Error creating transaction: ' . $e->getMessage());
-            throw $e;
-        }
 
         // Create order items and update stock
         foreach ($cartItems as $item) {
+            $itemTotal = $item->product->harga * $item->quantity;
+            $itemDiscount = ($itemTotal * $item->product->diskon) / 100;
+            $finalPrice = $itemTotal - $itemDiscount;
+
             OrderItems::create([
                 'order_id' => $order->id,
                 'produk_id' => $item->product->id,
                 'quantity' => $item->quantity,
                 'price' => $item->product->harga,
                 'discount' => $item->product->diskon,
-                'subtotal' => ($item->product->harga * $item->quantity) -
-                    (($item->product->harga * $item->quantity * $item->product->diskon) / 100)
+                'subtotal' => $finalPrice
             ]);
 
             // Update stock
@@ -311,41 +630,22 @@ class CheckoutController extends Controller
         // Clear cart items
         Cart::whereIn('id', $data['selected_items'])->delete();
 
-        // Record voucher usage if applicable
-        if ($voucherResult['voucher']) {
-            $this->recordVoucherUsage($user, $voucherResult['voucher'], $order, $voucherResult['voucher_discount']);
-        }
-
         return ['order' => $order];
     }
 
-    private function applyVoucher($voucherCode, $totalAmount)
+
+
+    private function applyVoucher($voucher, $totalAmount)
     {
-        $voucherDiscount = 0;
-        $voucherId = null;
-        $voucher = null;
-
-        if (!empty($voucherCode)) {
-            $voucher = Voucher::where('code', $voucherCode)
-                ->where('is_active', true)
-                ->first();
-
-            if ($voucher) {
-                $voucherDiscount = $voucher->type === 'fixed'
-                    ? min($voucher->value, $totalAmount)
-                    : ($totalAmount * $voucher->value / 100);
-
-                $totalAmount -= $voucherDiscount;
-                $voucherId = $voucher->id;
-            }
+        if ($voucher->min_purchase && $totalAmount < $voucher->min_purchase) {
+            throw new \Exception('Total pembelian belum memenuhi syarat minimum voucher');
         }
 
-        return [
-            'total_amount' => $totalAmount,
-            'voucher_discount' => $voucherDiscount,
-            'voucher_id' => $voucherId,
-            'voucher' => $voucher
-        ];
+        if ($voucher->type === 'percentage') {
+            return ($totalAmount * $voucher->value) / 100;
+        }
+
+        return $voucher->value;
     }
 
     private function recordVoucherUsage($user, $voucher, $order, $discountAmount)
@@ -390,11 +690,11 @@ class CheckoutController extends Controller
                     'message' => 'Silakan login terlebih dahulu'
                 ], 401);
             }
-            
+
             $request->validate([
                 'code' => [
-                    'required', 
-                    'string', 
+                    'required',
+                    'string',
                     function ($attribute, $value, $fail) {
                         if ($value !== strtoupper($value)) {
                             $fail('Kode voucher harus dalam huruf kapital.');
@@ -503,14 +803,14 @@ class CheckoutController extends Controller
                 'voucher_id' => $voucherId,
                 'discount_amount' => $discountAmount,
                 'status' => 'pending',
-                'voucher_discount' => $voucherDiscount // Pastikan field ini selalu ada
+                'qty' => $request->qty
             ]);
 
             // Create order items
             foreach ($cartItems as $item) {
                 OrderItems::create([
                     'order_id' => $order->id,
-                    'product_id' => $item->product_id,
+                    'produk_id' => $item->product_id,
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
                     'subtotal' => $item->quantity * $item->product->price

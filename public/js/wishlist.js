@@ -1,98 +1,59 @@
-function updateWishlistCount(count) {
-    const wishlistCountElement = document.querySelector('.wishlist-count');
-    if (wishlistCountElement) {
-        wishlistCountElement.textContent = count;
+// Fungsi untuk wishlist
+document.querySelectorAll('.wishlist-form').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const button = form.querySelector('button');
+        const originalContent = button.innerHTML;
+        const isAddingToWishlist = !form.querySelector('input[name="_method"]'); // Jika tidak ada _method=DELETE, berarti sedang menambahkan
 
-        // Show/hide badge based on count
-        if (count > 0) {
-            wishlistCountElement.classList.remove('d-none');
-        } else {
-            wishlistCountElement.classList.add('d-none');
-        }
-    }
-}
+        // Disable button dan tampilkan loading
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> <span class="text-sm">Proses...</span>';
 
-function confirmAddToWishlist(event, form) {
-    event.preventDefault();
+        // Submit form menggunakan fetch
+        fetch(form.action, {
+                method: form.method,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: new FormData(form)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Terjadi kesalahan');
+                }
+                // Tampilkan toast notification
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true
+                });
 
-    const button = form.querySelector('button');
-    const icon = button.querySelector('i');
-    const isInWishlist = icon.classList.contains('bi-heart-fill');
+                Toast.fire({
+                    icon: 'success',
+                    title: isAddingToWishlist ? 'Berhasil ditambahkan ke wishlist' : 'Berhasil dihapus dari wishlist'
+                });
 
-    if (!isInWishlist) {
-        Swal.fire({
-            title: 'Tambahkan ke Wishlist?',
-            text: "Produk ini akan ditambahkan ke wishlist anda",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, tambahkan!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Tampilkan status loading
-                button.disabled = true;
-                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-                form.submit();
-            }
-        });
-    } else {
-        Swal.fire({
-            title: 'Hapus dari Wishlist?',
-            text: "Produk ini akan dihapus dari wishlist anda",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, hapus!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Tampilkan status loading
-                button.disabled = true;
-                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-                form.submit();
-            }
-        });
-    }
-}
-
-// Add hover effect to wishlist buttons
-document.addEventListener('DOMContentLoaded', function () {
-    const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-    wishlistBtns.forEach(btn => {
-        // Set initial state
-        const icon = btn.querySelector('i');
-        if (!icon.classList.contains('bi-heart-fill')) {
-            btn.style.backgroundColor = '#fff';
-            icon.classList.add('text-danger');
-        }
-
-        btn.addEventListener('mouseenter', function () {
-            const icon = this.querySelector('i');
-            if (icon.classList.contains('bi-heart-fill')) {
-                // Jika sudah di wishlist, tampilkan efek hover merah muda
-                icon.classList.remove('text-danger');
-                icon.style.color = '#fff';
-            } else {
-                // Jika belum di wishlist, ubah background jadi putih dan icon jadi merah
-                this.style.backgroundColor = '#f00';
-                icon.classList.remove('text-danger');
-                icon.classList.add('text-light');
-            }
-        });
-
-        btn.addEventListener('mouseleave', function () {
-            const icon = this.querySelector('i');
-            if (icon.classList.contains('bi-heart-fill')) {
-                // Kembalikan ke warna merah normal
-                icon.classList.add('text-danger');
-                icon.style.color = '#fff';
-            } else {
-                // Kembalikan ke warna default (background merah, icon putih)
-                this.style.backgroundColor = '#fff';
-                icon.classList.add('text-danger');
-                icon.classList.remove('text-light');
-            }
-        });
+                // Reload halaman setelah notifikasi selesai
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                    confirmButtonColor: '#EF4444'
+                });
+            })
+            .finally(() => {
+                // Reset button state
+                button.disabled = false;
+                button.innerHTML = originalContent;
+            });
     });
 });

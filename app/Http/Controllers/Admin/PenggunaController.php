@@ -13,11 +13,13 @@ class PenggunaController extends Controller
     // Begin CRUD Pengguna 
     public function indexPengguna()
     {
+        $pengguna = DB::table('users')
+            ->paginate(10)
+            ->through(function ($user) {
+                $user->photo = Storage::exists('public/' . $user->photo) ? $user->photo : 'user.svg';
+                return $user;
+            });
 
-        $pengguna = DB::table('users')->get()->map(function ($user) { // Ambil semua pengguna dari tabel users
-            $user->photo = Storage::exists('public/' . $user->photo) ? $user->photo : 'user.svg';
-            return $user;
-        });
         return view('admin.pengguna.index', compact('pengguna'));
     }
 

@@ -1,7 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('selectAll');
     const itemCheckboxes = document.querySelectorAll('.item-checkbox');
     const btnCheckout = document.getElementById('btn-checkout');
+
+    // Setup CSRF token for all AJAX requests
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
     // AJAX function for updating quantity
     async function updateQuantity(cartItemId, quantity) {
@@ -10,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 body: JSON.stringify({ quantity })
             });
@@ -21,7 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return data;
         } catch (error) {
-            throw new Error(error.message || 'Gagal mengupdate quantity');
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonColor: '#EF4444'
+            });
         }
     }
 
@@ -47,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
             const price = parseFloat(checkbox.dataset.price);
             const discount = parseFloat(checkbox.dataset.discount) || 0;
-            
+
             selectedCount += quantity;
             const itemTotalPrice = price * quantity;
             totalPrice += itemTotalPrice;
@@ -86,11 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listeners for quantity buttons
     document.querySelectorAll('.quantity-btn').forEach(btn => {
-        btn.addEventListener('click', async function() {
+        btn.addEventListener('click', async function () {
             const cartItem = this.closest('.cart-item');
             const input = cartItem.querySelector('.quantity-input');
             const currentValue = parseInt(input.value);
             const action = this.dataset.action;
+            const cartItemId = cartItem.id.replace('cart-item-', '');
             const oldValue = currentValue;
 
             if (action === 'increase') {
@@ -99,46 +112,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = currentValue - 1;
             }
 
-            try {
-                updateItemPrice(cartItem);
-                calculateAndUpdateSummary();
-                await updateQuantity(cartItem.dataset.id, input.value);
-            } catch (error) {
-                input.value = oldValue;
-                updateItemPrice(cartItem);
-                calculateAndUpdateSummary();
-                console.error('Error:', error);
-                alert(error.message);
+            const newValue = parseInt(input.value);
+            if (newValue !== oldValue) {
+                try {
+                    await updateQuantity(cartItemId, newValue);
+                    updateItemPrice(cartItem);
+                    calculateAndUpdateSummary();
+                } catch (error) {
+                    input.value = oldValue;
+                }
             }
         });
     });
 
-    // Event listeners for manual quantity input
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', async function() {
-            const cartItem = this.closest('.cart-item');
-            const oldValue = this.defaultValue;
-            const newValue = Math.max(1, parseInt(this.value) || 1);
-            this.value = newValue;
-
-            try {
-                updateItemPrice(cartItem);
-                calculateAndUpdateSummary();
-                await updateQuantity(cartItem.dataset.id, newValue);
-                this.defaultValue = newValue;
-            } catch (error) {
-                this.value = oldValue;
-                updateItemPrice(cartItem);
-                calculateAndUpdateSummary();
-                console.error('Error:', error);
-                alert(error.message);
-            }
-        });
-    });
-
-    // Event listeners for checkboxes
+    // Event listener for select all checkbox
     if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
+        selectAllCheckbox.addEventListener('change', function () {
             itemCheckboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
             });
@@ -146,79 +135,110 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Event listeners for item checkboxes
     itemCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', calculateAndUpdateSummary);
-    });
-
-    // Checkout button click handler
-    btnCheckout.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const selectedItems = [];
-        document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-            const cartItem = checkbox.closest('.cart-item');
-            selectedItems.push(cartItem.dataset.id);
+        checkbox.addEventListener('change', function () {
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = Array.from(itemCheckboxes).every(cb => cb.checked);
+            }
+            calculateAndUpdateSummary();
         });
-
-        if (selectedItems.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Pilih minimal satu produk untuk checkout!'
-            });
-            return;
-        }
-
-        // Redirect to checkout page with selected items
-        window.location.href = `/checkout?items=${selectedItems.join(',')}`;
     });
 
-    // Initial calculation
-    document.querySelectorAll('.cart-item').forEach(updateItemPrice);
-    calculateAndUpdateSummary();
-
-    // Delete item functionality
+    // Event listener for delete buttons
     document.querySelectorAll('.delete-item').forEach(button => {
-        button.addEventListener('click', async function() {
+        button.addEventListener('click', async function () {
             const cartItemId = this.dataset.id;
             const cartItem = this.closest('.cart-item');
 
-            const result = await Swal.fire({
-                title: 'Konfirmasi',
-                text: 'Apakah Anda yakin ingin menghapus item ini?',
+            Swal.fire({
+                title: 'Hapus Produk?',
+                text: 'Produk akan dihapus dari keranjang',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Tidak, batalkan!',
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6'
-            });
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#6B7280'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`/cart/${cartItemId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                'Accept': 'application/json'
+                            }
+                        });
 
-            if (result.isConfirmed) {
-                try {
-                    const response = await fetch(`/cart/${cartItemId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
+                        if (!response.ok) {
+                            throw new Error('Gagal menghapus item');
                         }
-                    });
 
-                    if (!response.ok) {
-                        throw new Error('Gagal menghapus item');
+                        cartItem.remove();
+                        calculateAndUpdateSummary();
+
+                        // Update cart badge
+                        const cartBadges = document.querySelectorAll('.cart-badge');
+                        cartBadges.forEach(badge => {
+                            const currentCount = parseInt(badge.textContent);
+                            badge.textContent = currentCount - 1;
+                            if (currentCount - 1 <= 0) {
+                                badge.classList.add('hidden');
+                            }
+                        });
+
+                        // Reload if cart is empty
+                        if (document.querySelectorAll('.cart-item').length === 0) {
+                            location.reload();
+                        }
+
+                    } catch (error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#EF4444'
+                        });
                     }
-
-                    cartItem.remove();
-                    calculateAndUpdateSummary();
-                } catch (error) {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.message || 'Terjadi kesalahan!'
-                    });
                 }
-            }
+            });
         });
     });
+
+    // Event listener for checkout button
+    if (btnCheckout) {
+        btnCheckout.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Get selected items
+            const selectedItems = [];
+            document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
+                selectedItems.push(checkbox.value);
+            });
+
+            if (selectedItems.length === 0) {
+                Swal.fire({
+                    title: 'Peringatan!',
+                    text: 'Pilih minimal satu produk untuk checkout',
+                    icon: 'warning',
+                    confirmButtonColor: '#EF4444'
+                });
+                return;
+            }
+
+            // Log untuk debugging
+            console.log('Selected items:', selectedItems);
+
+            // Convert array to comma-separated string
+            const itemIdsString = selectedItems.join(',');
+            console.log('Items string:', itemIdsString);
+
+            // Redirect to checkout page with item IDs as query parameter
+            window.location.href = `/checkout?items=${itemIdsString}`;
+        });
+    }
+
+    // Initial calculation
+    calculateAndUpdateSummary();
 });

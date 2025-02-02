@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -75,7 +75,7 @@ class TransactionController extends Controller
             $query->where('user_id', $user->id);
         })
             ->whereMonth('created_at', Carbon::now()->month)
-            ->where('status', 'paid')
+            ->where('status', 'completed')
             ->sum('amount');
 
         // Get total completed orders
@@ -83,13 +83,19 @@ class TransactionController extends Controller
             ->where('status', 'completed')
             ->count();
 
-        // Get transactions history
-        $transactions = Transaction::whereHas('order', function ($query) use ($user) {
+        // Get transactions history with filter
+        $query = Transaction::whereHas('order', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        })
-            ->with('order')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        })->with('order');
+
+        // Filter berdasarkan status
+        if ($request->status) {
+            $status = $request->status;
+            $query->where('status', $status);
+        }
+
+        // Urutkan berdasarkan tanggal terbaru
+        $transactions = $query->latest()->paginate(5);
 
         return view('home.transaksi', compact(
             'totalTransferSpent',
@@ -123,6 +129,7 @@ class TransactionController extends Controller
             // Buat transaksi baru
             $transaction = new Transaction();
             $transaction->order_id = $order->id;
+            // $transaction->user_id = auth()->id();
             $transaction->amount = $order->total_amount;
             $transaction->payment_method = $order->payment_method;
             $transaction->status = $initialStatus;
@@ -150,8 +157,9 @@ class TransactionController extends Controller
             // Update status
             $transaction->status = $status;
             
-            // Update payment status dan date hanya jika pesanan selesai (dikonfirmasi terima)
-            if ($status === 'completed') {
+            // Update payment status dan date berdasarkan metode pembayaran dan status
+            if (($paymentMethod === 'transfer' && $status === 'processing') || 
+                ($paymentMethod === 'Cash on Delivery' && $status === 'completed')) {
                 $transaction->payment_status = 'paid';
                 if (!$transaction->payment_date) {
                     $transaction->payment_date = now();

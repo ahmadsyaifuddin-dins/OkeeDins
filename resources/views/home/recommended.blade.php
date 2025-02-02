@@ -1,88 +1,90 @@
-<div class="row">
-    @if ($recommendedProducts->count() > 0)
-        @foreach ($recommendedProducts as $recom)
-            <div class="col-lg-3 col-md-4 col-6 mb-2 mb-md-4">
-                <a href="{{ route('produk.detail', $recom->slug) }}" class="text-decoration-none">
-                    {{-- <a href="#" class="text-decoration-none"> --}}
-                    <div class="card product-card shadow-sm position-relative d-flex flex-column">
-                        <!-- Wishlist Button -->
-                        @auth
-                            @if (Auth::user()->wishlist->contains('produk_id', $recom->id))
-                                <form
-                                    action="{{ route('wishlist.destroy',Auth::user()->wishlist->where('produk_id', $recom->id)->first()) }}"
-                                    method="POST" class="d-inline" onsubmit="confirmAddToWishlist(event, this)">
-                                    @csrf
-                                    @method('DELETE')
-                                @else
-                                    <form action="{{ route('wishlist.store') }}" method="POST" class="d-inline"
-                                        onsubmit="confirmAddToWishlist(event, this)">
-                                        @csrf
-                            @endif
-                            <input type="hidden" name="produk_id" value="{{ $recom->id }}">
-                            <button type="submit"
-                                class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 shadow-sm wishlist-btn"
-                                onclick="event.stopPropagation();" style="min-width: 32px;">
-                                <i class="bi bi-heart{{ Auth::user()->wishlist->contains('produk_id', $recom->id) ? '-fill text-danger' : '' }}"
-                                    style="{{ Auth::user()->wishlist->contains('produk_id', $recom->id) ? 'font-size: 1rem;' : '' }}"></i>
-                            </button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}"
-                                class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 shadow-sm wishlist-btn"
-                                onclick="event.stopPropagation();">
-                                <i class="bi bi-heart"></i>
-                            </a>
-                        @endauth
+@extends('layouts.app')
 
-                        <!-- Discount Badge -->
-                        @if ($recom->diskon > 0)
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-danger">{{ $recom->diskon }}%</span>
-                            </div>
-                        @endif
-
-                        <!-- Product Image -->
-                        <img loading="lazy" src="{{ asset('storage/' . $recom->gambar) }}"
-                            class="card-img-top img-fluslug" alt="{{ $recom->nama_produk }}">
-
-                        <!-- Product Content -->
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title h6 text-dark mb-2">{{ $recom->nama_produk }}</h5>
-
-                            <!-- Price Section -->
-                            <div class="price-section mt-1 mb-1">
-                                <div class="d-flex flex-wrap align-items-center">
-                                    <p class="card-text fw-bold text-custom mb-0 me-2" style="font-size: 0.95rem;">
-                                        Rp{{ number_format($recom->harga_diskon, 0, ',', '.') }}
-                                    </p>
+@section('content')
+<section class="py-8">
+    <div class="container mx-auto px-4">
+        <h2 class="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+            @if ($recommendedProducts->count() > 0)
+                @foreach ($recommendedProducts as $recom)
+                    <div data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                        <a href="{{ route('produk.detail', $recom->slug) }}" class="block">
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                                <!-- Wishlist & Discount -->
+                                <div class="relative">
+                                    @auth
+                                        <form action="{{ Auth::user()->wishlist->contains('produk_id', $recom->id) ? route('wishlist.destroy', Auth::user()->wishlist->where('produk_id', $recom->id)->first()) : route('wishlist.store') }}"
+                                            method="POST" class="absolute top-2 right-2 z-10">
+                                            @csrf
+                                            @if(Auth::user()->wishlist->contains('produk_id', $recom->id))
+                                                @method('DELETE')
+                                            @endif
+                                            <input type="hidden" name="produk_id" value="{{ $recom->id }}">
+                                            <button type="submit" class="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
+                                                <i class="bi bi-heart{{ Auth::user()->wishlist->contains('produk_id', $recom->id) ? '-fill text-red-500' : '' }}"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a href="{{ route('login') }}" class="absolute top-2 right-2 z-10 p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
+                                            <i class="bi bi-heart"></i>
+                                        </a>
+                                    @endauth
 
                                     @if ($recom->diskon > 0)
-                                        <p class="card-text text-muted mb-0"
-                                            style="font-size: 0.75rem; text-decoration: line-through; white-space: nowrap;">
-                                            Rp{{ number_format($recom->harga, 0, ',', '.') }}
-                                        </p>
+                                        <span class="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs">
+                                            {{ $recom->diskon }}%
+                                        </span>
                                     @endif
-                                </div>
-                            </div>
 
-                            <!-- Rating and Sales -->
-                            <div class="d-flex align-items-center">
-                                <div class="rating me-1">
-                                    <i class="bi bi-star-fill text-warning" style="font-size: 0.8rem;"></i>
-                                    <span class="ms-1" style="font-size: 0.75rem;">4.8</span>
-                                    <span class="text-muted" style="font-size: 0.75rem;">• 1rb+ terjual</span>
+                                    <!-- Product Image -->
+                                    <img src="{{ asset('storage/' . $recom->gambar) }}"
+                                        class="w-full h-48 object-cover rounded-t-lg"
+                                        alt="{{ $recom->nama_produk }}"
+                                        loading="lazy">
+                                </div>
+
+                                <!-- Product Info -->
+                                <div class="p-3">
+                                    <h3 class="text-sm font-medium text-gray-900 line-clamp-2 min-h-[40px]">
+                                        {{ $recom->nama_produk }}
+                                    </h3>
+
+                                    <!-- Price -->
+                                    <div class="mt-2">
+                                        <span class="block text-base font-bold text-red-500">
+                                            Rp{{ number_format($recom->harga_diskon, 0, ',', '.') }}
+                                        </span>
+                                        @if ($recom->diskon > 0)
+                                            <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                                <span class="text-[11px] text-gray-500 line-through">
+                                                    Rp{{ number_format($recom->harga, 0, ',', '.') }}
+                                                </span>
+                                                <span class="text-[11px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded">
+                                                    {{ $recom->diskon }}%
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Rating & Sales -->
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <i class="bi bi-star-fill text-yellow-400 mr-1"></i>
+                                        <span>{{ number_format($recom->rating, 1) }}</span>
+                                        <span class="mx-1">•</span>
+                                        <span class="truncate">{{ $recom->terjual }}+ terjual</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-        @endforeach
-    @else
-        <div class="col-12 text-center py-5">
-            <i class="bi bi-box-seam text-muted" style="font-size: 4rem;"></i>
-            <h5 class="text-muted mt-3">Belum ada produk
-                tersedia{{ request()->query('kategori') ? ' untuk kategori ini' : '' }}</h5>
+                @endforeach
+            @else
+                <div class="col-span-full text-center py-12">
+                    <i class="bi bi-box-seam text-gray-400 text-6xl"></i>
+                    <h5 class="mt-4 text-gray-500">Tidak ada produk yang direkomendasikan</h5>
+                </div>
+            @endif
         </div>
-    @endif
-</div>
+    </div>
+</section>
+@endsection
