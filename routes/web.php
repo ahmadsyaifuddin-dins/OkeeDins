@@ -86,6 +86,7 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
         Route::get('/', [GameController::class, 'index'])->name('index');
         Route::get('/ping-pong', [GameController::class, 'pingPong'])->name('ping-pong');
         Route::get('/rock-paper-scissors', [GameController::class, 'rockPaperScissors'])->name('rock-paper-scissors');
+        Route::get('/tictactoe', [GameController::class, 'tictactoe'])->name('tictactoe');
         Route::get('/get-random-voucher', [GameController::class, 'getRandomVoucher'])->name('get-random-voucher');
     });
 

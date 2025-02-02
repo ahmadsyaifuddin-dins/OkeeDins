@@ -59,11 +59,38 @@
                             </a>
                         </div>
                     </div>
+                </div>
+
+                <!-- Tic Tac Toe Card -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
+                    <div class="relative">
+                        <img src="{{ asset('images/tictactoe.png') }}" alt="Tic Tac Toe Game"
+                            class="w-full h-48 object-cover">
+                        <div class="absolute top-0 right-0 bg-purple-500 text-white px-3 py-1 rounded-bl-lg">
+                            Game
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Tic Tac Toe</h3>
+                        <p class="text-gray-600 mb-4">Bermain Tic Tac Toe melawan komputer dan menangkan hadiah menarik!</p>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+                            <span class="text-sm text-gray-500">Hadiah: Voucher Diskon</span>
+                            <a href="{{ route('games.tictactoe') }}"
+                                class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:animate-[glitch_0.3s_ease-in-out_infinite]">
+                                <i class="bi bi-controller mr-2"></i>
+                                Main Sekarang
+                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 </div>
             </div>
         </div>
-    </div>
 
     <style>
         @keyframes glitch {

@@ -167,7 +167,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end px-4">
+                    <div class="d-flex justify-content-center px-4">
                         <div class="pagination pagination-dark">
                             {{ $vouchers->onEachSide(1)->links('vendor.pagination.material') }}
                         </div>

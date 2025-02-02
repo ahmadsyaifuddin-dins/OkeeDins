@@ -23,6 +23,11 @@ class GameController extends Controller
         return view('games.rock-paper-scissors');
     }
 
+    public function tictactoe()
+    {
+        return view('games.tictactoe');
+    }
+
     public function getRandomVoucher()
     {
         try {
