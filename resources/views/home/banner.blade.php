@@ -18,7 +18,7 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
-                            <img src="{{ asset('images/banner-kecap-bango.png') }}"
+                            <img src="{{ asset('images/banners/laptop alienware.jpg') }}"
                                 class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
                                 alt="Flash Sale">
                         </div>
@@ -42,13 +42,60 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
-                            <img src="{{ asset('images/banner-default-2.jpg') }}"
+                            <img src="{{ asset('images/banners/banner-kecap-bango.png') }}"
                                 class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
                                 alt="Produk Pilihan">
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Slide 3 -->
+            <div class="swiper-slide">
+                <div class="container mx-auto px-4 h-full">
+                    <div class="flex flex-col md:flex-row items-center justify-center h-full py-2 md:py-12">
+                        <div class="w-full md:w-1/2 space-y-2 md:space-y-4 text-center md:text-left">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Produk Pilihan Terbaik
+                            </h2>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600">
+                                Temukan berbagai produk berkualitas dengan harga terbaik untuk Anda.
+                            </p>
+                            <a href="#recommended"
+                                class="inline-block px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-custom text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                Belanja Sekarang
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
+                            <img src="{{ asset('images/banners/buah-buahan.jpg') }}"
+                                class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
+                                alt="Produk Pilihan">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="swiper-slide">
+                <div class="container mx-auto px-4 h-full">
+                    <div class="flex flex-col md:flex-row items-center justify-center h-full py-2 md:py-12">
+                        <div class="w-full md:w-1/2 space-y-2 md:space-y-4 text-center md:text-left">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Produk Pilihan Terbaik
+                            </h2>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600">
+                                Temukan berbagai produk berkualitas dengan harga terbaik untuk Anda.
+                            </p>
+                            <a href="#recommended"
+                                class="inline-block px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-custom text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                Belanja Sekarang
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/2 mt-2 md:mt-0 flex items-center justify-center">
+                            <img src="{{ asset('images/banners/t-virus3.jpg') }}"
+                                class="w-full max-w-[180px] sm:max-w-[220px] md:max-w-lg object-contain"
+                                alt="Produk Pilihan">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Navigation -->
