@@ -268,7 +268,7 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('js/checkout.js') }}"></script>
-        <script src="{{ asset('js/address-new.js') }}"></script>
+        <script src="{{ asset('js/address-checkout.js') }}"></script>
 
         <script>
             // Fungsi untuk toggle modal
