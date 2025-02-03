@@ -157,6 +157,8 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::patch('/profile', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
+        Route::patch('/profile/change-email', [ProfileController::class, 'updateEmail'])->name('profile.change-email');
+        Route::patch('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.change-password');
     });
 });
 
@@ -253,7 +255,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Route Pengaturan
             Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
             Route::put('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
-
         });
     });
 });

@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Orders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -40,13 +41,14 @@ class ProfileController extends Controller
             ->unique('full_address');
 
         // Ambil data statistik
-        $orders = DB::table('orders')
-            ->where('user_id', $user->id)
+        $orders = Orders::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(5);
 
-        $totalOrders = $orders->count();
-        $totalPayments = $orders->sum('total_amount');
+        $totalOrders = $orders->total();
+        $totalPayments = DB::table('orders')
+            ->where('user_id', $user->id)
+            ->sum('total_amount');
         $lastOrderStatus = $orders->first() ? ucfirst($orders->first()->status) : 'Belum ada pesanan';
 
         return view('home.profile', [
@@ -89,7 +91,7 @@ class ProfileController extends Controller
                     // Upload dan simpan foto baru
                     $photo = $request->file('photo');
                     $path = $photo->store('uploads/photo_pelanggan', 'public');
-                    
+
                     // Update data user
                     $user->photo = $path;
                     $user->save();
@@ -99,7 +101,6 @@ class ProfileController extends Controller
                         'message' => 'Foto profil berhasil diperbarui',
                         'photoUrl' => asset('storage/' . $path)
                     ], 200);
-
                 } catch (\Exception $e) {
                     // Log error
                     Log::error('Error saat upload foto: ' . $e->getMessage());
@@ -116,13 +117,11 @@ class ProfileController extends Controller
                 'success' => false,
                 'message' => 'Tidak ada foto yang diupload'
             ], 400);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->errors()['photo'][0] ?? 'Validasi foto gagal'
             ], 422);
-
         } catch (\Exception $e) {
             // Log error
             Log::error('Error di updatePhoto: ' . $e->getMessage());
@@ -222,7 +221,7 @@ class ProfileController extends Controller
 
         // Perbarui data pengguna
         $user->name = $validated['name'];
-        // $user->email = $validated['email'];
+        $user->email = $validated['email'];
         $user->telepon = $validated['telepon'];
         $user->tgl_lahir = $validated['tgl_lahir'];
         $user->makanan_fav = $validated['makanan_fav'];
@@ -237,6 +236,68 @@ class ProfileController extends Controller
             return back()->with('success', 'Profile Berhasil disimpan!');
         } else {
             return back()->with('error', 'Terjadi kesalahan saat menyimpan profile.');
+        }
+    }
+
+    public function updateEmail(Request $request)
+    {
+        if (auth()->user()->email_changed) {
+            return back()->with('error', 'Anda hanya dapat mengubah email 1 kali saja.');
+        }
+
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email,' . auth()->id()
+            ],
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan oleh pengguna lain.'
+        ]);
+
+        auth()->user()->update([
+            'email' => $request->email,
+            'email_changed' => true
+        ]);
+
+        return back()->with('success', 'Email berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // Cek apakah user sudah mengubah password 3 kali
+        if (auth()->user()->password_changed >= 3) {
+            return back()->with('error', 'Anda sudah mencapai batas maksimal 3 kali perubahan password.');
+        }
+
+        // Validasi input
+        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            ],
+        ], [
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.'
+        ]);
+
+        try {
+            // Update password dan increment counter password_changed
+            auth()->user()->update([
+                'password' => $request->password,
+                'password_changed' => DB::raw('password_changed + 1') // Gunakan DB::raw untuk increment
+
+            ]);
+
+            return back()->with('success', 'Password berhasil diperbarui. Sisa kesempatan mengubah password: ' . (3 - (auth()->user()->fresh()->password_changed)));
+        } catch (\Exception $e) {
+            Log::error('Error updating password: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui password.');
         }
     }
 }

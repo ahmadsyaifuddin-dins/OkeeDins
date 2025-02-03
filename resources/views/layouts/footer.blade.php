@@ -12,7 +12,7 @@
                     </span>
                 </div>
                 <p class="text-gray-600 text-sm leading-relaxed">
-                    {{ $appSettings['footer_description'] ?? 'Nikmati pengalaman kuliner terbaik dengan berbagai pilihan makanan lezat dari OkeDins.' }}
+                    {{ $appSettings['footer_description'] ?? 'Nikmati pengalaman kuliner terbaik dengan berbagai pilihan makanan lezat dari OkeeDins.' }}
                 </p>
                 <!-- Social Media Icons -->
                 <div class="flex space-x-5">

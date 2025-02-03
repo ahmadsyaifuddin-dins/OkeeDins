@@ -43,6 +43,7 @@ return new class extends Migration
             $table->string('remember_token')->nullable();
             // $table->boolean('is_active')->default(true);
             // $table->timestamp('last_login_at')->nullable();
+            $table->tinyInteger('password_changed')->default(0);
             $table->string('last_login_ip', 45)->default('0.0.0.0');
 
             // Social Media Links

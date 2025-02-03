@@ -1,7 +1,7 @@
 <div id="ordersContent" class="tab-content hidden">
     <div class="p-6">
         <div class="space-y-4">
-            @forelse(Auth::user()->order as $order)
+            @forelse($orders as $order)
                 <a href="{{ route('orders.detail', $order->id) }}" class="block">
                     <div
                         class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition duration-300 ease-in-out hover:shadow-md">
@@ -9,7 +9,7 @@
                             <div>
                                 <span class="text-sm text-gray-500">#{{ $order->order_number }}</span>
                                 <span
-                                    class="ml-2 text-sm font-medium text-custom">{{ $order->created_at->locale('id')->isoFormat('DD MMMM YYYY') }}</span>
+                                    class="ml-2 text-sm font-medium text-custom">{{ Carbon\Carbon::parse($order->created_at)->locale('id')->isoFormat('DD MMMM YYYY') }}</span>
                             </div>
                             <span
                                 class="px-3 py-1 text-sm rounded-full 
@@ -37,9 +37,13 @@
             @empty
                 <div class="text-center py-8">
                     <i class="bi bi-bag-x text-4xl text-gray-400"></i>
-                    <p class="mt-2 text-gray-500">Belum ada riwayat pesanan</p>
+                    <i class="bi bi-emoji-frown text-4xl text-gray-400 ml-2"></i>
+                    <p class="mt-2 text-gray-500">Belum ada riwayat pesanan </p>
                 </div>
             @endforelse
         </div>
+    </div>
+    <div class="mt-4 flex justify-center">
+        {{ $orders->links('vendor.pagination.custom') }}
     </div>
 </div>
