@@ -28,10 +28,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\GameController;
 
-use App\Http\Controllers\HomeController;
-use App\Models\KategoriProduk;
-use App\Models\Produk;
-use PHPUnit\Framework\Attributes\Group;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,25 +138,13 @@ Route::middleware(['auth', 'pelanggan'])->group(function () {
     Route::post('/payment/{order}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
 
     // Address Routes
-    // Route::prefix('addresses')->group(function () {
-    //     Route::get('/list', [AddressController::class, 'getList'])->name('addresses.list');
-    //     Route::get('/checkout-list', [AddressController::class, 'getCheckoutList'])->name('addresses.checkout-list');
-    //     Route::get('/{address}', [AddressController::class, 'show'])->name('addresses.show');
-    //     Route::get('/{address}/edit', [AddressController::class, 'edit'])->name('addresses.edit');
-    //     Route::post('/', [AddressController::class, 'store'])->name('addresses.store');
-    //     Route::put('/{address}', [AddressController::class, 'update'])->name('addresses.update');
-    //     Route::delete('/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
-    //     Route::post('/{address}/make-primary', [AddressController::class, 'setPrimary'])->name('addresses.make-primary');
-    // });
-    
     Route::prefix('addresses')->group(function () {
         Route::get('/list', [AddressControllerOld::class, 'getList'])->name('addresses.list');
         Route::get('/checkout-list', [AddressControllerOld::class, 'getCheckoutList'])->name('addresses.checkout-list');
-        Route::get('/{address}', [AddressControllerOld::class, 'show'])->name('addresses.show');
+        Route::post('/store', [AddressControllerOld::class, 'store'])->name('addresses.store');
         Route::get('/{address}/edit', [AddressControllerOld::class, 'edit'])->name('addresses.edit');
-        Route::post('/', [AddressControllerOld::class, 'store'])->name('addresses.store');
         Route::put('/{address}', [AddressControllerOld::class, 'update'])->name('addresses.update');
-        Route::delete('/{address}', [AddressControllerOld::class, 'destroy'])->name('addresses.destroy');
+        Route::delete('/{address}/destroy', [AddressControllerOld::class, 'destroy'])->name('addresses.destroy');
         Route::post('/{address}/make-primary', [AddressControllerOld::class, 'setPrimary'])->name('addresses.make-primary');
     });
 

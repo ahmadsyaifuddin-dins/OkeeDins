@@ -16,12 +16,11 @@ class AddressControllerOld extends Controller
                 'label' => 'nullable|string|max:255',
                 'receiver_name' => 'required|string|max:255',
                 'phone_number' => 'required|string|max:20',
-                'full_address' => 'required|string',
-                'is_primary' => 'required|in:0,1'
+                'full_address' => 'required|string'
             ]);
 
-            // Convert is_primary to boolean
-            $validated['is_primary'] = (bool)$validated['is_primary'];
+            // Set is_primary berdasarkan checkbox
+            $validated['is_primary'] = $request->has('is_primary');
             $validated['user_id'] = auth()->id();
             
             DB::beginTransaction();
@@ -36,21 +35,15 @@ class AddressControllerOld extends Controller
                 $address = Address::create($validated);
                 DB::commit();
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Alamat berhasil ditambahkan',
-                    'address' => $address
-                ]);
+                return redirect()->back()->with('success', 'Alamat berhasil ditambahkan');
+
             } catch (\Exception $e) {
                 DB::rollBack();
                 throw $e;
             }
         } catch (\Exception $e) {
             Log::error('Address creation error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menambahkan alamat: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->with('error', 'Gagal menambahkan alamat: ' . $e->getMessage());
         }
     }
 
@@ -65,12 +58,11 @@ class AddressControllerOld extends Controller
                 'label' => 'nullable|string|max:255',
                 'receiver_name' => 'required|string|max:255',
                 'phone_number' => 'required|string|max:20',
-                'full_address' => 'required|string',
-                'is_primary' => 'required|in:0,1'
+                'full_address' => 'required|string'
             ]);
 
-            // Convert is_primary to boolean
-            $validated['is_primary'] = (bool)$validated['is_primary'];
+            // Set is_primary berdasarkan checkbox
+            $validated['is_primary'] = $request->has('is_primary');
 
             DB::beginTransaction();
             try {
@@ -80,11 +72,10 @@ class AddressControllerOld extends Controller
                     Address::where('user_id', auth()->id())
                           ->where('id', '!=', $address->id)
                           ->update(['is_primary' => false]);
-                    $validated['is_primary'] = true;
                 }
-                // Jika mencoba mengubah alamat primary menjadi non-primary
-                elseif ($address->is_primary && !$validated['is_primary']) {
-                    throw new \Exception('Alamat utama tidak dapat diubah menjadi non-utama');
+                // Jika mencoba mengubah alamat primary menjadi non-primary dan ini adalah satu-satunya alamat
+                elseif ($address->is_primary && Address::where('user_id', auth()->id())->count() === 1) {
+                    $validated['is_primary'] = true; // Tetap jadikan primary
                 }
 
                 $address->update($validated);
@@ -108,24 +99,38 @@ class AddressControllerOld extends Controller
         }
     }
 
-    public function destroy(Request $request, Address $address)
+    public function destroy(Address $address)
     {
         try {
             if ($address->user_id !== auth()->id()) {
                 throw new \Exception('Anda tidak memiliki akses ke alamat ini');
             }
 
+            DB::beginTransaction();
+
             if ($address->is_primary) {
-                throw new \Exception('Alamat utama tidak dapat dihapus');
+                // Cari alamat lain yang bukan primary
+                $newPrimaryAddress = Address::where('user_id', auth()->id())
+                    ->where('id', '!=', $address->id)
+                    ->where('is_primary', false)
+                    ->first();
+
+                if ($newPrimaryAddress) {
+                    // Jika ada, jadikan sebagai primary
+                    $newPrimaryAddress->update(['is_primary' => true]);
+                } else {
+                    throw new \Exception('Tidak dapat menghapus satu-satunya alamat');
+                }
             }
 
             $address->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Alamat berhasil dihapus'
-            ]);
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Alamat berhasil dihapus');
+
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Address deletion error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
@@ -143,6 +148,23 @@ class AddressControllerOld extends Controller
 
             return response()->json($address);
         } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data alamat: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function edit(Address $address)
+    {
+        try {
+            if ($address->user_id !== auth()->id()) {
+                throw new \Exception('Anda tidak memiliki akses ke alamat ini');
+            }
+
+            return response()->json($address);
+        } catch (\Exception $e) {
+            Log::error('Address edit error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengambil data alamat: ' . $e->getMessage()

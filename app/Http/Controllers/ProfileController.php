@@ -39,9 +39,23 @@ class ProfileController extends Controller
             ->get()
             ->unique('full_address');
 
+        // Ambil data statistik
+        $orders = DB::table('orders')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalOrders = $orders->count();
+        $totalPayments = $orders->sum('total_amount');
+        $lastOrderStatus = $orders->first() ? ucfirst($orders->first()->status) : 'Belum ada pesanan';
+
         return view('home.profile', [
             'user' => $user,
-            'addresses' => $addresses
+            'addresses' => $addresses,
+            'orders' => $orders,
+            'totalOrders' => $totalOrders,
+            'totalPayments' => $totalPayments,
+            'lastOrderStatus' => $lastOrderStatus
         ]);
     }
 
