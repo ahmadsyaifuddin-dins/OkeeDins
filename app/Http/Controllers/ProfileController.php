@@ -211,7 +211,7 @@ class ProfileController extends Controller
         // $user->email = $validated['email'];
         $user->telepon = $validated['telepon'];
         $user->tgl_lahir = $validated['tgl_lahir'];
-        // $user->makanan_fav = $validated['makanan_fav']
+        $user->makanan_fav = $validated['makanan_fav'];
 
         // Perbarui password jika ada input password baru
         if ($request->filled('password')) {

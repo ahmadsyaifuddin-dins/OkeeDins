@@ -168,10 +168,8 @@ class AddressControllerOld extends Controller
                 $address->update(['is_primary' => true]);
             });
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Alamat utama berhasil diubah'
-            ]);
+            return redirect()->back()->with('success', 'Alamat utama berhasil diubah');
+
         } catch (\Exception $e) {
             Log::error('Set primary address error: ' . $e->getMessage());
             return response()->json([
@@ -179,6 +177,7 @@ class AddressControllerOld extends Controller
                 'message' => 'Gagal mengubah alamat utama: ' . $e->getMessage()
             ], 500);
         }
+
     }
 
     public function getList()
