@@ -33,7 +33,7 @@ return new class extends Migration
 
             // Role & Character
             $table->enum('role', ['Pelanggan', 'Administrator'])->nullable();
-            $table->enum('type_char', ['Hero', 'Villain']);
+            $table->enum('type_char', ['Hero', 'Villain', 'Anti Hero', 'Anti Villain']);
 
             // Security & Authentication
             // $table->boolean('two_factor_enabled')->default(false);

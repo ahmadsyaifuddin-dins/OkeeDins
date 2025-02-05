@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\CacheImages::class,
+        \App\Http\Middleware\HandleCors::class,
         // 'admin' => \App\Http\Middleware\AdminMiddleware::class,
         // \App\Http\Middleware\RoleMiddleware::class,
 

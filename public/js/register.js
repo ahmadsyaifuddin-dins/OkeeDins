@@ -932,26 +932,80 @@ $(document).ready(function () {
     });
 });
 
-function selectCharacter(type) {
-    document.getElementById('type_char').value = type;
-
-    // Remove selected class from all cards
-    document.querySelectorAll('.character-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-
-    // Add selected class to chosen card
-    if (type === 'Hero') {
-        document.getElementById('hero-card').classList.add('selected');
-    } else {
-        document.getElementById('villain-card').classList.add('selected');
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const characterSelection = document.querySelector('.character-selection');
+    const scrollDots = document.querySelectorAll('.scroll-dot');
+    const cards = document.querySelectorAll('.character-card');
+    
+    // Update dots based on scroll position
+    function updateScrollDots() {
+        const scrollPosition = characterSelection.scrollLeft;
+        const cardWidth = cards[0].offsetWidth + parseInt(getComputedStyle(characterSelection).gap);
+        const activeIndex = Math.min(Math.floor((scrollPosition + (cardWidth/2)) / cardWidth), cards.length - 1);
+        
+        scrollDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
     }
 
-    // Add selection animation
-    const card = type === 'Hero' ? document.getElementById('hero-card') : document.getElementById('villain-card');
-    card.style.animation = 'pulse 0.5s';
-    setTimeout(() => {
-        card.style.animation = '';
-    }, 500);
-}
+    // Add scroll event listener
+    characterSelection.addEventListener('scroll', updateScrollDots);
+
+    // Handle dot clicks
+    scrollDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const cardWidth = cards[0].offsetWidth + parseInt(getComputedStyle(characterSelection).gap);
+            characterSelection.scrollTo({
+                left: cardWidth * index,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Character selection function
+    window.selectCharacter = function(type) {
+        document.getElementById('type_char').value = type;
+
+        // Remove selected class from all cards
+        cards.forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        // Add selected class to chosen card
+        const cardMap = {
+            'Hero': 'hero-card',
+            'Villain': 'villain-card',
+            'Anti Hero': 'anti-hero-card',
+            'Anti Villain': 'anti-villain-card'
+        };
+
+        const selectedCard = document.getElementById(cardMap[type]);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+            
+            // Scroll the selected card into view
+            selectedCard.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+
+            // Add selection animation
+            selectedCard.style.animation = 'pulse 0.5s';
+            setTimeout(() => {
+                selectedCard.style.animation = '';
+            }, 500);
+        }
+    };
+
+    // Initial scroll to first card
+    characterSelection.scrollTo({
+        left: 0,
+        behavior: 'smooth'
+    });
+
+    // Initial dot update
+    updateScrollDots();
+});
 

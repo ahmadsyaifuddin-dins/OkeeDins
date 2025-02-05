@@ -17,17 +17,62 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.js"></script>
     <!-- IntlTelInput JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    
+
     <!-- Pace.js -->
     <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
     <style>
-        .pace {-webkit-pointer-events: none;pointer-events: none;-webkit-user-select: none;-moz-user-select: none;user-select: none;}
-        .pace-inactive {display: none;}
-        .pace .pace-activity {display: block;position: fixed;z-index: 2000;top: 50%;left: 50%;width: 50px;height: 50px;margin: -25px 0 0 -25px;border: 3px solid transparent;border-top-color: #D32F2F;border-radius: 50%;-webkit-animation: pace-spinner 0.8s linear infinite;animation: pace-spinner 0.8s linear infinite;}
-        @-webkit-keyframes pace-spinner {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}
-        @keyframes pace-spinner {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}
-        .formbold-main-wrapper {display: none;}
+        .pace {
+            -webkit-pointer-events: none;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .pace-inactive {
+            display: none;
+        }
+
+        .pace .pace-activity {
+            display: block;
+            position: fixed;
+            z-index: 2000;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin: -25px 0 0 -25px;
+            border: 3px solid transparent;
+            border-top-color: #D32F2F;
+            border-radius: 50%;
+            -webkit-animation: pace-spinner 0.8s linear infinite;
+            animation: pace-spinner 0.8s linear infinite;
+        }
+
+        @-webkit-keyframes pace-spinner {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pace-spinner {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .formbold-main-wrapper {
+            display: none;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -204,22 +249,55 @@
                                     <div class="character-glow hero-glow"></div>
                                 </div>
                                 <div class="character-info">
-                                    <h3>Hero 🦸‍♂️</h3>
-                                    <p>Pembela kebenaran dan keadilan</p>
+                                    <h3>Hero</h3>
+                                    <p>Pejuang kebenaran sejati</p>
                                 </div>
                             </div>
-
                             <div class="character-card" onclick="selectCharacter('Villain')" id="villain-card">
                                 <div class="character-image">
                                     <img src="{{ asset('images/villain-character.png') }}" alt="Villain Character">
                                     <div class="character-glow villain-glow"></div>
                                 </div>
                                 <div class="character-info">
-                                    <h3>Villain 🦹‍♂️</h3>
-                                    <p>Penguasa kegelapan yang kuat</p>
+                                    <h3>Villain</h3>
+                                    <p>Penguasa kegelapan</p>
+                                </div>
+                            </div>
+                            <div class="character-card" onclick="selectCharacter('Anti Hero')" id="anti-hero-card">
+                                <div class="character-image">
+                                    <img src="{{ asset('images/anti_hero_char.png') }}" alt="Anti Hero Character">
+                                    <div class="character-glow anti-hero-glow"></div>
+                                </div>
+                                <div class="character-info">
+                                    <h3>Anti Hero</h3>
+                                    <p>Pahlawan berani berbeda</p>
+                                </div>
+                            </div>
+                            <div class="character-card" onclick="selectCharacter('Anti Villain')"
+                                id="anti-villain-card">
+                                <div class="character-image">
+                                    <img src="{{ asset('images/anti_villain_char.jpg') }}"
+                                        alt="Anti Villain Character">
+                                    <div class="character-glow anti-villain-glow"></div>
+                                </div>
+                                <div class="character-info">
+                                    <h3>Anti Villain</h3>
+                                    <p>Antagonis bermotif mulia</p>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="scroll-indicator">
+                            <span class="scroll-dot active"></span>
+                            <span class="scroll-dot"></span>
+                            <span class="scroll-dot"></span>
+                            <span class="scroll-dot"></span>
+                        </div>
+
+                        <div class="scroll-hint">
+                            Geser untuk melihat karakter lainnya
+                        </div>
+
                     </div>
                 </div>
 

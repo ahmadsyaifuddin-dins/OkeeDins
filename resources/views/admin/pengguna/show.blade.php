@@ -22,7 +22,7 @@
                             {{ $pengguna->type_char }}
                         </span>
                     </div>
-                    <div class="text-center my-4">
+                    <div class="text-center my-2">
                         <h6 class="text-sm mb-1">Bergabung Sejak</h6>
                         <p class="text-sm text-dark mb-0">
                             {{ \Carbon\Carbon::parse($pengguna->created_at)->locale('id')->isoFormat('D MMMM Y') }}
@@ -31,7 +31,7 @@
                             </small>
                         </p>
                     </div>
-                    <hr class="horizontal gray-light my-4">
+                    <hr class="horizontal gray-light my-2">
                     <div class="row">
                         <div class="col-lg-6">
                             <h6 class="text-sm">Telepon</h6>
@@ -42,7 +42,7 @@
                             <p class="text-sm mb-0">{{ \Carbon\Carbon::parse($pengguna->tgl_lahir)->format('d M Y') }}</p>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-lg-6">
                             <h6 class="text-sm">Jenis Kelamin</h6>
                             <p class="text-sm mb-0">{{ $pengguna->jenis_kelamin }}</p>
@@ -51,6 +51,11 @@
                             <h6 class="text-sm">Makanan Favorit</h6>
                             <p class="text-sm mb-0">{{ $pengguna->makanan_fav }}</p>
                         </div>
+                        <div class="col-lg-12 mt-3">
+                            <h6 class="text-sm">Alamat</h6>
+                            <p class="text-sm mb-0">{{ $pengguna->alamat }}</p>
+                        </div>
+
                     </div>
                 </div>
             </div>
