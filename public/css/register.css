@@ -515,7 +515,7 @@ label:last-child span {
 /* Mobile Styles */
 @media screen and (max-width: 480px) {
     .character-title {
-        font-size: 1.25rem;
+        font-size: 1rem;
         margin-bottom: 1rem;
     }
 
@@ -526,14 +526,13 @@ label:last-child span {
     }
 
     .character-card {
-        min-width: 280px;
+        min-width: 100px;
         margin: 0;
-        padding: 0.75rem;
         scroll-snap-align: start;
     }
 
     .character-image {
-        height: 340px;
+        height: 325px;
     }
 
     .character-info h3 {

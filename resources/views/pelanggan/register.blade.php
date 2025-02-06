@@ -206,17 +206,16 @@
 
                         <!-- Password requirements section is now more organized -->
                         <div class="password-validation-container">
-
                             <div class="password-requirements">
-                                <div class="requirement length">Minimal 8 karakter</div>
-                                <div class="requirement letter">Minimal satu huruf kecil</div>
-                                <div class="requirement number">Minimal satu angka</div>
-                                <div class="requirement capital">Minimal satu huruf kapital</div>
-                                <div class="requirement special">Minimal satu karakter spesial</div>
+                                <div class="requirement length">Password minimal 8 karakter</div>
+                                <div class="requirement letter">satu huruf kecil</div>
+                                <div class="requirement number">satu angka</div>
+                                <div class="requirement capital">satu huruf kapital</div>
+                                <div class="requirement special">satu karakter spesial</div>
                                 <div class="password-strength-meter">
                                     <div class="strength-meter-fill"></div>
                                 </div>
-                                <small><b>Minimal 3</b> Kriteria Keamanan dan wajib 8 karakter </small>
+                                <small><b>Minimal 3</b> Kriteria Keamanan diatas dan wajib 8 karakter !</small>
                                 <div class="password-strength-text"></div>
                             </div>
                         </div>

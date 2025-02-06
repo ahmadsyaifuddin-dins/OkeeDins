@@ -294,7 +294,7 @@ $(document).ready(function () {
             letter: /[a-z]/.test(password),
             capital: /[A-Z]/.test(password),
             number: /[0-9]/.test(password),
-            special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+            special: /[+\-_; =!@#$%^&*(),.?":{}|<>]/.test(password),
         };
 
         Object.keys(requirements).forEach((req) => {
