@@ -1,9 +1,11 @@
-<nav x-data="{ mobileMenu: false }" class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
+<nav x-data="{ mobileMenu: false }" x-init="mobileMenu = false"
+    class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a href="{{ route('home.index') }}" class="flex items-center">
-                <img src="{{ asset('storage/' . ($appSettings['app_logo'] ?? 'default-logo.png')) }}" alt="{{ $appSettings['app_name'] ?? 'App Logo' }}" class="h-16 md:h-20 w-auto">
+                <img src="{{ asset('storage/' . ($appSettings['app_logo'] ?? 'default-logo.png')) }}"
+                    alt="{{ $appSettings['app_name'] ?? 'App Logo' }}" class="h-16 md:h-20 w-auto">
             </a>
 
             <!-- Search Bar (Desktop) -->
@@ -24,10 +26,9 @@
             <div class="flex-1 md:hidden mx-4">
                 <form action="{{ route('home.search') }}" method="GET">
                     <div class="relative flex items-center">
-                        <input type="text" name="query" 
+                        <input type="text" name="query"
                             class="w-full pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
-                            placeholder="Cari Produk favoritmu..."
-                            value="{{ request('query') }}">
+                            placeholder="Cari Produk..." value="{{ request('query') }}">
                         <button type="submit" class="absolute left-3 text-gray-400">
                             <i class="bi bi-search text-lg"></i>
                         </button>
@@ -103,7 +104,7 @@
                         </button>
 
                         <!-- Dropdown Menu -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-100"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
@@ -145,28 +146,15 @@
                     </a>
                 @endauth
             </div>
-
-             <!-- Mobile Search - Moved outside flex container but still inside main container -->
-        {{-- <div class="block md:hidden border-t border-gray-100">
-            <div class="py-2">
-                <form action="{{ route('home.search') }}" method="GET">
-                    <div class="relative flex items-center">
-                        <input type="text" name="query" 
-                            class="w-full pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
-                            placeholder="Cari Produk favoritmu..."
-                            value="{{ request('query') }}">
-                        <button type="submit" class="absolute left-3 text-gray-400">
-                            <i class="bi bi-search text-lg"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div> --}}
-
         </div>
 
         <!-- Mobile Menu -->
-        <div x-show="mobileMenu" class="md:hidden fixed inset-0 z-50 bg-white">
+        <div x-show="mobileMenu" x-cloak x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 transform scale-90"
+            x-transition:enter-end="opacity-100 transform scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform scale-100"
+            x-transition:leave-end="opacity-0 transform scale-90" class="md:hidden fixed inset-0 z-50 bg-white">
             <div class="flex flex-col h-full">
                 @auth
                     <!-- Mobile Header -->

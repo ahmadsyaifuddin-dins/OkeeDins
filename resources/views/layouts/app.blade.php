@@ -8,10 +8,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="turbo-cache-control" content="no-preview">
     <title>{{ config('app.name', 'OkeeDins') }}</title>
-    
+
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}"
+        type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}"
+        type="image/x-icon">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -59,8 +61,11 @@
         }
     </script>
 
-    <!-- Custom Styles -->
     <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
         :root {
             --customColor: #D32F2F;
         }
@@ -243,10 +248,6 @@
         }
     </style>
 
-    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
-
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    @livewireStyles
 </head>
 
 <body class="bg-gray-50">
@@ -259,12 +260,11 @@
     @include('layouts.bottom-nav')
     @include('layouts.footer')
 
-    @livewireScripts
     @stack('scripts')
 
     <script>
         AOS.init({
-            duration: 800,
+            duration: 200,
             easing: 'ease-in-out',
             once: true
         });
