@@ -221,7 +221,6 @@ class ProfileController extends Controller
 
         // Perbarui data pengguna
         $user->name = $validated['name'];
-        $user->email = $validated['email'];
         $user->telepon = $validated['telepon'];
         $user->tgl_lahir = $validated['tgl_lahir'];
         $user->makanan_fav = $validated['makanan_fav'];

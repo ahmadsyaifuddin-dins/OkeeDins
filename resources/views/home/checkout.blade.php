@@ -17,7 +17,7 @@
                 <!-- Main Content (Address, Items, Notes, Payment) -->
                 <div class="lg:col-span-2">
                     <!-- Delivery Address -->
-                    <div class="bg-white rounded-lg shadow-sm mb-6" data-aos="fade-right">
+                    <div class="bg-white rounded-lg shadow-sm mb-6" >
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-sm md:text-xl font-medium text-gray-900">Alamat Pengiriman</h2>
@@ -77,7 +77,7 @@
                     </div>
 
                     <!-- Purchase Details -->
-                    <div class="bg-white rounded-lg shadow-sm mb-6" data-aos="fade-up">
+                    <div class="bg-white rounded-lg shadow-sm mb-6" >
                         <div class="p-6">
                             <h2 class="text-lg font-bold text-gray-900 mb-4">Detail Pembelian</h2>
                             <div class="space-y-6">
@@ -154,7 +154,7 @@
                     </div>
 
                     <!-- Notes Section -->
-                    <div class="bg-white rounded-lg shadow-sm mb-6" data-aos="fade-up">
+                    <div class="bg-white rounded-lg shadow-sm mb-6" >
                         <div class="p-6">
                             <h2 class="text-lg font-bold text-gray-900 mb-4">Catatan</h2>
                             <textarea name="notes" id="notes" rows="3"
@@ -164,7 +164,7 @@
                     </div>
 
                     <!-- Payment Method -->
-                    <div class="bg-white rounded-lg shadow-sm mb-6" data-aos="fade-up">
+                    <div class="bg-white rounded-lg shadow-sm mb-6" >
                         <div class="p-6">
                             <h2 class="text-lg font-bold text-gray-900 mb-4">Metode Pembayaran</h2>
                             <div class="space-y-3">
@@ -197,7 +197,7 @@
                 </div>
 
                 <!-- Order Summary -->
-                <div class="bg-white rounded-lg shadow-sm p-6" data-aos="flip-up">
+                <div class="bg-white rounded-lg shadow-sm p-6">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Ringkasan Pesanan</h2>
 
                     <!-- Voucher Section -->

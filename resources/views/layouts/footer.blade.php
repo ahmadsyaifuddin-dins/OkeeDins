@@ -1,5 +1,5 @@
 <!-- Footer -->
-<footer class="bg-white border-t border-gray-100" data-aos="fade-up">
+<footer class="bg-white border-t border-gray-100" >
     <div class="container mx-auto px-4 py-12">
         <!-- Grid Container -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">

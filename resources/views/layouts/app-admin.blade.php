@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{{ $title ?? 'Admin Food Fusion' }}</title>
+    <title>{{ $title ?? 'Admin OkeeDins' }}</title>
 
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('material-dashboard/assets/img/apple-icon.png') }}" />
     <link rel="icon" type="image/png" href="{{ asset('material-dashboard/assets/img/favicon.png') }}" />
 
     <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+    <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
 
     <!-- Nucleo Icons -->
     <link href="{{ asset('material-dashboard/assets/css/nucleo-icons.css') }}" rel="stylesheet" />
@@ -21,7 +22,8 @@
     <link rel="stylesheet" href="{{ asset('css/admin-css/pagination-custom.css') }}">
 
     <!-- Material Icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-icons@1.13.13/iconfont/material-icons.min.css" />
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -43,7 +45,7 @@
 
     <!-- start main -->
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        
+
         <!-- start navbar -->
         @include('layouts-admin.navbar')
         <!-- end navbar -->

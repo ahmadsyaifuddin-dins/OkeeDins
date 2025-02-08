@@ -52,7 +52,10 @@ class MarketController extends Controller
 
     public function detailProduk($slug)
     {
-        $product = Produk::where('slug', $slug)->firstOrFail();
+        $product = Produk::with(['ulasan', 'order_items.order'])
+        ->where('slug', $slug)
+        ->firstOrFail();        
+        
         return view('home.produk-detail', compact('product'));
     }
 

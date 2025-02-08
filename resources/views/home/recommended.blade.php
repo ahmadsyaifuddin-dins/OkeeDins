@@ -7,7 +7,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
             @if ($recommendedProducts->count() > 0)
                 @foreach ($recommendedProducts as $recom)
-                    <div data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <div  data-aos-delay="{{ $loop->index * 100 }}">
                         <a href="{{ route('produk.detail', $recom->slug) }}" class="block">
                             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <!-- Wishlist & Discount -->

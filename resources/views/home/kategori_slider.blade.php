@@ -1,4 +1,4 @@
-<div class="py-4" data-aos="fade-up">
+<div class="py-4" >
     <div class="swiper kategoriSwiper">
         <div class="swiper-wrapper">
             <!-- Semua Kategori -->

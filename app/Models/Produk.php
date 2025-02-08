@@ -59,13 +59,27 @@ class Produk extends Model
         return $this->hasMany(ProductImage::class, 'produk_id');
     }
 
-    // public function thumbnail()
-    // {
-    //     return $this->hasOne(ProductImage::class)->where('is_thumbnail', true);
-    // }
-
     public function ulasan()
     {
         return $this->hasMany(Ulasan::class, 'produk_id', 'id');
+    }
+
+    // Calculate average rating
+    public function getRatingAttribute()
+    {
+        if ($this->ulasan()->count() === 0) {
+            return 0;
+        }
+        return $this->ulasan()->avg('rating');
+    }
+
+    // Calculate total sold
+    public function getTotalTerjualAttribute()
+    {
+        return $this->order_items()
+            ->whereHas('order', function($query) {
+                $query->where('status', 'completed');
+            })
+            ->sum('quantity');
     }
 }

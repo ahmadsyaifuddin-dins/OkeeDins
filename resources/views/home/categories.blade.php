@@ -35,7 +35,7 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @foreach ($products as $product)
-                        <div data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                        <div  data-aos-delay="{{ $loop->index * 100 }}">
                             <a href="{{ route('produk.detail', $product->slug) }}" class="block">
                                 <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
                                     <div class="relative">

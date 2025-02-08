@@ -409,25 +409,25 @@ $(document).ready(function () {
     ];
 
     // Tambahkan array blacklist nomor
-    const blacklistedNumbers = ['08123456789', '0812345679', '0812345678910', '0812345678911', '0812345678', '08123456788', '08123456787', '08123456786', '08123456785', '08123456784', '08123456783', '08123456782', '08123456781', '08123456780', '081234567890', '081234567891', '081234567892', '081234567893', '081234567894', '081234567895', '081234567896', '081234567897', '081234567898', '081234567899'];
+    const blacklistedNumbers = ['8123456789', '812345679', '81234567891', '812345678911', '812345678', '8123456788', '8123456787', '8123456786', '8123456785', '8123456784', '8123456783', '8123456782', '8123456781', '812345678', '8123456789', '81234567891', '81234567892', '81234567893', '81234567894', '81234567895', '81234567896', '81234567897', '81234567898', '81234567899'];
 
     // Mencegah input karakter non-angka
     input.addEventListener("keypress", function (e) {
         const countryCode = iti.getSelectedCountryData().iso2;
 
-        // Khusus untuk Indonesia, pastikan dimulai dengan '08'
+        // Khusus untuk Indonesia, pastikan dimulai dengan '8'
         if (countryCode === 'id') {
             const inputValue = this.value;
             // Jika input masih kosong, hanya izinkan '0'
-            if (inputValue.length === 0 && e.key !== '0') {
+            if (inputValue.length === 0 && e.key !== '8') {
                 e.preventDefault();
                 return;
             }
             // Jika input sudah ada '0', karakter kedua harus '8'
-            if (inputValue === '0' && e.key !== '8') {
-                e.preventDefault();
-                return;
-            }
+            // if (inputValue === '0' && e.key !== '8') {
+            //     e.preventDefault();
+            //     return;
+            // }
         }
 
         // Tetap hanya izinkan angka untuk semua negara
@@ -469,12 +469,12 @@ $(document).ready(function () {
 
         // Daftar prefix provider Indonesia
         const providers = {
-            '0811': 'Telkomsel', '0812': 'Telkomsel', '0813': 'Telkomsel', '0821': 'Telkomsel', '0822': 'Telkomsel', '0823': 'Telkomsel',
-            '0814': 'Indosat', '0815': 'Indosat', '0816': 'Indosat', '0855': 'Indosat', '0856': 'Indosat', '0857': 'Indosat', '0858': 'Indosat',
-            '0817': 'XL', '0818': 'XL', '0819': 'XL', '0859': 'XL', '0877': 'XL', '0878': 'XL',
-            '0838': 'Axis', '0831': 'Axis', '0832': 'Axis', '0833': 'Axis',
-            '0895': 'Three', '0896': 'Three', '0897': 'Three', '0898': 'Three', '0899': 'Three',
-            '0881': 'Smartfren', '0882': 'Smartfren', '0883': 'Smartfren', '0884': 'Smartfren', '0885': 'Smartfren', '0886': 'Smartfren', '0887': 'Smartfren'
+            '811': 'Telkomsel', '812': 'Telkomsel', '813': 'Telkomsel', '821': 'Telkomsel', '822': 'Telkomsel', '823': 'Telkomsel',
+            '814': 'Indosat', '815': 'Indosat', '816': 'Indosat', '855': 'Indosat', '856': 'Indosat', '857': 'Indosat', '858': 'Indosat',
+            '817': 'XL', '818': 'XL', '819': 'XL', '859': 'XL', '877': 'XL', '878': 'XL',
+            '838': 'Axis', '831': 'Axis', '832': 'Axis', '833': 'Axis',
+            '895': 'Three', '896': 'Three', '897': 'Three', '898': 'Three', '899': 'Three',
+            '881': 'Smartfren', '882': 'Smartfren', '883': 'Smartfren', '884': 'Smartfren', '885': 'Smartfren', '886': 'Smartfren', '887': 'Smartfren'
         };
 
         // Cek prefix
@@ -484,8 +484,8 @@ $(document).ready(function () {
             }
         }
 
-        // Jika nomor dimulai dengan '08' tapi tidak cocok dengan provider manapun
-        if (number.startsWith('08')) {
+        // Jika nomor dimulai dengan '8' tapi tidak cocok dengan provider manapun
+        if (number.startsWith('8')) {
             return 'Unknown Provider';
         }
 

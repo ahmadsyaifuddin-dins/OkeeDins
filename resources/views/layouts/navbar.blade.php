@@ -1,5 +1,4 @@
-<nav x-data="{ mobileMenu: false }" x-init="mobileMenu = false"
-    class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
+<nav x-data="{ mobileMenu: false }" x-init="mobileMenu = false" class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
@@ -38,17 +37,21 @@
 
             <!-- Mobile Icons (Right-aligned) -->
             <div class="flex items-center gap-2 md:hidden flex-shrink-0">
-                <a href="{{ route('cart.index') }}" class="p-2 text-gray-600 hover:text-custom relative">
-                    <i class="bi bi-cart text-xl"></i>
-                    @auth
+                @auth
+                    <a href="{{ route('cart.index') }}" class="p-2 text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-cart text-xl"></i>
                         @if (Auth::user()->cart->count() > 0)
                             <span
                                 class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                 {{ Auth::user()->cart->count() }}
                             </span>
                         @endif
-                    @endauth
-                </a>
+                    </a>
+                @else
+                    <button onclick="showLoginAlert()" class="p-2 text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-cart text-xl"></i>
+                    </button>
+                @endauth
 
                 <!-- Mobile Menu Button -->
                 <button type="button" class="p-2 text-gray-600 hover:text-custom" @click="mobileMenu = !mobileMenu">
@@ -58,41 +61,53 @@
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-4">
-                <a href="{{ route('wishlist.index') }}" class="text-gray-600 hover:text-custom relative">
-                    <i class="bi bi-heart text-xl"></i>
-                    @auth
+                @auth
+                    <a href="{{ route('wishlist.index') }}" class="text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-heart text-xl"></i>
                         @if (Auth::user()->wishlist->count() > 0)
                             <span
                                 class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                 {{ Auth::user()->wishlist->count() }}
                             </span>
                         @endif
-                    @endauth
-                </a>
+                    </a>
+                @else
+                    <button onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-heart text-xl"></i>
+                    </button>
+                @endauth
 
-                <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-custom relative">
-                    <i class="bi bi-cart text-xl"></i>
-                    @auth
+                @auth
+                    <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-cart text-xl"></i>
                         @if (Auth::user()->cart->count() > 0)
                             <span
                                 class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                 {{ Auth::user()->cart->count() }}
                             </span>
                         @endif
-                    @endauth
-                </a>
+                    </a>
+                @else
+                    <button onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-cart text-xl"></i>
+                    </button>
+                @endauth
 
-                <a href="{{ route('payment.index') }}" class="text-gray-600 hover:text-custom relative">
-                    <i class="bi bi-credit-card text-xl"></i>
-                    @auth
+                @auth
+                    <a href="{{ route('payment.index') }}" class="text-gray-600 hover:text-custom relative">
+                        <i class="bi bi-credit-card text-xl"></i>
                         @if ($bayarCount > 0)
                             <span
                                 class="absolute -top-1 -right-1 bg-custom text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                 {{ $bayarCount }}
                             </span>
                         @endif
-                    @endauth
-                </a>
+                    </a>
+                @else
+                    <button onclick="showLoginAlert()">
+                        <i class="bi bi-credit-card text-xl"></i>
+                    </button>
+                @endauth
 
                 @auth
                     <div class="relative" x-data="{ open: false }" @click.away="open = false">
@@ -127,10 +142,12 @@
                                 <i class="bi bi-receipt mr-2"></i>
                                 Riwayat Transaksi
                             </a>
+
                             <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                                 <i class="bi bi-controller mr-2"></i>
                                 Games
                             </a>
+
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:text-custom ">
@@ -183,16 +200,16 @@
                 @endauth
                 <div class="py-2">
 
-                    <a href="{{ route('transactions.index') }}"
-                        class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50">
-                        <i class="bi bi-receipt"></i>
-                        <span>Riwayat Transaksi</span>
-                    </a>
-                    <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                        <i class="bi bi-controller mr-2"></i>
-                        Games
-                    </a>
                     @auth
+                        <a href="{{ route('transactions.index') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50">
+                            <i class="bi bi-receipt"></i>
+                            <span>Riwayat Transaksi</span>
+                        </a>
+                        <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                            <i class="bi bi-controller mr-2"></i>
+                            Games
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
@@ -218,3 +235,15 @@
         </div>
     </div>
 </nav>
+
+<script>
+    function showLoginAlert() {
+        Swal.fire({
+            title: 'Perhatian!',
+            text: 'Silakan login terlebih dahulu untuk mengakses fitur ini',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#EF4444'
+        });
+    }
+</script>

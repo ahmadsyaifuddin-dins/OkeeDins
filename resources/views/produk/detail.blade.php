@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="lg:grid lg:grid-cols-2 lg:gap-8">
         <!-- Product Images -->
-        <div data-aos="fade-right">
+        <div >
             <div class="swiper-container product-slider rounded-lg overflow-hidden">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
@@ -41,7 +41,7 @@
         </div>
 
         <!-- Product Info -->
-        <div class="mt-8 lg:mt-0" data-aos="fade-left">
+        <div class="mt-8 lg:mt-0" >
             <nav class="flex mb-4" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li><a href="{{ route('home') }}" class="text-gray-500 hover:text-red-500">Home</a></li>
@@ -121,7 +121,7 @@
     </div>
 
     <!-- Related Products -->
-    <div class="mt-16" data-aos="fade-up">
+    <div class="mt-16" >
         <h2 class="text-xl font-bold text-gray-900 mb-6">Produk Terkait</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach($relatedProducts as $related)

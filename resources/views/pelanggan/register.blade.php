@@ -132,9 +132,9 @@
                             <div class="telepon-wrapper">
                                 <input type="tel" name="telepon" id="telepon" class="formbold-form-input" required
                                     value="{{ old('telepon') }}" inputmode="numeric" pattern="[0-9]*"
-                                    placeholder="08xxxxxxxx" />
+                                    placeholder="8xxxxxxxx" />
                             </div>
-                            <small class="telepon-hint">Contoh awalan: 08xxxxxxx</small>
+                            <small class="telepon-hint">Contoh awalan: 8xxxxxxx</small>
                             <span id="valid-msg" class="hide">✓ Valid</span>
                             <span id="error-msg" class="hide"></span>
                         </div>
@@ -199,9 +199,6 @@
                         <div class="password-wrapper">
                             <input type="password" name="password" id="password" class="formbold-form-input"
                                 required />
-                            <button type="button" class="password-toggle">
-                                <!-- Icon akan ditambahkan via JavaScript -->
-                            </button>
                         </div>
 
                         <!-- Password requirements section is now more organized -->

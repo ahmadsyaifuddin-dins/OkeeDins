@@ -74,7 +74,7 @@
                 </a>
             @else
                 <a href="{{ route('login') }}" class="flex flex-col items-center gap-1 text-gray-500 hover:text-red-600">
-                    <i class="bi bi-person text-xl"></i>
+                    <i class="bi bi-box-arrow-in-right text-xl"></i>
                     <span class="text-xs">Masuk</span>
                 </a>
             @endauth
@@ -85,7 +85,13 @@
 @push('scripts')
     <script>
         function showLoginAlert() {
-            alert('Silakan login terlebih dahulu untuk mengakses fitur ini');
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'Silakan login terlebih dahulu untuk mengakses fitur ini',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#EF4444'
+            });
         }
     </script>
 @endpush

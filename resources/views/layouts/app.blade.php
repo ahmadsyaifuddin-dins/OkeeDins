@@ -21,6 +21,7 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -28,10 +29,6 @@
     <!-- Swiper.js -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-
-    <!-- AOS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
@@ -41,21 +38,11 @@
             theme: {
                 extend: {
                     colors: {
-                        // 'custom': '#FF6F00', // Oranye cerah Primary
-                        'custom-secondary': '#004AAD', // Biru tua Secondary                   
-                        'custom-accent': '#FDCB6E', // kuning tua Accent
-                        'bg-primary': '#ffffff', // Putih
-
-                        'custom': '#D32F2F', // Default
-                        'custom-secondary': '#102863' // Biru malam
-
-                        // 'custom': '#006400', // hijau tua
-                        // 'custom': '#4B89DC', // biru muda
-
-                        // 'custom': '#FF6B35', // Oranye : Primary
-                        // 'custom': '#D63031', // merah tua : Secondary
-                        // 'custom': '#FDCB6E', // kuning tua : Accent
-                    }
+                        'custom': '#D32F2F', // Merah - Primary
+                        'custom-secondary': '#102863', // Biru malam - Secondary
+                        'custom-accent': '#FDCB6E', // Kuning tua - Accent
+                        'bg-primary': '#ffffff' // Putih - Background
+                    },
                 }
             }
         }
@@ -261,14 +248,6 @@
     @include('layouts.footer')
 
     @stack('scripts')
-
-    <script>
-        AOS.init({
-            duration: 200,
-            easing: 'ease-in-out',
-            once: true
-        });
-    </script>
 
 </body>
 

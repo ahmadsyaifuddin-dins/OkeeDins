@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-8 mt-12">
         <div class="lg:grid lg:grid-cols-3 lg:gap-8">
             <!-- Cart Items -->
-            <div class="lg:col-span-2" data-aos="fade-right">
+            <div class="lg:col-span-2" >
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-6">
@@ -105,7 +105,7 @@
             </div>
 
             <!-- Order Summary -->
-            <div class="mt-8 lg:mt-0" data-aos="fade-left">
+            <div class="mt-8 lg:mt-0" >
                 <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
                     <h2 class="text-lg font-bold mb-4">Ringkasan Belanja</h2>
 

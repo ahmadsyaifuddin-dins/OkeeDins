@@ -3,14 +3,14 @@
 @section('content')
     <div class="container mx-auto px-4 py-8 mt-16">
         <!-- Header -->
-        <div class="mb-6" data-aos="fade-right">
+        <div class="mb-6" >
             <h1 class="text-2xl font-bold text-gray-800">Profil Saya</h1>
             <p class="text-gray-600">Kelola informasi profil Anda untuk mengontrol, melindungi dan mengamankan akun</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Sidebar -->
-            <div class="lg:col-span-4 xl:col-span-3" data-aos="fade-left">
+            <div class="lg:col-span-4 xl:col-span-3" >
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <!-- Profile Photo -->
                     <div class="text-center">
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="lg:col-span-8 xl:col-span-9" data-aos="fade-up">
+            <div class="lg:col-span-8 xl:col-span-9" >
                 <div class="bg-white rounded-lg shadow-sm">
                     <!-- Tabs -->
                     <div class="border-b border-gray-200">
