@@ -29,11 +29,13 @@
                     <div class="relative">
 
                         <!-- Product Image -->
+                        <div class="w-full rounded-lg aspect-square flex items-center aspect-w-16 aspect-h-9 justify-center bg-gray-100">
                         <a href="{{ route('produk.detail', $wishlist->produk->slug) }}">
                             <img src="{{ asset('storage/' . $wishlist->produk->gambar) }}"
                                  alt="{{ $wishlist->produk->nama_produk }}" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                        </a>
+                                 class="w-full h-full object-contain rounded-lg hover:scale-105 transition-transform duration-300 ">
+                                </a>
+                        </div>
 
                         <!-- Discount Badge -->
                         @if ($wishlist->produk->diskon > 0)

@@ -33,7 +33,7 @@
                                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                                     <span class="text-gray-600 mb-1 sm:mb-0">Nomor Pesanan:</span>
                                     <span
-                                        class="font-semibold text-gray-800">#{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}</span>
+                                        class="font-semibold text-gray-800">ORD-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                             </div>
 

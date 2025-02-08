@@ -21,6 +21,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            text-transform: capitalize;
         }
         th {
             background-color: #f5f5f5;
@@ -42,7 +43,7 @@
     <table>
         <thead>
             <tr>
-                <th>ID Pesanan</th>
+                <th>No. Pesanan</th>
                 <th>Tanggal</th>
                 <th>Pelanggan</th>
                 <th>Total Item</th>
@@ -54,7 +55,7 @@
         <tbody>
             @foreach($data as $order)
             <tr>
-                <td>{{ $order->id }}</td>
+                <td>ORD-{{  str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
                 <td>{{ $order->created_at->format('d/m/Y') }}</td>
                 <td>{{ $order->user->name }}</td>
                 <td>{{ $order->orderItems->sum('quantity') }}</td>

@@ -8,7 +8,7 @@
                         <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
                             <div class="mb-2 md:mb-0">
                                 <div class="flex items-center">
-                                    <span class="text-xs md:text-sm text-gray-500">#{{ $order->order_number }}</span>
+                                    <span class="text-xs md:text-sm text-gray-500">ORD-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span
                                         class="ml-2 text-xs md:text-sm font-medium text-custom">{{ Carbon\Carbon::parse($order->created_at)->locale('id')->isoFormat('DD MMMM YYYY') }}</span>
                                 </div>

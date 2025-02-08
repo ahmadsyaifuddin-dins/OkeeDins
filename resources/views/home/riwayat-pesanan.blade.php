@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="flex items-center text-gray-900">
                                         <span class="font-medium">Order
-                                            #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</span>
+                                            ORD-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                         <span class="mx-2">•</span>
                                         <span class="text-blue-950 font-medium"><i
                                                 class="bi bi-shop mr-1"></i>OkeeDins</span>

@@ -147,7 +147,7 @@
                                             <div
                                                 class="flex flex-col sm:flex-row items-start sm:items-center text-gray-900">
                                                 <span class="font-medium mb-1 sm:mb-0">
-                                                    Transaksi #{{ str_pad($transaction->id, 6, '0', STR_PAD_LEFT) }}
+                                                    Transaksi ORD-{{ str_pad($transaction->id, 5, '0', STR_PAD_LEFT) }}
                                                 </span>
                                                 <span class="hidden sm:inline mx-2">•</span>
                                                 <span class="text-blue-950 font-medium flex items-center">

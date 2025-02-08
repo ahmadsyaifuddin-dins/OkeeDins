@@ -16,7 +16,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
                                 <p class="text-muted mb-1">Nomor Pesanan</p>
-                                <h6 class="mb-0">#{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}</h6>
+                                <h6 class="mb-0">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h6>
                             </div>
                             <div class="text-end">
                                 <p class="text-muted mb-1">Tanggal Pesanan</p>

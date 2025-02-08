@@ -207,7 +207,7 @@ class CheckoutControllerOld extends Controller
             'status' => 'pending',
             'total_amount' => $voucherResult['total_amount'],
             'qty' => $quantity,
-            'order_number' => 'ORD-' . uniqid(),
+            'order_number' => sprintf('ORD-%06d', rand(1, 999999)),
             'payment_status' => 'unpaid',
             'voucher_id' => $voucherResult['voucher_id'],
             'voucher_discount' => $voucherResult['voucher_discount']
@@ -283,7 +283,7 @@ class CheckoutControllerOld extends Controller
             'status' => 'pending',
             'total_amount' => $voucherResult['total_amount'],
             'qty' => $totalQty,
-            'order_number' => 'ORD-' . uniqid(),
+            'order_number' => sprintf('ORD-%06d', rand(1, 999999)),
             'payment_status' => 'unpaid',
             'voucher_id' => $voucherResult['voucher_id'],
             'voucher_discount' => $voucherResult['voucher_discount']

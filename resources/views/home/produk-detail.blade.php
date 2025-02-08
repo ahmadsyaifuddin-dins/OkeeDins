@@ -77,39 +77,46 @@
                 <div class="bg-white rounded-lg shadow-md p-4">
                     <h3 class="text-lg font-semibold mb-4">Produk Terkait</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        @foreach($product->kategori->produk->where('id', '!=', $product->id)->take(4) as $relatedProduct)
-                        <a href="{{ route('produk.detail', $relatedProduct->slug) }}" class="group">
-                            <div class="relative aspect-square rounded-lg overflow-hidden mb-2">
-                                <img src="{{ asset('storage/' . $relatedProduct->gambar) }}" 
-                                     alt="{{ $relatedProduct->nama_produk }}"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                @if($relatedProduct->diskon > 0)
-                                <div class="absolute top-2 left-2 bg-custom text-white px-2 py-1 rounded-full text-xs font-semibold">
-                                    -{{ $relatedProduct->diskon }}%
+                        @if(count($product->kategori->produk->where('id', '!=', $product->id)) > 0)
+                            @foreach($product->kategori->produk->where('id', '!=', $product->id)->take(4) as $relatedProduct)
+                            <a href="{{ route('produk.detail', $relatedProduct->slug) }}" class="group">
+                                <div class="relative aspect-square rounded-lg overflow-hidden mb-2">
+                                    <img src="{{ asset('storage/' . $relatedProduct->gambar) }}" 
+                                         alt="{{ $relatedProduct->nama_produk }}"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    @if($relatedProduct->diskon > 0)
+                                    <div class="absolute top-2 left-2 bg-custom text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                        -{{ $relatedProduct->diskon }}%
+                                    </div>
+                                    @endif
                                 </div>
-                                @endif
+                                <h4 class="text-sm font-medium text-gray-900 truncate mb-1">
+                                    {{ $relatedProduct->nama_produk }}
+                                </h4>
+                                <div class="flex-row items-center space-x-2">
+                                    <span class="text-sm font-bold text-custom">
+                                        Rp{{ number_format($relatedProduct->harga_diskon, 0, ',', '.') }}
+                                    </span>
+                                    @if($relatedProduct->diskon > 0)
+                                    <span class="text-xs text-gray-500 line-through">
+                                        Rp{{ number_format($relatedProduct->harga, 0, ',', '.') }}
+                                    </span>
+                                    @endif
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500 mt-1">
+                                    <i class="bi bi-star-fill text-yellow-400 mr-1"></i>
+                                    <span>{{ number_format($relatedProduct->rating, 1) }}</span>
+                                    <span class="mx-1">•</span>
+                                    <span>{{ $relatedProduct->total_terjual }}+ terjual</span>
+                                </div>
+                            </a>
+                            @endforeach
+                        @else
+                            <div class="flex items-center justify-center text-gray-600">
+                                <i class="bi bi-exclamation-triangle-fill text-2xl mr-2 text-custom"></i>
+                                <p class="text-custom">Belum ada produk terkait.</p>
                             </div>
-                            <h4 class="text-sm font-medium text-gray-900 truncate mb-1">
-                                {{ $relatedProduct->nama_produk }}
-                            </h4>
-                            <div class="flex-row items-center space-x-2">
-                                <span class="text-sm font-bold text-custom">
-                                    Rp{{ number_format($relatedProduct->harga_diskon, 0, ',', '.') }}
-                                </span>
-                                @if($relatedProduct->diskon > 0)
-                                <span class="text-xs text-gray-500 line-through">
-                                    Rp{{ number_format($relatedProduct->harga, 0, ',', '.') }}
-                                </span>
-                                @endif
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                <i class="bi bi-star-fill text-yellow-400 mr-1"></i>
-                                <span>{{ number_format($relatedProduct->rating, 1) }}</span>
-                                <span class="mx-1">•</span>
-                                <span>{{ $relatedProduct->total_terjual }}+ terjual</span>
-                            </div>
-                        </a>
-                        @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -228,7 +235,7 @@
 
                     <!-- Secondary Actions -->
                     <div class="grid grid-cols-3 gap-3 mt-4">
-                        <button type="button" onclick="window.location.href='https://wa.me/6285849910396'"
+                        <button type="button" onclick="window.location.href='https://wa.me/6285849910396?text=Hai%2C+saya+tertarik+dengan+produk+{{ $product->nama_produk }}'"
                             class="h-10 flex items-center justify-center space-x-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
                             <i class="bi bi-whatsapp text-green-500"></i>
                             <span class="text-sm">Chat</span>

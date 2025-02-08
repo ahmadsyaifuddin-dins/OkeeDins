@@ -9,7 +9,7 @@
             <!-- Header -->
             <div class="mb-6">
                 <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-2">Detail Pesanan</h1>
-                <p class="text-gray-600">Nomor Pesanan: #{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}</p>
+                <p class="text-gray-600">Nomor Pesanan: ORD-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
             </div>
 
             <!-- Main Content -->

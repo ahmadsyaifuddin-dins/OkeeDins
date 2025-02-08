@@ -10,7 +10,7 @@
             <i class="bi bi-arrow-left text-xl mr-2"></i>
             <span class="text-sm font-medium">Kembali</span>
         </a>
-        <h1 class="text-xl md:text-2xl font-bold text-gray-900 ml-4">Lacak Pesanan #{{ $order->order_number }}</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 ml-4">Lacak Pesanan ORD-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
     </div>
 
     <!-- Order Status Timeline -->

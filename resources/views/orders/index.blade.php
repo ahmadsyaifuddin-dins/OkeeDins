@@ -28,7 +28,7 @@
                                         </span>
                                         <br>
                                         <span class="small">
-                                            Order #{{ str_pad($order->id, 8, '0', STR_PAD_LEFT) }}
+                                            Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
                                         </span>
                                     </div>
                                     <div class="col text-end">
