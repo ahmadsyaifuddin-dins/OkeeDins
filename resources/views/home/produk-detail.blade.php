@@ -237,7 +237,7 @@
                 <!-- Secondary Actions -->
                 <div class="grid grid-cols-3 gap-3 mt-4">
                     <button type="button"
-                        onclick="window.location.href='https://wa.me/6285849910396?text=Hai%2C+saya+tertarik+dengan+produk+{{ $product->nama_produk }}'"
+                        onclick="window.location.href='https://wa.me/6285849910396?text=Hai%2C+saya+{{ Auth::check() ? Auth::user()->name : '' }}+tertarik+dengan+produk+{{ $product->nama_produk }}'"
                         class="h-10 flex items-center justify-center space-x-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
                         <i class="bi bi-whatsapp text-green-500"></i>
                         <span class="text-sm">Chat</span>
