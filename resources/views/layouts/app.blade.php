@@ -14,6 +14,8 @@
         type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}"
         type="image/x-icon">
+    <link rel="preload" as="image" href="{{ asset('images/banners/laptop alienware.webp') }}">
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -248,7 +250,7 @@
     @include('layouts.footer')
 
     @stack('scripts')
-
+    @extends('layouts.flash-messages')
 </body>
 
 </html>

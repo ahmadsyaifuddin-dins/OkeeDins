@@ -10,7 +10,7 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
                     <div class="relative">
                         <img src="{{ asset('images/logopingpong.png') }}" alt="Ping Pong Game"
-                            class="w-full h-48 object-cover">
+                            class="w-full h-48 object-contain">
                         <div class="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 rounded-bl-lg">
                             Game
                         </div>
@@ -38,7 +38,7 @@
                     class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
                     <div class="relative">
                         <img src="{{ asset('images/rps.jpg') }}" alt="Rock Paper Scissors Game"
-                            class="w-full h-48 object-cover">
+                            class="w-full h-48 object-contain">
                         <div class="absolute top-0 right-0 bg-green-500 text-white px-3 py-1 rounded-bl-lg">
                             Game
                         </div>
@@ -65,7 +65,7 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
                     <div class="relative">
                         <img src="{{ asset('images/tictactoe.png') }}" alt="Tic Tac Toe Game"
-                            class="w-full h-48 object-cover">
+                            class="w-full h-48 object-contain">
                         <div class="absolute top-0 right-0 bg-purple-500 text-white px-3 py-1 rounded-bl-lg">
                             Game
                         </div>

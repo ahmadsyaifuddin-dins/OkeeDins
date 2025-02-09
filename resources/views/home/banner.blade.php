@@ -18,8 +18,10 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 h-48 md:h-80 relative">
-                            <img src="{{ asset('images/banners/laptop alienware.jpg') }}"
-                                class="absolute inset-0 w-full h-full object-contain" alt="Flash Sale">
+                            <picture>
+                                <source srcset="{{ asset('images/banners/laptop alienware.webp') }}" type="image/webp">
+                                <img src="{{ asset('images/banners/laptop alienware.webp') }}" width="800" height="600" alt="Flash Sale" loading="eager" class="absolute inset-0 w-full h-full object-contain">
+                            </picture>
                         </div>
                     </div>
                 </div>
@@ -41,7 +43,7 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 h-48 md:h-80 relative">
-                            <img src="{{ asset('images/banners/banner-kecap-bango.png') }}"
+                            <img src="{{ asset('images/banners/banner-kecap-bango.png') }}" width="800" height="600"
                                 class="absolute inset-0 w-full h-full object-contain" alt="Produk Pilihan">
                         </div>
                     </div>
@@ -64,7 +66,7 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 h-48 md:h-80 relative">
-                            <img src="{{ asset('images/banners/buah-buahan.jpg') }}"
+                            <img src="{{ asset('images/banners/buah-buahan.webp') }}" width="800" height="600"
                                 class="absolute inset-0 w-full h-full object-contain" alt="Produk Pilihan">
                         </div>
                     </div>
@@ -87,7 +89,7 @@
                             </a>
                         </div>
                         <div class="w-full md:w-1/2 h-48 md:h-80 relative">
-                            <img src="{{ asset('images/banners/t-virus3.jpg') }}"
+                            <img src="{{ asset('images/banners/t-virus3.webp') }}" width="800" height="600"
                                 class="absolute inset-0 w-full h-full object-contain" alt="Produk Pilihan">
                         </div>
                     </div>
