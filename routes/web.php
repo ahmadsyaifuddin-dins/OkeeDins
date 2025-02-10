@@ -10,9 +10,9 @@ use App\Http\Controllers\Admin\KategoriProdukController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\UlasanController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\Admin\WishlistUserController;
 
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CheckoutControllerOld;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\OrderController;
@@ -208,6 +208,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
             Route::get('/ulasan/{id}', [UlasanController::class, 'show'])->name('ulasan.show');
             Route::delete('/ulasan/{id}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
+
+            Route::get('/wishlistUser', [WishlistUserController::class, 'index'])->name('wishlist.index');
+            Route::get('/wishlistUser/{userId}', [WishlistUserController::class, 'show'])->name('wishlist.show');
 
             Route::get('/kategori', [KategoriProdukController::class, 'indexKategori'])->name('kategori.index'); // Halaman daftar kategori
             Route::get('/kategori/create', [KategoriProdukController::class, 'createKategori'])->name('kategori.create'); // Halaman form tambah kategori

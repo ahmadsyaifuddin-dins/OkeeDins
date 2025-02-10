@@ -32,7 +32,8 @@
 
     <!-- Add Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    {{-- <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" /> --}}
+    {{--
+    <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" /> --}}
     <link id="pagestyle" href="{{ asset('material-dashboard/assets/css/material-dashboard.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/admin-index.css') }}">
 

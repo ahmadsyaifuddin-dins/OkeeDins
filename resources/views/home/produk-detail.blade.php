@@ -73,9 +73,9 @@
                 </div>
             </div>
 
-            <!-- Tambahkan Produk Terkait -->
+            <!-- Tambahkan Produk penawaran-->
             <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-semibold mb-4">Produk Terkait</h3>
+                <h3 class="text-lg font-semibold mb-4">Mau beli produk lainnya?</h3>
                 <div class="grid grid-cols-2 gap-4">
                     @if(count($product->kategori->produk->where('id', '!=', $product->id)) > 0)
                     @foreach($product->kategori->produk->where('id', '!=', $product->id)->take(4) as $relatedProduct)
@@ -115,7 +115,7 @@
                     @else
                     <div class="flex items-center justify-center text-gray-600">
                         <i class="bi bi-exclamation-triangle-fill text-2xl mr-2 text-custom"></i>
-                        <p class="text-custom">Belum ada produk terkait.</p>
+                        <p class="text-custom">Belum ada produk penawaran</p>
                     </div>
                     @endif
                 </div>
@@ -459,273 +459,290 @@
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize variables
-        const mainImage = document.querySelector('.main-image');
-        const mainImageLink = document.querySelector('.main-image-link');
-        const thumbnails = document.querySelectorAll('.thumbnail-item');
-        const wrapper = document.querySelector('.thumbnails-wrapper');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        // Initialize Fancybox
-        Fancybox.bind("[data-fancybox]", {
-            Carousel: {
-                infinite: false,
-            },
-            Thumbs: {
-                autoStart: true,
-            },
-            Images: {
-                zoom: true,
-            }
-        });
-        // Thumbnail click handler
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                // Update main image src
-                const newImageSrc = thumbnail.dataset.image;
-                mainImage.src = newImageSrc;
-                mainImageLink.href = newImageSrc;
-                // Update active state
-                thumbnails.forEach(t => t.classList.remove('active'));
-                thumbnail.classList.add('active');
-            });
-        });
-        // Scroll functionality
-        let scrollPosition = 0;
-        const scrollAmount = 88; // width of thumbnail (80px) + gap (8px)
-        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+                // Initialize variables
+                const mainImage = document.querySelector('.main-image');
+                const mainImageLink = document.querySelector('.main-image-link');
+                const thumbnails = document.querySelectorAll('.thumbnail-item');
+                const wrapper = document.querySelector('.thumbnails-wrapper');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
 
-        function updateNavigationVisibility() {
-            if (wrapper.scrollWidth > wrapper.clientWidth) {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-            } else {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-            }
-            prevBtn.disabled = scrollPosition <= 0;
-            nextBtn.disabled = scrollPosition >= maxScroll;
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-        }
-        // Initialize visibility
-        updateNavigationVisibility();
-        // Previous button click handler
-        prevBtn.addEventListener('click', () => {
-            scrollPosition = Math.max(scrollPosition - scrollAmount, 0);
-            wrapper.style.transform = `translateX(-${scrollPosition}px)`;
-            updateNavigationVisibility();
-        });
-        // Next button click handler
-        nextBtn.addEventListener('click', () => {
-            scrollPosition = Math.min(scrollPosition + scrollAmount, maxScroll);
-            wrapper.style.transform = `translateX(-${scrollPosition}px)`;
-            updateNavigationVisibility();
-        });
-        // Update on window resize
-        window.addEventListener('resize', updateNavigationVisibility);
-    });
-    // Function to change main image
-    function changeMainImage(imageSrc, thumbnail) {
-        // Update main image
-        const mainImageContainer = document.querySelector('.relative.overflow-hidden.rounded-lg.mb-4');
-        if (mainImageContainer) {
-            const mainImage = mainImageContainer.querySelector('img');
-            const fancyboxLink = mainImageContainer.querySelector('a');
-            if (mainImage) {
-                mainImage.src = imageSrc;
-            }
-            if (fancyboxLink) {
-                fancyboxLink.href = imageSrc;
-            }
-        }
-        // Update active state of thumbnails
-        document.querySelectorAll('.thumbnail-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        thumbnail.closest('.thumbnail-item').classList.add('active');
-    }
-    const quantityInput = document.getElementById('quantity');
-    const amountInput = document.querySelector('input[name="amount"]');
-    const price = {
-        {
-            $product - > harga_diskon
-        }
-    };
-    const maxStock = {
-        {
-            $product - > stok
-        }
-    };
-
-    function updateAmount() {
-        const quantity = parseInt(quantityInput.value) || 1;
-        if (quantity > maxStock) {
-            quantityInput.value = maxStock;
-            Swal.fire({
-                icon: 'warning',
-                title: 'Perhatian',
-                text: 'Jumlah melebihi stok yang tersedia!',
-                confirmButtonColor: '#EF4444'
-            });
-        }
-        amountInput.value = price * parseInt(quantityInput.value);
-    }
-
-    function incrementQuantity() {
-        const input = document.getElementById('quantity');
-        const currentValue = parseInt(input.value) || 0;
-        if (currentValue < maxStock) {
-            input.value = currentValue + 1;
-            updateAmount();
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Perhatian',
-                text: 'Stok tidak mencukupi!',
-                confirmButtonColor: '#EF4444'
-            });
-        }
-    }
-
-    function decrementQuantity() {
-        const input = document.getElementById('quantity');
-        if (parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-            updateAmount();
-        }
-    }
-    quantityInput.addEventListener('input', function() {
-        const value = parseInt(this.value) || 0;
-        if (value > maxStock) {
-            this.value = maxStock;
-            Swal.fire({
-                icon: 'warning',
-                title: 'Perhatian',
-                text: 'Jumlah melebihi stok yang tersedia!',
-                confirmButtonColor: '#EF4444'
-            });
-        }
-        updateAmount();
-    });
-    quantityInput.addEventListener('change', updateAmount);
-    // Fungsi untuk cart
-    document.querySelector('form[action="{{ route('
-        cart.add ') }}"]').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const button = document.getElementById('btn-addToCart');
-        const originalContent = button.innerHTML;
-        // Validasi input
-        const quantity = document.getElementById('quantity').value;
-        if (!quantity || quantity < 1) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Jumlah produk harus diisi',
-                confirmButtonColor: '#EF4444'
-            });
-            return;
-        }
-        // Update amount sebelum submit
-        updateAmount();
-        // Disable button & show loading
-        button.disabled = true;
-        button.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> <span>Proses...</span>';
-        fetch(this.action, {
-                method: this.method,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: new FormData(this)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    throw new Error(data.message || 'Terjadi kesalahan');
-                }
-                // Update cart count jika ada
-                if (data.cartCount !== undefined) {
-                    const cartCountElement = document.querySelector('.cart-count');
-                    if (cartCountElement) {
-                        cartCountElement.textContent = data.cartCount;
-                    }
-                }
-                // Tampilkan konfirmasi dengan 2 tombol
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: data.message,
-                    showCancelButton: true,
-                    confirmButtonColor: '#EF4444',
-                    cancelButtonColor: '#3B82F6',
-                    confirmButtonText: 'Lihat Keranjang',
-                    cancelButtonText: 'Lanjut Belanja',
-                    reverseButtons: true // Membalik posisi tombol
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirect ke halaman keranjang
-                        window.location.href = "{{ route('cart.index') }}";
-                    } else {
-                        // Tetap di halaman, refresh untuk update data
-                        // window.location.reload();
+                // Initialize Fancybox
+                Fancybox.bind("[data-fancybox]", {
+                    Carousel: {
+                        infinite: false,
+                    },
+                    Thumbs: {
+                        autoStart: true,
+                    },
+                    Images: {
+                        zoom: true,
                     }
                 });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                if (error.message === 'Unauthenticated.') {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Oops...',
-                        text: 'Anda harus login terlebih dahulu untuk menambahkan produk ke keranjang.',
-                        confirmButtonColor: '#EF4444'
-                    }).then(() => {
-                        window.location.href = "{{ route('login') }}";
+
+                // Thumbnail click handler
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', (e) => {
+                        e.preventDefault(); // Prevent default action
+
+                        // Update main image src
+                        const newImageSrc = thumbnail.dataset.image;
+                        mainImage.src = newImageSrc;
+                        mainImageLink.href = newImageSrc;
+
+                        // Update active state
+                        thumbnails.forEach(t => t.classList.remove('active'));
+                        thumbnail.classList.add('active');
                     });
+                });
+
+                // Scroll functionality
+                let scrollPosition = 0;
+                const scrollAmount = 88; // width of thumbnail (80px) + gap (8px)
+                const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+
+                function updateNavigationVisibility() {
+                    if (wrapper.scrollWidth > wrapper.clientWidth) {
+                        prevBtn.classList.remove('hidden');
+                        nextBtn.classList.remove('hidden');
+                    } else {
+                        prevBtn.classList.add('hidden');
+                        nextBtn.classList.add('hidden');
+                    }
+
+                    prevBtn.disabled = scrollPosition <= 0;
+                    nextBtn.disabled = scrollPosition >= maxScroll;
+                    prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+                    nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+                }
+
+                // Initialize visibility
+                updateNavigationVisibility();
+
+                // Previous button click handler
+                prevBtn.addEventListener('click', () => {
+                    scrollPosition = Math.max(scrollPosition - scrollAmount, 0);
+                    wrapper.style.transform = `translateX(-${scrollPosition}px)`;
+                    updateNavigationVisibility();
+                });
+
+                // Next button click handler
+                nextBtn.addEventListener('click', () => {
+                    scrollPosition = Math.min(scrollPosition + scrollAmount, maxScroll);
+                    wrapper.style.transform = `translateX(-${scrollPosition}px)`;
+                    updateNavigationVisibility();
+                });
+
+                // Update on window resize
+                window.addEventListener('resize', updateNavigationVisibility);
+            });
+
+            // Function to change main image
+            function changeMainImage(imageSrc, thumbnail) {
+                // Update main image
+                const mainImageContainer = document.querySelector('.relative.overflow-hidden.rounded-lg.mb-4');
+                if (mainImageContainer) {
+                    const mainImage = mainImageContainer.querySelector('img');
+                    const fancyboxLink = mainImageContainer.querySelector('a');
+
+                    if (mainImage) {
+                        mainImage.src = imageSrc;
+                    }
+
+                    if (fancyboxLink) {
+                        fancyboxLink.href = imageSrc;
+                    }
+                }
+
+                // Update active state of thumbnails
+                document.querySelectorAll('.thumbnail-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                thumbnail.closest('.thumbnail-item').classList.add('active');
+            }
+
+
+            const quantityInput = document.getElementById('quantity');
+            const amountInput = document.querySelector('input[name="amount"]');
+            const price = {{ $product->harga_diskon }};
+            const maxStock = {{ $product->stok }};
+
+            function updateAmount() {
+                const quantity = parseInt(quantityInput.value) || 1;
+                if (quantity > maxStock) {
+                    quantityInput.value = maxStock;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Jumlah melebihi stok yang tersedia!',
+                        confirmButtonColor: '#EF4444'
+                    });
+                }
+                amountInput.value = price * parseInt(quantityInput.value);
+            }
+
+            function incrementQuantity() {
+                const input = document.getElementById('quantity');
+                const currentValue = parseInt(input.value) || 0;
+                if (currentValue < maxStock) {
+                    input.value = currentValue + 1;
+                    updateAmount();
                 } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Stok tidak mencukupi!',
+                        confirmButtonColor: '#EF4444'
+                    });
+                }
+            }
+
+            function decrementQuantity() {
+                const input = document.getElementById('quantity');
+                if (parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                    updateAmount();
+                }
+            }
+
+            quantityInput.addEventListener('input', function() {
+                const value = parseInt(this.value) || 0;
+                if (value > maxStock) {
+                    this.value = maxStock;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Jumlah melebihi stok yang tersedia!',
+                        confirmButtonColor: '#EF4444'
+                    });
+                }
+                updateAmount();
+            });
+
+            quantityInput.addEventListener('change', updateAmount);
+
+            // Fungsi untuk cart
+            document.querySelector('form[action="{{ route('cart.add') }}"]').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const button = document.getElementById('btn-addToCart');
+                const originalContent = button.innerHTML;
+
+                // Validasi input
+                const quantity = document.getElementById('quantity').value;
+                if (!quantity || quantity < 1) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang',
+                        text: 'Jumlah produk harus diisi',
                         confirmButtonColor: '#EF4444'
                     });
+                    return;
                 }
-            })
-            .finally(() => {
-                button.disabled = false;
-                button.innerHTML = originalContent;
+
+                // Update amount sebelum submit
+                updateAmount();
+
+                // Disable button & show loading
+                button.disabled = true;
+                button.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> <span>Proses...</span>';
+
+                fetch(this.action, {
+                        method: this.method,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: new FormData(this)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            throw new Error(data.message || 'Terjadi kesalahan');
+                        }
+
+                        // Update cart count jika ada
+                        if (data.cartCount !== undefined) {
+                            const cartCountElement = document.querySelector('.cart-count');
+                            if (cartCountElement) {
+                                cartCountElement.textContent = data.cartCount;
+                            }
+                        }
+
+                        // Tampilkan konfirmasi dengan 2 tombol
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            showCancelButton: true,
+                            confirmButtonColor: '#EF4444',
+                            cancelButtonColor: '#3B82F6',
+                            confirmButtonText: 'Lihat Keranjang',
+                            cancelButtonText: 'Lanjut Belanja',
+                            reverseButtons: true // Membalik posisi tombol
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect ke halaman keranjang
+                                window.location.href = "{{ route('cart.index') }}";
+                            } else {
+                                // Tetap di halaman, refresh untuk update data
+                                // window.location.reload();
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+
+                        if (error.message === 'Unauthenticated.') {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Oops...',
+                                text: 'Anda harus login terlebih dahulu untuk menambahkan produk ke keranjang.',
+                                confirmButtonColor: '#EF4444'
+                            }).then(() => {
+                                window.location.href = "{{ route('login') }}";
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang',
+                                confirmButtonColor: '#EF4444'
+                            });
+                        }
+                    })
+                    .finally(() => {
+                        button.disabled = false;
+                        button.innerHTML = originalContent;
+                    });
             });
-    });
-    // Fungsi untuk buy now
-    function buyNow() {
-        @guest
-        window.location.href = "{{ route('login') }}";
-        return;
-        @endguest
-        const qty = parseInt(document.getElementById('quantity').value);
-        if (!qty || qty < 1) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Jumlah produk tidak valid!',
-                confirmButtonColor: '#EF4444'
-            });
-            return;
-        }
-        // Redirect langsung ke checkout dengan parameter produk
-        window.location.href = "{{ route('checkout.index') }}?" + new URLSearchParams({
-            direct_buy: 1,
-            produk_id: {
-                {
-                    $product - > id
-                }
-            },
-            quantity: qty
-        }).toString();
-    }
+
+
+            // Fungsi untuk buy now
+            function buyNow() {
+                @guest
+                window.location.href = "{{ route('login') }}";
+                return;
+            @endguest
+
+            const qty = parseInt(document.getElementById('quantity').value);
+            if (!qty || qty < 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Jumlah produk tidak valid!',
+                    confirmButtonColor: '#EF4444'
+                });
+                return;
+            }
+
+            // Redirect langsung ke checkout dengan parameter produk
+            window.location.href = "{{ route('checkout.index') }}?" + new URLSearchParams({
+                direct_buy: 1,
+                produk_id: {{ $product->id }},
+                quantity: qty
+            }).toString();
+            }
 </script>
 
 <script src="{{ asset('js/wishlist.js') }}"></script>
