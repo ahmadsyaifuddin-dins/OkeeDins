@@ -220,12 +220,12 @@
         }
 
         .swiper-slide {
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.3s ease;
         }
 
         .swiper-slide-active {
-            opacity: 1;
+            transform: scale(1);
         }
 
         @media (max-width: 768px) {
@@ -235,6 +235,8 @@
                 display: none;
             }
         }
+
+        /* Skeleton Loader Styles */
     </style>
 
 </head>
@@ -246,11 +248,12 @@
         @yield('content')
     </main>
 
+    @stack('scripts')
     @include('layouts.bottom-nav')
     @include('layouts.footer')
 
-    @stack('scripts')
     @extends('layouts.flash-messages')
+
 </body>
 
 </html>

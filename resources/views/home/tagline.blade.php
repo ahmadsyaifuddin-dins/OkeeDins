@@ -1,8 +1,9 @@
 <!-- Tagline Section -->
-<div class="bg-gradient-to-b from-gray-50 to-white py-12 overflow-hidden">
+<div class="bg-gradient-to-b from-gray-50 to-white py-14 overflow-hidden">
     <div class="container mx-auto px-4 text-center">
         <h1 class="text-3xl md:text-4xl font-bold mb-6 animate-fade-in text-custom-secondary">
-            {{ substr($appSettings['app_name'], 0, -4) }}<span class="text-custom">{{ substr($appSettings['app_name'], -4) }}</span>
+            {{ substr($appSettings['app_name'], 0, -4) }}<span class="text-custom">{{ substr($appSettings['app_name'],
+                -4) }}</span>
         </h1>
         <div class="space-y-3 max-w-2xl mx-auto relative min-h-[10px] md:min-h-[0px]">
             <div class="tagline-slider">
@@ -10,13 +11,21 @@
                     <p class="text-2xl font-semibold text-gray-800">Belanja Cerdas, Harga Pas!</p>
                 </div>
                 <div class="tagline-slide opacity-0 transition-all duration-500 absolute w-full px-4">
-                    <p class="text-xl text-gray-700">Cepat, Lengkap, OkeeDins Solusinya!</p>
+                    <p class="text-xl text-gray-700">Cepat, Lengkap, <span class="text-custom-secondary">{{
+                            substr($appSettings['app_name'], 0, -4)
+                            }}</span><span class="text-custom">{{ substr($appSettings['app_name'], -4) }}</span>
+                        Solusinya!</p>
                 </div>
                 <div class="tagline-slide opacity-0 transition-all duration-500 absolute w-full px-4">
-                    <p class="text-lg italic text-custom">From Cart to Heart - Only at OkeeDins</p>
+                    <p class="text-lg italic text-custom">From Cart to Heart - Only at <span
+                            class="text-custom-secondary">{{
+                            substr($appSettings['app_name'], 0, -4) }}</span><span class="text-custom">{{
+                            substr($appSettings['app_name'], -4) }}</span>
+                    </p>
                 </div>
                 <div class="tagline-slide opacity-0 transition-all duration-500 absolute w-full px-4">
-                    <p class="text-lg text-gray-700 leading-relaxed">Nikmati Kemudahan Berbelanja dengan Harga Terbaik</p>
+                    <p class="text-lg text-gray-700 leading-relaxed">Nikmati Kemudahan Berbelanja dengan Harga Terbaik
+                    </p>
                 </div>
                 <div class="tagline-slide opacity-0 transition-all duration-500 absolute w-full px-4">
                     <p class="text-md text-gray-600">Kami Hadir untuk Memenuhi Kebutuhan Anda</p>
@@ -27,18 +36,25 @@
 </div>
 
 <style>
-.animate-fade-in {
-    animation: fadeIn 1s ease-in;
-}
+    .animate-fade-in {
+        animation: fadeIn 1s ease-in;
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.tagline-slide');
     let currentSlide = 0;
 

@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MarketController extends Controller
 {
@@ -53,9 +54,9 @@ class MarketController extends Controller
     public function detailProduk($slug)
     {
         $product = Produk::with(['ulasan', 'order_items.order'])
-        ->where('slug', $slug)
-        ->firstOrFail();        
-        
+            ->where('slug', $slug)
+            ->firstOrFail();
+
         return view('home.produk-detail', compact('product'));
     }
 
