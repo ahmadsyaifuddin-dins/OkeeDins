@@ -37,15 +37,39 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         'custom': '#D32F2F', // Merah - Primary
                         'custom-secondary': '#102863', // Biru malam - Secondary
                         'custom-accent': '#FDCB6E', // Kuning tua - Accent
-                        'bg-primary': '#ffffff' // Putih - Background
+                        'bg-primary': '#ffffff', // Putih - Background
+                        'dark': {
+                            'bg-primary': '#1a1a1a',
+                            'text': '#ffffff',
+                            'custom': '#FF4545'
+                        }
                     },
                 }
+            }
+        }
+    </script>
+
+    <script>
+        // Check for dark mode preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
             }
         }
     </script>
@@ -237,11 +261,16 @@
         }
 
         /* Skeleton Loader Styles */
+
+        /* Dark mode transitions */
+        .dark-mode-transition {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
     </style>
 
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-gray-900 dark-mode-transition">
     @include('layouts.navbar')
 
     <main class="min-h-screen pb-16 md:pb-0">
