@@ -252,7 +252,7 @@
 
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900 dark-mode-transition">
+<body class="bg-gray-50">
     @include('layouts.navbar')
 
     <main class="min-h-screen pb-16 md:pb-0">
