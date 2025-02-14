@@ -73,7 +73,7 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative">
+                <button onclick="showLoginAlert()" name="wishlist" class="text-gray-600 hover:text-custom relative">
                     <i class="bi bi-heart text-xl"></i>
                 </button>
                 @endauth
@@ -89,7 +89,7 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative">
+                <button onclick="showLoginAlert()" name="cart" class="text-gray-600 hover:text-custom relative">
                     <i class="bi bi-cart text-xl"></i>
                 </button>
                 @endauth
@@ -105,11 +105,16 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()">
+                <button name="pembayaran" onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative">
                     <i class="bi bi-credit-card text-xl"></i>
                 </button>
                 @endauth
+                @guest
+                <a href="{{ route('about') }}" class="text-gray-600 hover:text-custom relative">
+                    <i class="bi bi-info-circle text-xl"></i>
 
+                </a>
+                @endguest
                 @auth
                 <div class="relative" x-data="{ open: false }" @click.away="open = false">
                     <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-custom">
@@ -147,6 +152,10 @@
                         <a href="{{ route('games.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                             <i class="bi bi-controller mr-2"></i>
                             Games
+                        </a>
+                        <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                            <i class="bi bi-info-circle mr-2"></i>
+                            Tentang Kami
                         </a>
 
                         <form action="{{ route('logout') }}" method="POST">
@@ -211,6 +220,10 @@
                         <i class="bi bi-controller mr-2"></i>
                         Games
                     </a>
+                    <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                        <i class="bi bi-info-circle mr-2"></i>
+                        Tentang Kami
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
@@ -220,15 +233,21 @@
                         </button>
                     </form>
                     @else
-                    <div class="px-4 py-3 space-y-2">
-                        <a href="{{ route('login') }}"
-                            class="block w-full text-center px-4 py-2 border border-custom text-custom rounded-lg hover:bg-red-50">
-                            Masuk
+                    <div class="p-4 space-y-3">
+                        <a href="{{ route('about') }}"
+                            class="block w-full text-center px-4 py-2.5 border border-custom text-custom rounded-lg hover:bg-red-50 transition duration-150">
+                            Tentang Kami
                         </a>
-                        <a href="{{ route('register') }}"
-                            class="block w-full text-center px-4 py-2 bg-custom text-white rounded-lg hover:bg-red-600">
-                            Daftar
-                        </a>
+                        <div class="grid grid-cols-2 gap-3">
+                            <a href="{{ route('login') }}"
+                                class="block w-full text-center px-4 py-2.5 border border-custom text-custom rounded-lg hover:bg-red-50 transition duration-150">
+                                Masuk
+                            </a>
+                            <a href="{{ route('register') }}"
+                                class="block w-full text-center px-4 py-2.5 bg-custom text-white rounded-lg hover:bg-red-600 transition duration-150">
+                                Daftar
+                            </a>
+                        </div>
                     </div>
                     @endauth
                 </div>

@@ -27,7 +27,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\GameController;
-
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +44,8 @@ use App\Http\Controllers\GameController;
 //! Route untuk halaman utama (market)
 Route::get('/', [MarketController::class, 'index'])->middleware('cegah.admin.akses.pelanggan')->name('home.index');
 Route::get('/search', [MarketController::class, 'search'])->name('home.search');
+// About Page Route
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 // Route::get('/', [MarketController::class, 'index'])->name('home.index');
 // Route::get('/cart', [MarketController::class, 'cart'])->name('market.cart');

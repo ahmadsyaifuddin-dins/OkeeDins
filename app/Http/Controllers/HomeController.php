@@ -16,16 +16,21 @@ class HomeController extends Controller
         return view('home.index', compact('categories', 'latestProducts'));
     }
 
+    public function about()
+    {
+        return view('home.about');
+    }
+
     public function search(Request $request)
     {
         $query = $request->input('query');
-        
+
         $products = Produk::query()
             ->when($query, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('nama_produk', 'like', "%{$search}%")
-                      ->orWhere('deskripsi', 'like', "%{$search}%")
-                      ->orWhere('kategori', 'like', "%{$search}%");
+                        ->orWhere('deskripsi', 'like', "%{$search}%")
+                        ->orWhere('kategori', 'like', "%{$search}%");
                 });
             })
             ->latest()
@@ -39,7 +44,7 @@ class HomeController extends Controller
     }
 
 
-      public function riwayatPesanan()
+    public function riwayatPesanan()
     {
         return view('home.riwayat-pesanan');
     }
