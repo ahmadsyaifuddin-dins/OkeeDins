@@ -2,19 +2,16 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8 mt-16">
-    <!-- Breadcrumb -->
-    <nav class="text-sm mb-4">
-        <ol class="list-none p-0 flex items-center space-x-2">
-            <li>
-                <a href="{{ route('home.index') }}" class="text-gray-500 hover:text-red-500">Home</a>
-            </li>
-            <li class="text-gray-400">/</li>
-            <li>
-                <a href="#" class="text-gray-500 hover:text-red-500">{{ $product->kategori->nama_kategori }}</a>
-            </li>
-            <li class="text-gray-400">/</li>
-            <li class="text-gray-900">{{ $product->nama_produk }}</li>
-        </ol>
+    <!-- Elegant Breadcrumb -->
+    <nav class="flex items-center space-x-3 text-sm mb-8">
+        <a href="{{ route('home.index') }}" class="text-gray-600 hover:text-custom transition-colors">
+            <i class="bi bi-house-door-fill"></i>
+        </a>
+        <i class="bi bi-chevron-right text-gray-400 text-xs"></i>
+        <a href="#" class="text-gray-600 hover:text-custom transition-colors">{{ $product->kategori->nama_kategori
+            }}</a>
+        <i class="bi bi-chevron-right text-gray-400 text-xs"></i>
+        <span class="text-gray-900 font-medium">{{ $product->nama_produk }}</span>
     </nav>
 
     <div class="lg:grid lg:grid-cols-12 lg:gap-8">
@@ -108,7 +105,7 @@
                             <i class="bi bi-star-fill text-yellow-400 mr-1"></i>
                             <span>{{ number_format($relatedProduct->rating, 1) }}</span>
                             <span class="mx-1">•</span>
-                            <span>{{ $relatedProduct->total_terjual }}+ terjual</span>
+                            <span>{{ $relatedProduct->total_terjual }} terjual</span>
                         </div>
                     </a>
                     @endforeach
@@ -125,16 +122,40 @@
         <!-- Product Info -->
         <div class="lg:col-span-7 lg:sticky lg:top-24">
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $product->nama_produk }}</h1>
-                    <div class="flex items-center space-x-4 text-sm">
-                        <div class="flex items-center text-yellow-400">
-                            <i class="bi bi-star-fill mr-1"></i>
-                            <span class="text-gray-600">{{ number_format($product->rating, 1) }}</span>
+                <div class="mb-6 px-4 sm:px-0">
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                        {{ $product->nama_produk }}
+                    </h1>
+
+                    <div class="flex flex-col sm:flex-row gap-4 text-sm">
+                        <!-- Rating Section -->
+                        <div class="flex items-center justify-center bg-yellow-50 rounded-full px-3 py-1.5 flex-1">
+                            <div class="flex text-yellow-400 mr-1.5">
+                                @for ($i = 1; $i <= 5; $i++) <i class="bi bi-star-fill text-xs sm:text-sm"></i>
+                                    @endfor
+                            </div>
+                            <span class="text-gray-700 font-medium">{{ number_format($product->rating, 1) }}</span>
                         </div>
-                        <span class="text-gray-400">•</span>
-                        <span class="text-gray-600">{{ $product->total_terjual }}+ terjual</span>
+
+                        <!-- Sales Section -->
+                        <div class="flex items-center justify-center bg-green-50 rounded-full px-3 py-1.5 flex-1">
+                            <i class="bi bi-bag-check-fill mr-1.5 text-green-500"></i>
+                            <span class="text-gray-700">
+                                {{ $product->total_terjual }}
+                                <span class="text-gray-500">terjual</span>
+                            </span>
+                        </div>
+
+                        <!-- Wishlist Section -->
+                        <div class="flex items-center justify-center bg-red-50 rounded-full px-3 py-1.5 flex-1">
+                            <i class="bi bi-heart-fill mr-1.5 text-red-500"></i>
+                            <span class="text-gray-700">
+                                {{ $product->wishlist->count() }}
+                                <span class="text-gray-500">orang suka</span>
+                            </span>
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- Price -->
@@ -163,19 +184,19 @@
                             <p class="text-sm text-gray-500">Kategori</p>
                         </div>
                         <div class="col-span-2">
-                            <p class="text-sm text-gray-900">{{ $product->kategori->nama_kategori }}</p>
+                            <p class="font-medium text-gray-900">{{ $product->kategori->nama_kategori }}</p>
                         </div>
                         <div class="col-span-1">
                             <p class="text-sm text-gray-500">Berat</p>
                         </div>
                         <div class="col-span-2">
-                            <p class="text-sm text-gray-900">{{ $product->berat ?? '500' }} gram</p>
+                            <p class="font-medium  text-gray-900">{{ $product->berat ?? '500' }} gram</p>
                         </div>
                         <div class="col-span-1">
                             <p class="text-sm text-gray-500">Kondisi</p>
                         </div>
                         <div class="col-span-2">
-                            <p class="text-sm text-gray-900">Baru</p>
+                            <p class="font-medium text-gray-900">Baru</p>
                         </div>
                         <!-- Tambahkan spesifikasi lainnya sesuai kebutuhan -->
                     </div>
@@ -218,17 +239,17 @@
                         </div>
                     </div>
 
+
                     <!-- Action Buttons -->
-                    <div class="flex space-x-4">
+                    <div class="grid grid-cols-2 gap-4">
                         <button type="button" id="btn-payNow" onclick="buyNow()"
-                            class="flex-1 h-12 bg-custom text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                            class="h-12 bg-custom text-white rounded-xl hover:bg-red-600 transition-colors flex items-center justify-center space-x-2">
                             <i class="bi bi-lightning-charge-fill"></i>
                             <span>Beli Sekarang</span>
                         </button>
-
                         <button type="submit" id="btn-addToCart"
-                            class="flex-1 h-12 border border-custom text-custom rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center space-x-2">
-                            <i class="bi bi-cart-plus mr-2"></i>
+                            class="h-12 border-2 border-custom text-custom rounded-xl hover:bg-red-50 transition-colors flex items-center justify-center space-x-2">
+                            <i class="bi bi-cart-plus"></i>
                             <span>Keranjang</span>
                         </button>
                     </div>
@@ -238,8 +259,8 @@
                 <div class="grid grid-cols-3 gap-3 mt-4">
                     <button type="button"
                         onclick="window.location.href='https://wa.me/6285849910396?text=Hai%2C+saya+{{ Auth::check() ? Auth::user()->name : '' }}+tertarik+dengan+produk+{{ $product->nama_produk }}'"
-                        class="h-10 flex items-center justify-center space-x-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
-                        <i class="bi bi-whatsapp text-green-500"></i>
+                        class="h-10 flex items-center justify-center space-x-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors">
+                        <i class="bi bi-whatsapp"></i>
                         <span class="text-sm">Chat</span>
                     </button>
 
@@ -253,6 +274,7 @@
                         class="wishlist-form">
                         @csrf
                         @method('DELETE')
+                        <input type="hidden" name="produk_id" value="{{ $product->id }}">
                         <button type="submit"
                             class="w-full h-10 flex items-center justify-center space-x-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
                             <i class="bi bi-heart-fill text-custom"></i>
@@ -287,7 +309,7 @@
                             <span class="text-sm">Share</span>
                         </button>
                         <!-- Share dropdown -->
-                        <div x-show="shareOpen" @click.away="shareOpen = false"
+                        <div x-show="shareOpen" x-cloak @click.away="shareOpen = false"
                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                             <div class="py-1">
                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -456,6 +478,7 @@
 </style>
 
 @push('scripts')
+<script src="{{ asset('js/wishlist.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -745,6 +768,5 @@
             }
 </script>
 
-<script src="{{ asset('js/wishlist.js') }}"></script>
 @endpush
 @endsection

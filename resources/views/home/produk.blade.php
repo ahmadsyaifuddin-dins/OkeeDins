@@ -19,7 +19,7 @@
 <!-- Actual Products -->
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 hidden" id="actual-products">
     @foreach ($recommendedProducts as $product)
-    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 h-fit">
         <a href="{{ route('produk.detail', $product->slug) }}" class="block">
             <!-- Image Container -->
             <div class="relative aspect-square">
@@ -35,28 +35,39 @@
             </div>
 
             <!-- Product Info -->
-            <div class="p-2 md:p-4">
+            <div class="p-4 flex flex-col">
+                <!-- Product Name -->
                 <h3
-                    class="text-sm md:text-base font-medium text-gray-900 truncate hover:text-custom hover:scale-105 transform transition-all duration-300 ease-in-out">
+                    class="text-sm md:text-base font-medium text-gray-900 hover:text-custom transition-colors duration-200 mb-2 truncate">
                     {{ $product->nama_produk }}
                 </h3>
-                <div class="mt-1 space-y-1">
-                    <div class="flex flex-col">
-                        <span class="text-lg font-bold text-custom">
+
+                <!-- Price Section -->
+                <div class="mb-2">
+                    <!-- Price Container with responsive layout -->
+                    <div class="flex flex-col xl:flex-row xl:items-center xl:space-x-2">
+                        <!-- Discounted Price -->
+                        <span class="text-lg md:text-xl font-bold text-custom">
                             Rp{{ number_format($product->harga_diskon, 0, ',', '.') }}
                         </span>
+
+                        <!-- Original Price (if discounted) -->
                         @if ($product->diskon > 0)
-                        <span class="text-sm text-gray-500 line-through">
+                        <span class="text-base text-gray-600 line-through mt-0.5 md:mt-0">
                             Rp{{ number_format($product->harga, 0, ',', '.') }}
                         </span>
                         @endif
                     </div>
-                    <div class="flex items-center text-sm text-gray-500">
+                </div>
+
+                <!-- Rating & Sales Info -->
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                    <div class="flex items-center">
                         <i class="bi bi-star-fill text-yellow-400 mr-1"></i>
                         <span>{{ number_format($product->getRatingAttribute(), 1) }}</span>
-                        <span class="mx-1">•</span>
-                        <span>{{ $product->getTotalTerjualAttribute() }} terjual</span>
                     </div>
+                    <span class="text-gray-300">•</span>
+                    <span>{{ $product->getTotalTerjualAttribute() }} terjual</span>
                 </div>
             </div>
         </a>

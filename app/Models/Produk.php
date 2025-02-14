@@ -77,9 +77,20 @@ class Produk extends Model
     public function getTotalTerjualAttribute()
     {
         return $this->order_items()
-            ->whereHas('order', function($query) {
+            ->whereHas('order', function ($query) {
                 $query->where('status', 'completed');
             })
             ->sum('quantity');
+    }
+
+    // Calculate total disukai (wishlist)
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, 'produk_id', 'id');
+    }
+
+    public function getTotalDisukaiAttribute()
+    {
+        return $this->wishlist()->count();
     }
 }

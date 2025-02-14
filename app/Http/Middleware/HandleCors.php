@@ -14,11 +14,15 @@ class HandleCors
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle($request, Closure $next)
-{
-    $response = $next($request);
-    $response->header('Access-Control-Allow-Origin', '*');
-    $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    $response->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, X-CSRF-TOKEN');
-    return $response;
-}
+    {
+        $response = $next($request);
+
+        if (method_exists($response, 'header')) {
+            $response->header('Access-Control-Allow-Origin', '*');
+            $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+            $response->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, X-CSRF-TOKEN');
+        }
+
+        return $response;
+    }
 }
