@@ -16,17 +16,17 @@
                 </p>
                 <!-- Social Media Icons -->
                 <div class="flex space-x-5">
-                    <a href="#" class="hover:scale-110 transform transition-all duration-300">
+                    <a href="#" class="hover:scale-110 transform transition-all duration-300" aria-label="Facebook">
                         <div class="w-10 h-10 bg-custom rounded-lg flex items-center justify-center shadow-lg hover:shadow-custom/50">
                             <i class="bi bi-facebook text-xl text-white"></i>
                         </div>
                     </a>
-                    <a href="#" class="hover:scale-110 transform transition-all duration-300">
+                    <a href="#" class="hover:scale-110 transform transition-all duration-300" aria-label="Instagram">
                         <div class="w-10 h-10 bg-custom rounded-lg flex items-center justify-center shadow-lg hover:shadow-custom/50">
                             <i class="bi bi-instagram text-xl text-white"></i>
                         </div>
                     </a>
-                    <a href="#" class="hover:scale-110 transform transition-all duration-300">
+                    <a href="#" class="hover:scale-110 transform transition-all duration-300" aria-label="Twitter">
                         <div class="w-10 h-10 bg-custom rounded-lg flex items-center justify-center shadow-lg hover:shadow-custom/50">
                             <i class="bi bi-twitter text-xl text-white"></i>
                         </div>
@@ -108,7 +108,7 @@
                         <input type="email" 
                             class="w-full pl-5 pr-12 py-3 bg-gray-50 text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-custom focus:ring-1 focus:ring-custom transition-all"
                             placeholder="Masukkan email Anda">
-                        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-custom rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
+                        <button type="submit" aria-label="Tombol Berlangganan" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-custom rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
                             <i class="bi bi-send-fill text-white"></i>
                         </button>
                     </div>
@@ -123,9 +123,9 @@
                     &copy; {{ date('Y') }} {{ $appSettings['app_name'] ?? 'OkeeDins' }}. All rights reserved.
                 </p>
                 <div class="flex items-center space-x-6">
-                    <a href="#" class="text-sm text-gray-600 hover:text-custom transition-colors">Kebijakan Privasi</a>
-                    <a href="#" class="text-sm text-gray-600 hover:text-custom transition-colors">Syarat & Ketentuan</a>
-                    <a href="#" class="text-sm text-gray-600 hover:text-custom transition-colors">FAQ</a>
+                    <a href="#" aria-label="Kebijakan Privasi" class="text-sm text-gray-600 hover:text-custom transition-colors">Kebijakan Privasi</a>
+                    <a href="#" aria-label="Syarat & Ketentuan" class="text-sm text-gray-600 hover:text-custom transition-colors">Syarat & Ketentuan</a>
+                    <a href="#" aria-label="FAQ" class="text-sm text-gray-600 hover:text-custom transition-colors">FAQ</a>
                 </div>
             </div>
         </div>

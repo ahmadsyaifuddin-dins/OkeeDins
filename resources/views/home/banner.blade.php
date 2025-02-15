@@ -166,4 +166,11 @@
         }, 1000); // Delay 1 detik, sesuaikan jika perlu
     });
 </script>
+
+<style>
+    .swiper-pagination-bullet {
+        margin: 6px;
+        touch-action: manipulation;
+    }
+</style>
 @endpush
