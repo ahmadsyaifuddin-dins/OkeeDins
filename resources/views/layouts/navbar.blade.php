@@ -1,6 +1,6 @@
 <nav x-data="{ mobileMenu: false }" x-init="mobileMenu = false"
     class="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a href="{{ route('home.index') }}" class="flex items-center">
@@ -14,7 +14,8 @@
                     <div class="relative">
                         <input type="text" name="query"
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-custom"
-                            placeholder="{{ Auth::check() ? ucfirst(explode(' ', Auth::user()->name)[0]) : 'Dinsers' }}, mau cari apa?" value="{{ request('query') }}">
+                            placeholder="{{ Auth::check() ? ucfirst(explode(' ', Auth::user()->name)[0]) : 'Dinsers' }}, mau cari apa?"
+                            value="{{ request('query') }}">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="bi bi-search text-gray-400"></i>
                         </div>
@@ -27,9 +28,10 @@
                 <form action="{{ route('home.search') }}" method="GET">
                     <div class="relative flex items-center">
                         <input type="text" name="query"
-                            class="w-full pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
-                            placeholder="{{ Auth::check() ? ucfirst(explode(' ', Auth::user()->name)[0]) : 'Dinsers' }}, mau cari apa?" value="{{ request('query') }}">
-                        <button type="submit" class="absolute left-3 text-gray-400" aria-label="Cari Produk">
+                            class="w-full pl-7 pr-3 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:border-custom"
+                            placeholder="{{ Auth::check() ? ucfirst(explode(' ', Auth::user()->name)[0]) : 'Dinsers' }}, mau cari apa?"
+                            value="{{ request('query') }}">
+                        <button type="submit" class="absolute left-2 text-gray-400" aria-label="Cari Produk">
                             <i class="bi bi-search text-lg"></i>
                         </button>
                     </div>
@@ -37,9 +39,9 @@
             </div>
 
             <!-- Mobile Icons (Right-aligned) -->
-            <div class="flex items-center gap-2 md:hidden flex-shrink-0">
+            <div class="flex items-center gap-1 md:hidden flex-shrink-0">
                 @auth
-                <a href="{{ route('cart.index') }}" class="p-2 text-gray-600 hover:text-custom relative">
+                <a href="{{ route('cart.index') }}" class="p-1 text-gray-600 hover:text-custom relative">
                     <i class="bi bi-cart text-xl"></i>
                     @if (Auth::user()->cart->count() > 0)
                     <span
@@ -49,13 +51,15 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()" aria-label="menuju ke keranjang" class="p-2 text-gray-600 hover:text-custom relative">
+                <button onclick="showLoginAlert()" aria-label="menuju ke keranjang"
+                    class="p-1 text-gray-600 hover:text-custom relative">
                     <i class="bi bi-cart text-xl"></i>
                 </button>
                 @endauth
 
                 <!-- Mobile Menu Button -->
-                <button type="button" aria-label="menuju ke menu" class="p-2 text-gray-600 hover:text-custom" @click="mobileMenu = !mobileMenu">
+                <button type="button" aria-label="menuju ke menu" class="m-3 text-gray-600 hover:text-custom"
+                    @click="mobileMenu = !mobileMenu">
                     <i class="bi bi-list text-2xl"></i>
                 </button>
             </div>
@@ -73,7 +77,8 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()" name="wishlist" class="text-gray-600 hover:text-custom relative" aria-label="menuju ke wishlist" title="menuju ke wishlist">
+                <button onclick="showLoginAlert()" name="wishlist" class="text-gray-600 hover:text-custom relative"
+                    aria-label="menuju ke wishlist" title="menuju ke wishlist">
                     <i class="bi bi-heart text-xl"></i>
                 </button>
                 @endauth
@@ -89,7 +94,8 @@
                     @endif
                 </a>
                 @else
-                <button onclick="showLoginAlert()" name="cart" class="text-gray-600 hover:text-custom relative" aria-label="menuju ke keranjang" title="menuju ke keranjang">
+                <button onclick="showLoginAlert()" name="cart" class="text-gray-600 hover:text-custom relative"
+                    aria-label="menuju ke keranjang" title="menuju ke keranjang">
                     <i class="bi bi-cart text-xl"></i>
                 </button>
                 @endauth
@@ -105,12 +111,14 @@
                     @endif
                 </a>
                 @else
-                <button name="pembayaran" onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative" aria-label="menuju ke pembayaran" title="menuju ke pembayaran">
+                <button name="pembayaran" onclick="showLoginAlert()" class="text-gray-600 hover:text-custom relative"
+                    aria-label="menuju ke pembayaran" title="menuju ke pembayaran">
                     <i class="bi bi-credit-card text-xl"></i>
                 </button>
                 @endauth
                 @guest
-                <a href="{{ route('about') }}" class="text-gray-600 hover:text-custom relative" aria-label="menuju ke about" title="menuju ke about">
+                <a href="{{ route('about') }}" class="text-gray-600 hover:text-custom relative"
+                    aria-label="menuju ke about" title="menuju ke about">
                     <i class="bi bi-info-circle text-xl"></i>
 
                 </a>
@@ -168,7 +176,8 @@
                     </div>
                 </div>
                 @else
-                <a href="{{ route('login') }}" class="text-gray-700 hover:text-custom" aria-label="menuju ke login" title="menuju ke login">
+                <a href="{{ route('login') }}" class="text-gray-700 hover:text-custom" aria-label="menuju ke login"
+                    title="menuju ke login">
                     <i class="bi bi-person-circle text-xl"></i>
                 </a>
                 @endauth
@@ -197,7 +206,7 @@
                 </div>
                 @else
                 <!-- Guest Mobile Header -->
-                <div class="flex items-center justify-between p-4 border-b">
+                <div class="flex items-center justify-between p-2 border-b">
                     <div class="flex items-center gap-2">
                         <img src="{{ asset('images/user.svg') }}" alt="Guest User"
                             class="w-10 h-10 rounded-full object-cover">
