@@ -14,13 +14,13 @@
         type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('storage/' . ($appSettings['favicon'] ?? 'default-favicon.ico')) }}"
         type="image/x-icon">
-    <link rel="preload" as="image" href="{{ asset('images/banners/laptop alienware.webp') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
